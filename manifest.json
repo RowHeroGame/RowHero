@@ -1,12 +1,12 @@
 {
   "launcher": {
-    "version": "1.0.0",
-    "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/launcher-v1.0.0/GameLauncher.zip"
+    "version": "1.0.1",
+    "url": "https://http://github.com/lfairclo/theo-game-launcher/releases/download/launcher/GameLauncher.zip"
   },
   "game": {
-    "version": "1.0.0",
-    "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/game-v1.0.0/GameBuild.zip",
-    "dataZipUrl": "https://github.com/lfairclo/theo-game-launcher/releases/download/game-v1.0.0/GameData.zip",
+    "version": "1.0.1",
+    "url": "http://github.com/lfairclo/theo-game-launcher/releases/download/game/GameLauncher.zip",
+    "dataZipUrl": "https://github.com/lfairclo/theo-game-launcher/releases/download/game/GameData.zip",
     "changelog": "- Happy Birthday",
     "sizeMB": 450
   }
