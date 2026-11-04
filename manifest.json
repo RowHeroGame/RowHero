@@ -6,8 +6,12 @@
   "game": {
     "version": "1.0.1",
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/game/RowHero.zip",
-    "dataZipUrl": "https://github.com/lfairclo/theo-game-launcher/releases/download/game/GameData.zip",
     "changelog": "- Happy Birthday/happy going to uni from Linus And Nate",
     "sizeMB": 900
+  },
+  "gameData": {
+    "version": "1.0.1",
+    "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/gamedata/GameData.zip",
+    "changelog": "- Initial game data"
   }
 }
