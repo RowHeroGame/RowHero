@@ -1,0 +1,42 @@
+<Window x:Class="GameLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Game Launcher" Height="640" Width="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#1e1e1e">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- logo -->
+            <RowDefinition Height="*"/>      <!-- main menu image -->
+            <RowDefinition Height="Auto"/>   <!-- status text -->
+            <RowDefinition Height="Auto"/>   <!-- version + button row -->
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" x:Name="LogoImage" Source="Assets/logo.png"
+               Height="100" Margin="0,20,0,10" Stretch="Uniform"/>
+
+        <Image Grid.Row="1" x:Name="MenuImage" Source="Assets/menu_bg.png"
+               Stretch="UniformToFill" Margin="10"/>
+
+        <TextBlock Grid.Row="2" x:Name="StatusText" Text="Checking for updates..."
+                   Foreground="#bbbbbb" HorizontalAlignment="Center" Margin="0,4,0,4"/>
+
+        <Grid Grid.Row="3" Margin="20,10,20,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" x:Name="VersionText" Text="v-.-.-"
+                       Foreground="#888888" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+            <Button Grid.Column="1" x:Name="ActionButton" Content="Install Game"
+                    Height="44" FontSize="16" FontWeight="Bold"
+                    Click="ActionButton_Click"/>
+        </Grid>
+
+        <ProgressBar Grid.Row="3" x:Name="ProgressBarControl" Height="6"
+                     VerticalAlignment="Bottom" Margin="20,0,20,0" Visibility="Collapsed"/>
+    </Grid>
+</Window>
