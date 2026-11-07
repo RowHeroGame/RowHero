@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="logo.png">
+<title>Row Hero</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Archivo:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: pixel boathouse hero over the river, then a single column that reads like a race programme */
+:root {
+  --sky: #5d9ee0;
+  --river: #1f3f63;
+  --river-deep: #142a44;
+  --foam: #eef4fb;
+  --mist: #a9c1dc;
+  --oar: #f2c230;        /* single accent: blade yellow */
+  --oar-ink: #1a1405;
+  --line: rgba(238,244,251,.14);
+  --pixel: "Silkscreen", "Courier New", monospace;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--river-deep); color: var(--foam); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+a { color: inherit; }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* Hero */
+.hero { position: relative; background: var(--sky) url("background.png") center bottom / cover no-repeat; image-rendering: pixelated; border-bottom: 6px solid var(--river); }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,42,68,0) 45%, rgba(20,42,68,.55) 100%); pointer-events: none; }
+.hero .wrap { position: relative; z-index: 1; padding-block: clamp(28px, 6vw, 64px) clamp(32px, 6vw, 56px); display: grid; justify-items: center; text-align: center; gap: 22px; }
+.logo { width: min(560px, 88%); height: auto; image-rendering: pixelated; filter: drop-shadow(0 6px 0 rgba(20,42,68,.35)); animation: bob 3.2s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0) rotate(-.6deg); } 50% { transform: translateY(-6px) rotate(.6deg); } }
+.tagline { margin: 0; font-family: var(--pixel); font-size: clamp(15px, 2.4vw, 20px); letter-spacing: .04em; background: var(--river-deep); color: var(--foam); padding: 8px 14px; box-shadow: 4px 4px 0 var(--oar); text-wrap: balance; }
+
+.dl { display: grid; justify-items: center; gap: 10px; }
+.btn { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-family: var(--pixel); font-weight: 700; font-size: clamp(17px, 2.6vw, 22px); color: var(--oar-ink); background: var(--oar); padding: 16px 26px; border: 3px solid var(--oar-ink); box-shadow: 6px 6px 0 var(--oar-ink); transition: transform .08s, box-shadow .08s; }
+.btn:hover { transform: translate(-2px,-2px); box-shadow: 8px 8px 0 var(--oar-ink); }
+.btn:active { transform: translate(4px,4px); box-shadow: 2px 2px 0 var(--oar-ink); }
+.btn:focus-visible { outline: 3px solid var(--foam); outline-offset: 4px; }
+.btn svg { width: 22px; height: 22px; flex: none; }
+.meta { font-size: 14px; color: var(--foam); background: rgba(20,42,68,.78); padding: 4px 10px; }
+.meta code { font-family: var(--pixel); font-size: 13px; }
+
+/* Sections */
+section { padding-block: 56px; border-bottom: 1px solid var(--line); }
+section:last-of-type { border-bottom: 0; }
+.eyebrow { font-family: var(--pixel); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--oar); margin: 0 0 10px; }
+h2 { font-family: var(--body); font-weight: 800; font-size: clamp(26px, 4vw, 36px); line-height: 1.15; margin: 0 0 16px; text-wrap: balance; }
+p { margin: 0 0 14px; max-width: 65ch; }
+.lead { font-size: 19px; color: var(--foam); }
+.muted { color: var(--mist); }
+
+/* Features */
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 28px 36px; margin-top: 28px; }
+.feature { min-width: 0; padding-top: 14px; border-top: 3px solid var(--river); }
+.feature h3 { font-family: var(--pixel); font-size: 17px; font-weight: 700; margin: 0 0 6px; letter-spacing: .02em; }
+.feature p { font-size: 15.5px; color: var(--mist); margin: 0; }
+
+/* Season: the real order the career is raced in */
+.season { margin-top: 26px; overflow-x: auto; }
+.season table { width: 100%; min-width: 520px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.season th, .season td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.season th { font-family: var(--pixel); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--mist); font-weight: 400; }
+.season td:first-child { font-family: var(--pixel); color: var(--oar); width: 3.5em; }
+.season td.venue { font-weight: 700; }
+.chip { display: inline-block; font-family: var(--pixel); font-size: 12px; padding: 2px 8px; border: 1px solid currentColor; }
+.chip.head { color: var(--mist); }
+.chip.side { color: var(--oar); }
+
+/* Install steps */
+.steps { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 18px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+.steps li::before { content: counter(s); font-family: var(--pixel); font-weight: 700; font-size: 18px; width: 44px; height: 44px; display: grid; place-items: center; background: var(--river); color: var(--oar); }
+.steps li div { min-width: 0; }
+.steps strong { display: block; }
+.steps span { color: var(--mist); font-size: 15.5px; }
+.note { margin-top: 26px; padding: 14px 16px; background: var(--river); font-size: 15px; color: var(--mist); max-width: 70ch; }
+.note b { color: var(--foam); }
+
+.cta-bottom { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; margin-top: 28px; }
+.textlink { font-family: var(--pixel); font-size: 14px; color: var(--mist); text-underline-offset: 4px; }
+.textlink:hover { color: var(--foam); }
+
+footer { padding-block: 28px 40px; font-size: 14px; color: var(--mist); }
+
+@media (prefers-reduced-motion: reduce) { .logo { animation: none; } .btn { transition: none; } }
+</style>
+</head>
+<body>
+
+
+<header class="hero">
+  <div class="wrap">
+    <img class="logo" src="logo.png" alt="Row Hero" width="1296" height="828">
+    <p class="tagline">Row to the beat. Beat the crew next to you.</p>
+    <div class="dl">
+      <a class="btn" href="https://github.com/lfairclo/theo-game-launcher/releases/download/installer/RowHeroInstaller.exe" rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
+        Download for Windows
+      </a>
+      <span class="meta"><code>RowHeroInstaller.exe</code> · Windows 10 / 11 · free</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">What it is</p>
+      <h2>A rhythm game where every note is a stroke</h2>
+      <p class="lead">Row Hero is Guitar Hero on the water. Notes stream down towards your boat, and every one you hit in time pulls your crew through the water. Hit a streak and the boat flies. Miss and the crew beside you starts to move away.</p>
+      <p class="muted">It was made for an older brother who rows and won at Henley Royal Regatta, so the races, venues and crews come from real rowing.</p>
+
+      <div class="features">
+        <div class="feature">
+          <h3>Career mode</h3>
+          <p>Race a full season, venue by venue. Each regatta is a run of races with a boss race at the end.</p>
+        </div>
+        <div class="feature">
+          <h3>Pick your crew</h3>
+          <p>Between races, spend your winnings in the shop on new rowers. Each one brings a perk that changes how your boat races.</p>
+        </div>
+        <div class="feature">
+          <h3>Free play</h3>
+          <p>Replay any song you've unlocked, at any venue, with the crew you've built. Add your own songs too.</p>
+        </div>
+        <div class="feature">
+          <h3>Leaderboards &amp; achievements</h3>
+          <p>Post your best scores online, chase achievements, and look out for the secret bosses.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">The season</p>
+      <h2>Four venues, raced in order</h2>
+      <p class="muted">Two head races through the winter, where you race the clock down the course, then two side-by-side regattas.</p>
+      <div class="season">
+        <table>
+          <thead><tr><th>Race</th><th>Venue</th><th>Format</th></tr></thead>
+          <tbody>
+            <tr><td>01</td><td class="venue">Head of the Charles</td><td><span class="chip head">Head race</span></td></tr>
+            <tr><td>02</td><td class="venue">Head of the River</td><td><span class="chip head">Head race</span></td></tr>
+            <tr><td>03</td><td class="venue">National Schools</td><td><span class="chip side">Side by side</span></td></tr>
+            <tr><td>04</td><td class="venue">Henley</td><td><span class="chip side">Side by side</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Getting started</p>
+      <h2>Install in a minute</h2>
+      <ol class="steps">
+        <li><div><strong>Download the installer</strong><span>Click the yellow button to get <code>RowHeroInstaller.exe</code> from GitHub.</span></div></li>
+        <li><div><strong>Run it</strong><span>Open the file from your Downloads folder and follow the installer.</span></div></li>
+        <li><div><strong>Launch and row</strong><span>Open Row Hero from the launcher. It checks for updates and shows what's new each time you start it, so you won't need to download the installer again.</span></div></li>
+      </ol>
+      <p class="note"><b>Windows warning?</b> The installer isn't signed yet, so Windows SmartScreen may say it "protected your PC". Click <b>More info</b>, then <b>Run anyway</b>.</p>
+      <div class="cta-bottom">
+        <a class="btn" href="https://github.com/lfairclo/theo-game-launcher/releases/download/installer/RowHeroInstaller.exe" rel="noopener">
+          <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
+          Download Row Hero
+        </a>
+        <a class="textlink" href="https://github.com/lfairclo/theo-game-launcher/releases/tag/installer" rel="noopener">View the release on GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Row Hero · made with Unity · Windows only · <a class="textlink" href="privacy.html">Privacy policy</a> · <a class="textlink" href="terms.html">Terms of service</a></div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RowHero Song Batch Converter</title>
+<style>
+  :root{
+    --bg:#0A0C0F; --panel:#12151B; --panel-2:#171B22; --border:#232830;
+    --text:#E7EAEE; --text-dim:#8A93A3; --text-faint:#565E6C;
+    --teal:#4FD8C4; --amber:#F5A623; --red:#E5484D;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica Neue,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--sans);}
+  body{padding:32px 24px 80px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;margin-bottom:10px;}
+  h1{font-size:28px;font-weight:700;letter-spacing:-0.02em;margin:0 0 8px;}
+  h1 span{color:var(--teal);}
+  .sub{color:var(--text-dim);font-size:14px;line-height:1.6;max-width:720px;}
+  .sub b{color:var(--text);}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:22px;margin:20px 0;}
+  .panel-title{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--text-faint);text-transform:uppercase;margin-bottom:16px;}
+  .drop{border:1.5px dashed var(--border);border-radius:8px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;}
+  .drop:hover,.drop.drag{border-color:var(--teal);background:#0F1A18;}
+  .drop-icon{font-family:var(--mono);font-size:22px;color:var(--teal);margin-bottom:10px;}
+  .drop-text{font-size:14px;color:var(--text-dim);line-height:1.6;}
+  .drop-text b{color:var(--text);}
+  input[type=file]{display:none;}
+  .row-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center;}
+  button{font-family:var(--sans);font-size:13px;font-weight:600;border-radius:6px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);padding:9px 16px;cursor:pointer;}
+  button:hover{border-color:var(--teal);color:var(--teal);}
+  button.primary{background:var(--teal);color:#04201B;border-color:var(--teal);}
+  button.primary:hover{background:#67E4D2;color:#04201B;}
+  button:disabled{opacity:.35;cursor:not-allowed;}
+  label.opt{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:8px;}
+  label.opt input{accent-color:var(--teal);}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px;}
+  th{text-align:left;padding:8px 10px;color:var(--text-faint);font-weight:500;text-transform:uppercase;font-size:10px;letter-spacing:.08em;border-bottom:1px solid var(--border);}
+  td{padding:8px 10px;border-bottom:1px solid #1B1F26;color:var(--text-dim);vertical-align:top;}
+  td input[type=text]{width:100%;background:var(--panel-2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:12.5px;padding:5px 7px;}
+  td input[type=text]:focus{outline:none;border-color:var(--teal);}
+  .ok{color:var(--teal);} .bad{color:var(--red);} .warn{color:var(--amber);} .faint{color:var(--text-faint);}
+  .small{font-size:11px;line-height:1.5;}
+  .log{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--text-dim);white-space:pre-wrap;max-height:200px;overflow:auto;}
+  .note{margin-top:14px;padding:10px 12px;border-radius:6px;font-size:12.5px;line-height:1.55;background:#0F1A18;border:1px solid #1E3A33;color:#9FE3D7;}
+  .note b{color:var(--text);}
+  footer{margin-top:36px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-faint);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Batch song converter</div>
+  <h1>Row<span>Hero</span> songs</h1>
+  <div class="sub">Drop in as many <b>Clone Hero song zips</b> as you like (or song folders, or loose <b>.chart / .mid</b> files). Each one is converted to the game's chart <b>.json</b> with exact timing, and its audio stems are mixed into a single <b>.wav</b>. Nothing to fill in: the track, the song's sync delay, the artist, the length and the file name are all worked out for you.</div>
+
+  <div class="panel">
+    <div class="panel-title">01 · Add songs</div>
+    <div class="drop" id="drop">
+      <div class="drop-icon">♫</div>
+      <div class="drop-text"><b>Click to choose files</b> or drag them here.<br>Song <b>.zip</b>s are best: they have the audio and the song.ini. A loose <b>.chart</b> or <b>.mid</b> works too (drop its song.ini alongside it to get the delay and artist), but then there is no audio to make the .wav from.</div>
+      <input type="file" id="fileInput" multiple accept=".zip,.chart,.mid,.midi,.ini,.opus,.ogg,.mp3,.wav,.flac,.m4a">
+      <input type="file" id="folderInput" webkitdirectory multiple>
+    </div>
+    <div class="row-actions">
+      <button id="folderBtn">Choose a folder of songs…</button>
+      <button id="clearBtn">Clear list</button>
+    </div>
+  </div>
+
+  <div class="panel" id="listPanel" style="display:none;">
+    <div class="panel-title">02 · Songs <span class="faint">(the file name is editable -- it has to match the song's name in the game)</span></div>
+    <table>
+      <thead><tr><th style="width:26%;">Game file name</th><th>From</th><th>Chart</th><th>Audio</th><th>Status</th></tr></thead>
+      <tbody id="songBody"></tbody>
+    </table>
+    <div class="row-actions">
+      <label class="opt"><input type="checkbox" id="audioCheck" checked> Make the .wav from the song's audio</label>
+    </div>
+    <div class="row-actions">
+      <label class="opt">Shortest gap between two notes in the same lane
+        <input type="number" id="gapInput" value="0" step="0.05" min="0" style="width:80px;background:var(--panel-2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--mono);padding:5px 7px;"> seconds</label>
+    </div>
+    <div class="note" style="margin-top:8px;">Guitar charts often run fast streams on one fret, and folding orange onto R makes more of them. <b>Leave this at 0 for the game.</b> The game now applies this limit itself as each song loads, with its own value per regatta and boss song (NoteGap.cs), and Expert mode in Options turns it off to play every note. A chart converted with a gap here has those notes gone for good, so Expert mode cannot bring them back. Set it above 0 only if you want a chart thinned before it ever reaches the game: any note that comes sooner than this after the previous note <b>in the same lane</b> is then left out of the file. Notes in other lanes and chords are not affected.</div>
+    <div class="row-actions">
+      <button class="primary" id="saveFolderBtn" disabled>Save straight into my Songs folder…</button>
+      <button id="zipBtn" disabled>Download everything as one .zip</button>
+    </div>
+    <div class="note">The game's Songs folder is <b>%USERPROFILE%\AppData\LocalLow\lfairclo\RowHero\Songs</b>. "Save straight into" works in Chrome and Edge; pick that folder and the files are written into it, replacing any of the same name. The game uses a song's .wav before its .mp3, so old .mp3s can stay.</div>
+    <div class="log" id="log"></div>
+  </div>
+
+  <footer>Runs entirely in your browser. Nothing is uploaded anywhere.</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+
+// ------------------------------------------------------------------ settings
+// Fixed for every song, matching what the game was tuned with.
+const TIMING_RESOLUTION = 960;   // ticks per beat: about +-0.3 ms per note
+const NOTE_DISTANCE = 9.2;
+const SONG_SPEED = 4.6;
+const FRET_TO_LANE = ['Q','W','E','R','R'];   // green, red, yellow, blue, orange (orange folds onto R)
+
+// The game's song file names. A song is matched to one of these so its files
+// come out with the name the game looks for.
+const GAME_SONGS = [
+  'A horse with no name','Chamber Of Reflection','Down Under','Feel good inc',
+  'Could you be loved','Gold','Californication','Brazil',
+  'Longview','Highwayman','Tangerine','Little black submarines',
+  'Fortunate son','Lady hear me tonight','Move on up','Seventeen going under','The chain',
+  'Freebird','All along the watchtower','Ramble on',
+];
+
+const AUDIO_EXT = /\.(opus|ogg|mp3|wav|m4a|flac|aac|weba)$/i;
+// Clone Hero stems that are not part of the music
+const NON_MUSIC = /^(preview|crowd)\./i;
+
+let songs = [];   // {id, source, files:{chart|mid, ini, audio:[{name,data}]}, name, result, status}
+let nextId = 1;
+
+// ------------------------------------------------------------------ input
+const drop = $('drop');
+drop.addEventListener('click', () => $('fileInput').click());
+['dragenter','dragover'].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add('drag'); }));
+['dragleave','drop'].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove('drag'); }));
+drop.addEventListener('drop', async ev => {
+  const items = ev.dataTransfer.items;
+  const files = [];
+  if (items && items.length && items[0].webkitGetAsEntry){
+    const entries = [];
+    for (const it of items){ const en = it.webkitGetAsEntry(); if (en) entries.push(en); }
+    for (const en of entries) await walkEntry(en, '', files);
+  } else {
+    for (const f of ev.dataTransfer.files) files.push({ file: f, path: f.name });
+  }
+  addFiles(files);
+});
+$('fileInput').addEventListener('change', e => { addFiles(Array.from(e.target.files).map(f => ({ file: f, path: f.name }))); e.target.value = ''; });
+$('folderBtn').addEventListener('click', () => $('folderInput').click());
+$('folderInput').addEventListener('change', e => { addFiles(Array.from(e.target.files).map(f => ({ file: f, path: f.webkitRelativePath || f.name }))); e.target.value = ''; });
+$('clearBtn').addEventListener('click', () => { songs = []; render(); $('log').textContent = ''; });
+$('gapInput').addEventListener('change', () => {
+  for (const s of songs) if (s.status !== 'mixing'){ s.status = 'pending'; convert(s); }
+  render();
+});
+
+function walkEntry(entry, prefix, out){
+  return new Promise(resolve => {
+    if (entry.isFile){
+      entry.file(f => { out.push({ file: f, path: prefix + f.name }); resolve(); }, () => resolve());
+    } else if (entry.isDirectory){
+      const reader = entry.createReader();
+      const all = [];
+      const readBatch = () => reader.readEntries(async batch => {
+        if (!batch.length){
+          for (const child of all) await walkEntry(child, prefix + entry.name + '/', out);
+          resolve();
+        } else { all.push(...batch); readBatch(); }
+      }, () => resolve());
+      readBatch();
+    } else resolve();
+  });
+}
+
+function dirOf(path){ const i = path.lastIndexOf('/'); return i < 0 ? '' : path.slice(0, i); }
+function baseOf(path){ const i = path.lastIndexOf('/'); return i < 0 ? path : path.slice(i + 1); }
+
+async function addFiles(list){
+  log('Reading ' + list.length + ' file(s)...');
+  // Group loose files by the folder they came from. Zips are opened and
+  // grouped by the folders inside them -- one zip can hold several songs.
+  const groups = new Map();   // key -> {source, files:[{name, data}]}
+  const add = (key, source, name, data) => {
+    if (!groups.has(key)) groups.set(key, { source, files: [] });
+    groups.get(key).files.push({ name, data });
+  };
+
+  for (const { file, path } of list){
+    if (/\.zip$/i.test(file.name)){
+      try {
+        const entries = await parseZip(await file.arrayBuffer());
+        for (const en of entries){
+          const d = dirOf(en.name);
+          add(file.name + '::' + d, file.name + (d ? ' / ' + d : ''), baseOf(en.name), en.data);
+        }
+      } catch (err){ log('✕ ' + file.name + ': could not open the zip (' + err.message + ')'); }
+    } else {
+      const d = dirOf(path);
+      add('dir::' + d, d || '(loose files)', baseOf(path), await file.arrayBuffer());
+    }
+  }
+
+  let added = 0;
+  for (const [, g] of groups){
+    const charts = g.files.filter(f => /^notes\.(chart|mid|midi)$/i.test(f.name) || /\.(chart|mid|midi)$/i.test(f.name));
+    if (!charts.length) continue;
+    const ini = g.files.find(f => /^song\.ini$/i.test(f.name));
+    const audio = g.files.filter(f => AUDIO_EXT.test(f.name) && !NON_MUSIC.test(f.name));
+    // A folder normally has one chart. Loose files may have several: each
+    // becomes its own song, sharing whatever song.ini and audio came along.
+    for (const chart of charts){
+      const s = { id: nextId++, source: charts.length > 1 ? g.source + ' / ' + chart.name : g.source,
+                  chart, ini, audio, name: '', status: 'pending', result: null, message: '' };
+      songs.push(s);
+      added++;
+      convert(s);
+    }
+  }
+  log(added ? 'Added ' + added + ' song(s).' : 'No .chart or .mid found in what was added.');
+  render();
+}
+
+// ------------------------------------------------------------------ convert
+function convert(s){
+  try {
+    const iniInfo = s.ini ? parseIni(new TextDecoder('utf-8').decode(s.ini.data)) : {};
+    const isMid = /\.(mid|midi)$/i.test(s.chart.name);
+    const parsed = isMid ? parseMidi(s.chart.data) : parseChart(decodeText(s.chart.data));
+
+    const track = pickTrack(parsed.tracks);
+    if (!track) throw new Error('no guitar/bass/drums notes in the chart');
+
+    // Sync delay: the .chart's Offset (seconds) and song.ini's delay (ms) both
+    // push the notes later against the audio, the way Clone Hero applies them.
+    const iniDelay = parseFloat(iniInfo.delay || '0') || 0;
+    const delaySec = (iniDelay / 1000) + (parsed.offset || 0);
+
+    const tickToSec = makeTickToSeconds(parsed.tempoMap, parsed.resolution);
+    const notes = [];
+    for (const n of track.notes){
+      if (n.fret === 7) continue;               // open notes have no lane
+      notes.push({ time: tickToSec(n.tick) + delaySec, note: FRET_TO_LANE[n.fret] });
+    }
+    if (!notes.length) throw new Error('the chosen track has no playable notes');
+    notes.sort((a, b) => a.time - b.time);
+
+    // Same-lane limit. Also removes exact duplicates (blue + orange in the
+    // same chord both land on R), which the game can only ever hit one of.
+    const gap = Math.max(0, parseFloat($('gapInput').value) || 0);
+    const lastInLane = {};
+    const kept = [];
+    for (const n of notes){
+      const last = lastInLane[n.note];
+      if (last !== undefined && (n.time - last) < Math.max(gap, 0.001) - 1e-6) continue;
+      lastInLane[n.note] = n.time;
+      kept.push(n);
+    }
+    const removed = notes.length - kept.length;
+    notes.length = 0;
+    notes.push(...kept);
+
+    const lastTick = track.notes[track.notes.length - 1].tick;
+    const bpm = round(averageBpm(parsed.tempoMap, parsed.resolution, lastTick), 3);
+    const spt = (60 / bpm) / TIMING_RESOLUTION;
+    const intro = notes[0].time;
+
+    const out = {
+      BPM: bpm,
+      timingResolution: TIMING_RESOLUTION,
+      noteDistance: NOTE_DISTANCE,
+      songspeed: SONG_SPEED,
+      introlength: round(intro, 6),
+      timings: notes.map(n => Math.round((n.time - intro) / spt)),
+      notes: notes.map(n => n.note),
+    };
+    if (iniInfo.artist) out.artist = iniInfo.artist;
+    if (iniInfo.song_length && parseFloat(iniInfo.song_length) > 0) out.length = round(parseFloat(iniInfo.song_length) / 1000, 3);
+
+    s.result = out;
+    s.trackName = track.name;
+    s.delayMs = Math.round(delaySec * 1000);
+    s.name = s.name || gameName(iniInfo.name || chartSongName(parsed) || (/^notes\./i.test(s.chart.name) ? s.source : s.chart.name));
+    s.status = 'ready';
+    s.message = notes.length + ' notes' + (removed ? ' (' + removed + ' too fast, left out)' : '') + ' · ' + track.name + (s.delayMs ? ' · delay ' + s.delayMs + 'ms' : '');
+  } catch (err){
+    s.status = 'error';
+    s.message = err.message;
+    s.name = s.name || gameName(s.source);
+  }
+}
+
+function round(v, dp){ const m = Math.pow(10, dp); return Math.round(v * m) / m; }
+
+function decodeText(buf){
+  let t = new TextDecoder('utf-8').decode(buf);
+  if (t.charCodeAt(0) === 0xFEFF) t = t.slice(1);
+  return t;
+}
+
+function parseIni(text){
+  const info = {};
+  for (const line of text.split(/\r?\n/)){
+    const m = line.match(/^\s*([A-Za-z0-9_]+)\s*=\s*(.*)$/);
+    if (m) info[m[1].toLowerCase()] = m[2].trim();
+  }
+  return info;
+}
+
+function chartSongName(parsed){ return parsed.songName || ''; }
+
+// Best-match the song to the game's own file name, else a tidy version of
+// the song's name.
+function normal(s){ return s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]/g, ''); }
+function gameName(title){
+  const t = normal(title);
+  let best = null;
+  for (const g of GAME_SONGS){
+    const k = normal(g);
+    if (t === k) return g;
+    if ((t.includes(k) || k.includes(t)) && (!best || k.length > normal(best).length)) best = g;
+  }
+  if (best) return best;
+  return title.replace(/\.(zip|chart|mid|midi)$/i, '').replace(/[\\/:*?"<>|]/g, '').trim() || 'song';
+}
+
+// Expert guitar if there is one, else the hardest of whatever is there.
+function pickTrack(tracks){
+  const names = Object.keys(tracks).filter(n => tracks[n].length);
+  if (!names.length) return null;
+  const score = n => {
+    let s = 0;
+    if (/expert/i.test(n)) s += 400; else if (/hard/i.test(n)) s += 300; else if (/medium/i.test(n)) s += 200; else if (/easy/i.test(n)) s += 100;
+    if (/single|guitar/i.test(n) && !/coop|double|rhythm|bass/i.test(n)) s += 50;
+    else if (/bass|double/i.test(n)) s += 20;
+    else if (/drum/i.test(n)) s += 0;
+    else s += 10;
+    return s;
+  };
+  names.sort((a, b) => score(b) - score(a));
+  const name = names[0];
+  return { name, notes: tracks[name].slice().sort((a, b) => a.tick - b.tick) };
+}
+
+function makeTickToSeconds(tempoMap, resolution){
+  // Precompute the time at each tempo change so every lookup is cheap.
+  const starts = [];
+  let t = 0;
+  for (let i = 0; i < tempoMap.length; i++){
+    starts.push(t);
+    const next = tempoMap[i + 1];
+    if (next) t += (next.tick - tempoMap[i].tick) * (60 / tempoMap[i].bpm) / resolution;
+  }
+  return tick => {
+    let lo = 0, hi = tempoMap.length - 1;
+    while (lo < hi){ const mid = (lo + hi + 1) >> 1; if (tempoMap[mid].tick <= tick) lo = mid; else hi = mid - 1; }
+    const seg = tempoMap[lo];
+    return starts[lo] + (tick - seg.tick) * (60 / seg.bpm) / resolution;
+  };
+}
+
+function averageBpm(tempoMap, resolution, lastTick){
+  let beats = 0, time = 0;
+  for (let i = 0; i < tempoMap.length; i++){
+    const cur = tempoMap[i];
+    if (cur.tick >= lastTick) break;
+    const end = tempoMap[i + 1] ? Math.min(tempoMap[i + 1].tick, lastTick) : lastTick;
+    const b = Math.max(0, end - cur.tick) / resolution;
+    beats += b; time += b * (60 / cur.bpm);
+  }
+  return time > 0 ? beats * 60 / time : (tempoMap[0] ? tempoMap[0].bpm : 120);
+}
+
+// ---------- .chart
+function parseChart(text){
+  const lines = text.split(/\r?\n/);
+  const sections = {};
+  for (let i = 0; i < lines.length; i++){
+    const h = lines[i].match(/^\s*\[([A-Za-z0-9_]+)\]\s*$/);
+    if (!h) continue;
+    let j = i + 1;
+    while (j < lines.length && lines[j].trim() !== '{') j++;
+    const body = [];
+    let k = j + 1;
+    while (k < lines.length && lines[k].trim() !== '}'){ body.push(lines[k]); k++; }
+    sections[h[1]] = body;
+    i = k;
+  }
+  let resolution = 192, offset = 0, songName = '';
+  for (const l of sections['Song'] || []){
+    let m;
+    if ((m = l.match(/^\s*Resolution\s*=\s*(\d+)/))) resolution = parseInt(m[1]);
+    if ((m = l.match(/^\s*Offset\s*=\s*(-?[\d.]+)/))) offset = parseFloat(m[1]) || 0;
+    if ((m = l.match(/^\s*Name\s*=\s*"?(.*?)"?\s*$/))) songName = m[1];
+  }
+  const tempoMap = [];
+  for (const l of sections['SyncTrack'] || []){
+    const m = l.match(/^\s*(\d+)\s*=\s*B\s*(\d+)/);
+    if (m) tempoMap.push({ tick: parseInt(m[1]), bpm: parseInt(m[2]) / 1000 });
+  }
+  finishTempo(tempoMap);
+
+  const tracks = {};
+  for (const name of Object.keys(sections)){
+    if (name === 'Song' || name === 'SyncTrack' || name === 'Events') continue;
+    const list = [];
+    for (const l of sections[name]){
+      const m = l.match(/^\s*(\d+)\s*=\s*N\s*(\d+)\s*(\d+)/);
+      if (!m) continue;
+      const fret = parseInt(m[2]);
+      if ((fret >= 0 && fret <= 4) || fret === 7) list.push({ tick: parseInt(m[1]), fret });
+    }
+    if (list.length) tracks[name] = list;
+  }
+  return { resolution, offset, tempoMap, tracks, songName };
+}
+
+function finishTempo(tempoMap){
+  tempoMap.sort((a, b) => a.tick - b.tick);
+  for (let i = tempoMap.length - 1; i > 0; i--) if (tempoMap[i].tick === tempoMap[i - 1].tick) tempoMap.splice(i - 1, 1);
+  if (!tempoMap.length || tempoMap[0].tick !== 0) tempoMap.unshift({ tick: 0, bpm: 120 });
+}
+
+// ---------- .mid
+const MIDI_DIFF = { Easy: 60, Medium: 72, Hard: 84, Expert: 96 };
+function parseMidi(buffer){
+  const view = new DataView(buffer);
+  let pos = 0;
+  const u8 = () => view.getUint8(pos++);
+  const u16 = () => { const v = view.getUint16(pos); pos += 2; return v; };
+  const u32 = () => { const v = view.getUint32(pos); pos += 4; return v; };
+  const tag = () => String.fromCharCode(u8(), u8(), u8(), u8());
+  const vlen = () => { let v = 0, b; do { b = u8(); v = (v << 7) | (b & 0x7f); } while (b & 0x80); return v; };
+
+  if (tag() !== 'MThd') throw new Error('not a MIDI file');
+  const hlen = u32(); const hend = pos + hlen;
+  u16(); const ntracks = u16(); const division = u16();
+  pos = hend;
+  if (division & 0x8000) throw new Error('SMPTE MIDI is not supported');
+
+  const tempoMap = [];
+  const tracks = {};
+  for (let t = 0; t < ntracks; t++){
+    if (tag() !== 'MTrk') throw new Error('malformed MIDI file');
+    const len = u32(); const end = pos + len;
+    let time = 0, running = null, name = null;
+    const ons = [];
+    while (pos < end){
+      time += vlen();
+      let st = view.getUint8(pos);
+      if (st & 0x80){ pos++; if (st < 0xF0) running = st; } else st = running;
+      if (st === 0xFF){
+        const type = u8(); const l = vlen(); const ds = pos; pos += l;
+        if (type === 0x51 && l === 3){
+          const mpqn = (view.getUint8(ds) << 16) | (view.getUint8(ds + 1) << 8) | view.getUint8(ds + 2);
+          tempoMap.push({ tick: time, bpm: 60000000 / mpqn });
+        } else if (type === 0x03 && name === null){
+          let s = ''; for (let x = 0; x < l; x++) s += String.fromCharCode(view.getUint8(ds + x));
+          name = s;
+        }
+      } else if (st === 0xF0 || st === 0xF7){ pos += vlen(); }
+      else if (st == null){ break; }
+      else {
+        const cmd = st & 0xF0;
+        const d1 = u8(); const d2 = (cmd === 0xC0 || cmd === 0xD0) ? null : u8();
+        if (cmd === 0x90 && d2 > 0) ons.push({ tick: time, note: d1 });
+      }
+    }
+    pos = end;
+    if (!name || !(/^PART (GUITAR|BASS|DRUMS|KEYS|RHYTHM|GUITAR COOP)$/i.test(name) || /^T1 GEMS$/i.test(name))) continue;
+    for (const diff of Object.keys(MIDI_DIFF)){
+      const base = MIDI_DIFF[diff];
+      const list = [];
+      for (const ev of ons){ const f = ev.note - base; if (f >= 0 && f <= 4) list.push({ tick: ev.tick, fret: f }); }
+      if (list.length) tracks[name + ' ' + diff] = list;
+    }
+  }
+  finishTempo(tempoMap);
+  return { resolution: division, offset: 0, tempoMap, tracks, songName: '' };
+}
+
+// ------------------------------------------------------------------ audio
+let audioCtx = null;
+async function mixAudio(s){
+  if (!s.audio.length) return null;
+  audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  const buffers = [];
+  for (const a of s.audio){
+    try { buffers.push(await audioCtx.decodeAudioData(a.data.slice(0))); }
+    catch (err){ log('  ' + s.name + ': skipped ' + a.name + ' (could not decode)'); }
+  }
+  if (!buffers.length) return null;
+  // All Clone Hero stems start together, so this is a straight mixdown.
+  const rate = Math.max(...buffers.map(b => b.sampleRate));
+  const channels = Math.max(2, ...buffers.map(b => b.numberOfChannels));
+  const length = Math.max(...buffers.map(b => Math.ceil(b.duration * rate)));
+  const ctx = new OfflineAudioContext(channels, length, rate);
+  for (const b of buffers){ const src = ctx.createBufferSource(); src.buffer = b; src.connect(ctx.destination); src.start(0); }
+  const rendered = await ctx.startRendering();
+  let peak = 0;
+  for (let c = 0; c < rendered.numberOfChannels; c++){ const d = rendered.getChannelData(c); for (let i = 0; i < d.length; i++){ const v = Math.abs(d[i]); if (v > peak) peak = v; } }
+  if (peak > 1){ const k = 0.98 / peak; for (let c = 0; c < rendered.numberOfChannels; c++){ const d = rendered.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] *= k; } }
+  return { wav: toWav(rendered), duration: rendered.duration };
+}
+
+function toWav(buffer){
+  const ch = buffer.numberOfChannels, rate = buffer.sampleRate, n = buffer.length;
+  const size = n * ch * 2;
+  const out = new ArrayBuffer(44 + size); const v = new DataView(out);
+  const str = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  str(0, 'RIFF'); v.setUint32(4, 36 + size, true); str(8, 'WAVE'); str(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, ch, true);
+  v.setUint32(24, rate, true); v.setUint32(28, rate * ch * 2, true); v.setUint16(32, ch * 2, true); v.setUint16(34, 16, true);
+  str(36, 'data'); v.setUint32(40, size, true);
+  const data = []; for (let c = 0; c < ch; c++) data.push(buffer.getChannelData(c));
+  let o = 44;
+  for (let i = 0; i < n; i++) for (let c = 0; c < ch; c++){
+    const x = Math.max(-1, Math.min(1, data[c][i]));
+    v.setInt16(o, x < 0 ? x * 0x8000 : x * 0x7FFF, true); o += 2;
+  }
+  return out;
+}
+
+// ------------------------------------------------------------------ output
+function ready(){ return songs.filter(s => s.status === 'ready' || s.status === 'saved'); }
+
+// Yields [{name, data}] for one song at a time, so a whole setlist of .wavs
+// is never held in memory at once when saving to a folder.
+async function filesFor(s, withAudio){
+  const json = Object.assign({}, s.result);
+  const files = [];
+  if (withAudio && s.audio.length){
+    setStatus(s, 'mixing', 'mixing audio…');
+    const mixed = await mixAudio(s);
+    if (mixed){
+      if (json.length === undefined) json.length = round(mixed.duration, 3);
+      files.push({ name: s.name + '.wav', data: mixed.wav });
+    }
+  }
+  files.unshift({ name: s.name + '.json', data: new TextEncoder().encode(JSON.stringify(json, null, 2)) });
+  return files;
+}
+
+$('saveFolderBtn').addEventListener('click', async () => {
+  if (!window.showDirectoryPicker){ alert('Your browser cannot write into a folder. Use Chrome or Edge, or download the .zip instead.'); return; }
+  let dir;
+  try { dir = await window.showDirectoryPicker({ mode: 'readwrite' }); } catch (e){ return; }
+  const withAudio = $('audioCheck').checked;
+  setBusy(true);
+  for (const s of ready()){
+    try {
+      for (const f of await filesFor(s, withAudio)){
+        const h = await dir.getFileHandle(f.name, { create: true });
+        const w = await h.createWritable(); await w.write(f.data); await w.close();
+      }
+      setStatus(s, 'saved', 'saved');
+      log('✓ ' + s.name);
+    } catch (err){ setStatus(s, 'error', err.message); log('✕ ' + s.name + ': ' + err.message); }
+  }
+  setBusy(false);
+  log('Done.');
+});
+
+$('zipBtn').addEventListener('click', async () => {
+  const withAudio = $('audioCheck').checked;
+  setBusy(true);
+  const entries = [];
+  for (const s of ready()){
+    try { for (const f of await filesFor(s, withAudio)) entries.push(f); setStatus(s, 'saved', 'in zip'); }
+    catch (err){ setStatus(s, 'error', err.message); }
+  }
+  try {
+    const blob = makeZip(entries);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'RowHero songs.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    log('Downloaded RowHero songs.zip (' + entries.length + ' files). Unzip it into the Songs folder.');
+  } catch (err){ log('✕ Could not build the zip: ' + err.message + ' -- try "Save straight into" instead.'); }
+  setBusy(false);
+});
+
+function setBusy(b){
+  $('saveFolderBtn').disabled = b || !ready().length;
+  $('zipBtn').disabled = b || !ready().length;
+}
+
+function setStatus(s, status, message){ s.status = status; s.message = message; render(); }
+
+// ---------- zip writer (stored, no compression -- audio does not compress anyway)
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++){ let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(bytes){ let c = 0xFFFFFFFF; for (let i = 0; i < bytes.length; i++) c = CRC[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function makeZip(files){
+  const parts = [], central = [];
+  let offset = 0;
+  for (const f of files){
+    const data = new Uint8Array(f.data instanceof ArrayBuffer ? f.data : f.data.buffer);
+    const name = new TextEncoder().encode(f.name);
+    const crc = crc32(data);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true);
+    lh.setUint32(14, crc, true); lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true);
+    lh.setUint16(26, name.length, true);
+    parts.push(lh.buffer, name, data);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true);
+    ch.setUint32(16, crc, true); ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true);
+    ch.setUint16(28, name.length, true); ch.setUint32(42, offset, true);
+    central.push(ch.buffer, name);
+    offset += 30 + name.length + data.length;
+  }
+  const cdSize = central.reduce((n, p) => n + p.byteLength, 0);
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true);
+  end.setUint32(12, cdSize, true); end.setUint32(16, offset, true);
+  return new Blob([...parts, ...central, end.buffer], { type: 'application/zip' });
+}
+
+// ---------- zip reader
+async function inflateRaw(bytes){
+  const ds = new DecompressionStream('deflate-raw');
+  return await new Response(new Blob([bytes]).stream().pipeThrough(ds)).arrayBuffer();
+}
+async function parseZip(buffer){
+  const view = new DataView(buffer), bytes = new Uint8Array(buffer);
+  let eocd = -1;
+  for (let i = bytes.length - 22; i >= Math.max(0, bytes.length - 65557); i--) if (view.getUint32(i, true) === 0x06054b50){ eocd = i; break; }
+  if (eocd < 0) throw new Error('not a zip file');
+  const count = view.getUint16(eocd + 10, true);
+  let pos = view.getUint32(eocd + 16, true);
+  const out = [];
+  for (let i = 0; i < count; i++){
+    if (view.getUint32(pos, true) !== 0x02014b50) throw new Error('damaged zip');
+    const method = view.getUint16(pos + 10, true), csize = view.getUint32(pos + 20, true);
+    const nlen = view.getUint16(pos + 28, true), xlen = view.getUint16(pos + 30, true), clen = view.getUint16(pos + 32, true);
+    const lho = view.getUint32(pos + 42, true);
+    const name = new TextDecoder('utf-8').decode(bytes.subarray(pos + 46, pos + 46 + nlen));
+    pos += 46 + nlen + xlen + clen;
+    if (name.endsWith('/')) continue;
+    const start = lho + 30 + view.getUint16(lho + 26, true) + view.getUint16(lho + 28, true);
+    const raw = bytes.subarray(start, start + csize);
+    let data;
+    if (method === 0) data = raw.slice().buffer;
+    else if (method === 8) data = await inflateRaw(raw);
+    else continue;
+    out.push({ name, data });
+  }
+  return out;
+}
+
+// ------------------------------------------------------------------ render
+function render(){
+  $('listPanel').style.display = songs.length ? 'block' : 'none';
+  const body = $('songBody');
+  body.innerHTML = '';
+  for (const s of songs){
+    const tr = document.createElement('tr');
+    const nameTd = document.createElement('td');
+    const input = document.createElement('input');
+    input.type = 'text'; input.value = s.name;
+    input.addEventListener('change', () => { s.name = input.value.replace(/[\\/:*?"<>|]/g, '').trim() || s.name; input.value = s.name; renderMatch(); });
+    nameTd.appendChild(input);
+    const match = document.createElement('div');
+    match.className = 'small';
+    const renderMatch = () => {
+      const known = GAME_SONGS.some(g => g.toLowerCase() === s.name.toLowerCase());
+      match.className = 'small ' + (known ? 'ok' : 'warn');
+      match.textContent = known ? 'matches a game song' : 'not one of the game\'s song names';
+    };
+    renderMatch();
+    nameTd.appendChild(match);
+
+    const fromTd = document.createElement('td'); fromTd.className = 'small'; fromTd.textContent = s.source;
+    const chartTd = document.createElement('td'); chartTd.className = 'small';
+    chartTd.textContent = s.chart.name + (s.ini ? ' + song.ini' : ' (no song.ini)');
+    const audioTd = document.createElement('td'); audioTd.className = 'small';
+    audioTd.textContent = s.audio.length ? s.audio.map(a => a.name).join(', ') : 'none';
+    if (!s.audio.length) audioTd.classList.add('warn');
+    const statusTd = document.createElement('td'); statusTd.className = 'small ' + (s.status === 'error' ? 'bad' : s.status === 'saved' ? 'ok' : s.status === 'mixing' ? 'warn' : '');
+    statusTd.textContent = (s.status === 'ready' ? 'ready · ' : s.status === 'error' ? '✕ ' : s.status === 'saved' ? '✓ ' : '') + s.message;
+    tr.append(nameTd, fromTd, chartTd, audioTd, statusTd);
+    body.appendChild(tr);
+  }
+  setBusy(false);
+}
+
+function log(msg){ const el = $('log'); el.textContent += (el.textContent ? '\n' : '') + msg; el.scrollTop = el.scrollHeight; }
+})();
+</script>
+</body>
+</html>
