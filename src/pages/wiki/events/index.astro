@@ -1,0 +1,32 @@
+---
+// Events: the four regattas of Career mode, in season order.
+import WikiLayout from "../../../layouts/WikiLayout.astro";
+import { url, eventUrl, wikiData } from "../../../lib/site";
+
+const { events } = await wikiData();
+---
+
+<WikiLayout title="Events | Row Hero Wiki" description="The four regattas of Row Hero's Career mode and the real races behind them.">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <ol><li><a href={url("wiki/")}>Wiki</a></li></ol>
+  </nav>
+  <h1 class="page-title">Events</h1>
+  <p>Career mode is one season of four regattas, raced in order. Win one to unlock the next.</p>
+  <ol class="venues">
+    {
+      events.map((e) => (
+        <li>
+          <a class="venue" href={eventUrl(e.id)}>
+            <img src={url(`img/${e.data.image}`)} alt="" width="384" height="96" />
+            <span class="venue-body">
+              <span class="venue-no">{String(e.data.order).padStart(2, "0")}{e.data.order === events.length && " · Finale"}</span>
+              <span class="venue-name">{e.data.name}</span>
+              <span class="venue-real">{e.data.realName}</span>
+              <span class="venue-meta">{e.data.month} · {e.data.raceType}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</WikiLayout>

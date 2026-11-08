@@ -1,21 +1,18 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
-<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<title>Row Hero Terms of Service</title>
-<meta name="description" content="Row Hero Terms of Service">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Archivo:wght@400;500;700;800&display=swap">
-<link rel="stylesheet" href="site.css">
-</head>
-<body class="doc-page">
+---
+import Base from "../layouts/Base.astro";
+import Menubar from "../components/Menubar.astro";
+import Footer from "../components/Footer.astro";
+import { url } from "../lib/site";
+---
 
-<nav class="menubar" aria-label="Main"><div class="wrap"><ul><li><a href="index.html">Home</a></li><li class="wide"><a class="buy" href="index.html#get-started">Download</a></li><li class="push"><a href="privacy.html">Privacy</a></li><li><a href="terms.html" aria-current="page">Terms</a></li><li class="wide"><a href="mailto:lfairowl12@gmail.com">Contact</a></li></ul></div></nav>
-<header class="doc-head"><a href="index.html"><img class="px" src="logo.png" alt="Row Hero home" width="1296" height="828"></a></header>
+<Base
+  title="Row Hero Terms of Service"
+  description="Row Hero Terms of Service"
+  bodyClass="doc-page"
+  fonts="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Archivo:wght@400;500;700;800&display=swap"
+>
+<Menubar current="terms" />
+<header class="doc-head"><a href={url("")}><img class="px" src={url("logo.png")} alt="Row Hero home" width="1296" height="828"></a></header>
 <main class="wrap doc"><article>
 <h1>Terms of service</h1>
 <p class="date">Last updated 5 November 2026</p>
@@ -60,6 +57,5 @@
 <h2>Changes and law</h2>
 <p>We may update these terms. If we do, we'll change the date at the top of this page, and continuing to use the game means you accept the new terms. These terms are governed by the laws of England and Wales.</p>
 </article></main>
-<footer class="site-footer"><div class="wrap"><span>Row Hero · Free for Windows</span><nav aria-label="Footer"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:lfairowl12@gmail.com">Contact</a></nav></div></footer>
-</body>
-</html>
+<Footer />
+</Base>

@@ -1,0 +1,33 @@
+---
+// Wiki home: the four sections as a 2×2 grid of tiles, each with its silhouette.
+import WikiLayout from "../../layouts/WikiLayout.astro";
+import Silhouette from "../../components/wiki/Silhouette.astro";
+import { SECTIONS, wikiData } from "../../lib/site";
+
+const { characters, events, achievements, songs } = await wikiData();
+const counts = {
+  characters: `${characters.length} rowers`,
+  events: `${events.length} regattas`,
+  achievements: `${achievements.length} achievements`,
+  songs: `${songs.length} songs`,
+};
+---
+
+<WikiLayout title="Row Hero Wiki" description="Every rower, regatta, achievement and song in Row Hero, the free rowing rhythm game for Windows.">
+  <h1 class="sr-only">Row Hero Wiki</h1>
+  <ul class="hub">
+    {
+      SECTIONS.map((s) => (
+        <li>
+          <a class="hub-tile" href={s.href}>
+            <span class="hub-art">
+              <Silhouette name={s.key} />
+            </span>
+            <span class="hub-name">{s.name}</span>
+            <span class="hub-meta">{counts[s.key]}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</WikiLayout>

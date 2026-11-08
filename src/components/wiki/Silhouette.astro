@@ -1,0 +1,16 @@
+---
+// A section's single-colour pixel silhouette (traced from the game's sprites by scripts/game-data/silhouettes.py).
+// Drawn in currentColor at a whole-pixel scale of about 96px on its long side.
+import shapes from "../../lib/silhouettes.json";
+
+interface Props {
+  name: keyof typeof shapes;
+}
+const { name } = Astro.props;
+const { w, h, d } = shapes[name];
+const scale = Math.round(96 / Math.max(w, h));
+---
+
+<svg class="sil" viewBox={`0 0 ${w} ${h}`} style={`--w: ${w * scale}; --h: ${h * scale}`} shape-rendering="crispEdges" aria-hidden="true">
+  <path fill="currentColor" d={d}></path>
+</svg>

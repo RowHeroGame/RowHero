@@ -1,0 +1,10 @@
+---
+// Difficulty as a four-pip meter plus the word, so it reads at a glance and to a screen reader.
+interface Props {
+  level: "Easy" | "Medium" | "Hard" | "Expert";
+}
+const { level } = Astro.props;
+const filled = ["Easy", "Medium", "Hard", "Expert"].indexOf(level) + 1;
+---
+
+<span class="diff"><span class="pips" aria-hidden="true">{[1, 2, 3, 4].map((n) => <i class={n <= filled ? "on" : undefined} />)}</span>{level}</span>

@@ -1,0 +1,9 @@
+---
+// Category bar at the very bottom of an article.
+interface Props {
+  links: { label: string; href: string }[];
+}
+const { links } = Astro.props;
+---
+
+<p class="cats"><span class="cats-label">Categories</span>{links.map((l) => <a href={l.href}>{l.label}</a>)}</p>

@@ -1,33 +1,38 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
-<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<link rel="canonical" href="https://lfairclo.github.io/theo-game-launcher/">
+---
+import Base from "../layouts/Base.astro";
+import Footer from "../components/Footer.astro";
+import { url, eventUrl, DOWNLOAD_URL } from "../lib/site";
+
+const site = new URL(url(""), Astro.site).href; // https://rowhero.uk/
+// The season, read left to right like a course; each venue opens its wiki page.
+const season = [
+  { id: "head-of-the-charles", name: "Head of the Charles", img: "venue-charles.png", fmt: "Head race" },
+  { id: "head-of-the-river", name: "Head of the River", img: "venue-river.png", fmt: "Head race" },
+  { id: "nat-schools", name: "National Schools", img: "venue-nat.png", fmt: "Side by side" },
+  { id: "henley", name: "Henley", img: "venue-henley.png", fmt: "Side by side" },
+];
+---
+
+<Base title="Row Hero" description="Row Hero: a free rowing rhythm game for Windows. Play in time with the music to haul your crew to victory.">
+<Fragment slot="head">
+<link rel="canonical" href={site}>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Row Hero">
 <meta property="og:title" content="Row Hero: free rowing rhythm game for Windows">
 <meta property="og:description" content="Play in time with the music to haul your crew to victory.">
-<meta property="og:url" content="https://lfairclo.github.io/theo-game-launcher/">
-<meta property="og:image" content="https://lfairclo.github.io/theo-game-launcher/img/og-image.png">
+<meta property="og:url" content={site}>
+<meta property="og:image" content={`${site}img/og-image.png`}>
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Row Hero logo over two crews racing at Henley">
 <meta name="twitter:card" content="summary_large_image">
-<title>Row Hero</title>
-<meta name="description" content="Row Hero: a free rowing rhythm game for Windows. Play in time with the music to haul your crew to victory.">
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Redaction+10:wght@400;700&family=Redaction+35:wght@700&display=swap">
-<link rel="stylesheet" href="site.css">
-<style>
+</Fragment>
+<style is:global>
 /* Order follows a visitor's questions: what is it → what can I do → where do I race → how do I get it */
 
 /* 1 Hero: the boathouse fills the window, the logo floats in the sky */
-.hero { position: relative; height: clamp(560px, 100vh, 940px); height: clamp(560px, 100svh, 940px); overflow: hidden; background: var(--sky) url("background.png") center bottom / cover no-repeat; image-rendering: pixelated; border-bottom: 6px solid var(--river); }
+.hero { position: relative; height: clamp(560px, 100vh, 940px); height: clamp(560px, 100svh, 940px); overflow: hidden; background: var(--sky) url("/background.png") center bottom / cover no-repeat; image-rendering: pixelated; border-bottom: 6px solid var(--river); }
 .hero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(20,42,68,0) 45%, rgba(20,42,68,.55) 100%); pointer-events: none; }
 .hero-inner { position: relative; z-index: 2; display: grid; justify-items: center; gap: 24px; text-align: center; padding-top: clamp(32px, 9vh, 96px); }
 .logo { width: min(560px, 88%); height: auto; image-rendering: pixelated; animation: bob 3.2s ease-in-out infinite; }
@@ -47,9 +52,9 @@ h2 .line { display: inline-block; }  /* break between sentences before breaking 
 h3 { font-family: var(--pixel); font-size: 17px; font-weight: 700; letter-spacing: .02em; line-height: 1.25; margin: 0 0 8px; }
 p { margin: 0 auto 16px; max-width: 65ch; }
 
-/* 2 Gameplay: drop gameplay.mp4 next to this file and it plays; until then the Henley scene shows,
+/* 2 Gameplay: drop gameplay.mp4 into public/ and it plays; until then the Henley scene shows,
    with both crews rowing as you scroll (the still image underneath is the no-JavaScript fallback) */
-.clip { position: relative; aspect-ratio: 16 / 9; margin-top: 32px; background: var(--river) url("img/henley-scene.png") center / cover no-repeat; image-rendering: pixelated; border: 3px solid var(--river); overflow: hidden; }
+.clip { position: relative; aspect-ratio: 16 / 9; margin-top: 32px; background: var(--river) url("/img/henley-scene.png") center / cover no-repeat; image-rendering: pixelated; border: 3px solid var(--river); overflow: hidden; }
 .clip canvas, .clip video { position: absolute; inset: 0; width: 100%; height: 100%; }
 .clip canvas { image-rendering: pixelated; }
 .clip video { display: none; object-fit: cover; }
@@ -63,7 +68,7 @@ p { margin: 0 auto 16px; max-width: 65ch; }
 .features { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 12px; text-wrap: pretty; }
 .features b { color: var(--oar); }
 
-/* 4 The season: one row, read left to right like a course */
+/* 4 The season: one row, read left to right like a course; each venue opens its wiki page */
 .season { list-style: none; padding: 0; margin: 32px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 16px; counter-reset: v; text-align: left; }
 .season li { counter-increment: v; min-width: 0; }
 .season .mark { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -71,9 +76,19 @@ p { margin: 0 auto 16px; max-width: 65ch; }
 .season li:not(:last-child) .mark::after { content: ""; flex: 1; height: 3px; margin-right: -16px; background: repeating-linear-gradient(90deg, var(--river) 0 8px, transparent 8px 14px); }
 .season li:last-child .mark::before { background: var(--oar); color: var(--oar-ink); }
 .season .final { font-family: var(--pixel); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--oar); }
-.season img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; }
-.season strong { display: block; margin-top: 8px; font-size: 18px; line-height: 1.25; }
+.season a { display: block; color: inherit; text-decoration: none; }
+.season img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; transition: transform 100ms ease-out, box-shadow 100ms ease-out; }
+.season strong { display: block; margin-top: 8px; font-size: 18px; line-height: 1.25; text-underline-offset: 4px; }
+.season strong::after { content: " \203A"; color: var(--oar); }
 .season span.fmt { font-family: var(--pixel); font-size: 12px; color: var(--mist); }
+@media (hover: hover) {
+  .season a:hover img { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--oar); }
+  .season a:hover strong { text-decoration: underline; }
+}
+.season a:focus-visible { outline: 3px solid var(--oar); outline-offset: 4px; }
+.season-more { margin: 32px auto 0; text-align: center; }
+.season-more a { display: inline-flex; align-items: center; min-height: 44px; font-family: var(--pixel); font-size: 15px; color: var(--oar); text-underline-offset: 4px; }
+.season-more a:focus-visible { outline: 3px solid var(--oar); outline-offset: 2px; }
 @media (max-width: 767.98px) {
   .season { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .season li:nth-child(2) .mark::after { display: none; }
@@ -99,14 +114,12 @@ p { margin: 0 auto 16px; max-width: 65ch; }
 .reqs dd { margin: 0; min-width: 0; }
 .reqs dd small { display: block; color: var(--mist); font-size: 16px; }
 </style>
-</head>
-<body>
 
 <header class="hero" id="top">
   <div class="hero-inner wrap">
-    <h1 class="title"><img class="logo" src="logo.png" alt="Row Hero" width="1296" height="828"></h1>
+    <h1 class="title"><img class="logo" src={url("logo.png")} alt="Row Hero" width="1296" height="828"></h1>
     <p class="tagline">Row to the beat.</p>
-    <a class="btn" id="dl-top" href="https://github.com/lfairclo/theo-game-launcher/releases/download/installer/RowHeroInstaller.exe" rel="noopener">
+    <a class="btn" id="dl-top" href={DOWNLOAD_URL} rel="noopener">
       <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
       Download for Windows
     </a>
@@ -120,12 +133,12 @@ p { margin: 0 auto 16px; max-width: 65ch; }
       <h2><span class="line">Play in time with the music.</span> <span class="line">Haul your crew to victory.</span></h2>
       <p>Row Hero is a free rowing rhythm game for Windows.</p>
 
-      <!-- Gameplay: save the clip as gameplay.mp4 next to index.html and it plays here (muted, looping).
+      <!-- Gameplay: save the clip as public/gameplay.mp4 and it plays here (muted, looping).
            Until then the Henley scene shows, with both crews rowing as you scroll. -->
       <div class="clip" id="clip">
         <canvas id="scene" width="384" height="216" role="img" aria-label="Two crews racing past the grandstand at Henley"></canvas>
         <video id="gameplay" autoplay muted loop playsinline preload="metadata" aria-label="Row Hero gameplay">
-          <source src="gameplay.mp4" type="video/mp4">
+          <source src={url("gameplay.mp4")} type="video/mp4">
         </video>
         <button class="clip-toggle" id="clip-toggle" type="button">Pause</button>
       </div>
@@ -148,11 +161,14 @@ p { margin: 0 auto 16px; max-width: 65ch; }
     <div class="wrap">
       <h2>The season</h2>
       <ol class="season">
-        <li><div class="mark"></div><img class="px" src="img/venue-charles.png" alt="" width="384" height="96"><strong>Head of the Charles</strong><span class="fmt">Head race</span></li>
-        <li><div class="mark"></div><img class="px" src="img/venue-river.png" alt="" width="384" height="96"><strong>Head of the River</strong><span class="fmt">Head race</span></li>
-        <li><div class="mark"></div><img class="px" src="img/venue-nat.png" alt="" width="384" height="96"><strong>National Schools</strong><span class="fmt">Side by side</span></li>
-        <li><div class="mark"><span class="final">Finale</span></div><img class="px" src="img/venue-henley.png" alt="" width="384" height="96"><strong>Henley</strong><span class="fmt">Side by side</span></li>
+        {season.map((v, i) => (
+          <li>
+            <div class="mark">{i === season.length - 1 && <span class="final">Finale</span>}</div>
+            <a href={eventUrl(v.id)}><img class="px" src={url(`img/${v.img}`)} alt="" width="384" height="96"><strong>{v.name}</strong><span class="fmt">{v.fmt}</span></a>
+          </li>
+        ))}
       </ol>
+      <p class="season-more"><a href={url("wiki/")}>Explore the wiki: every rower, venue and song</a></p>
     </div>
   </section>
 
@@ -160,7 +176,7 @@ p { margin: 0 auto 16px; max-width: 65ch; }
     <div class="wrap">
       <h2>Download</h2>
       <div class="cta">
-        <a class="btn" href="https://github.com/lfairclo/theo-game-launcher/releases/download/installer/RowHeroInstaller.exe" rel="noopener">
+        <a class="btn" href={DOWNLOAD_URL} rel="noopener">
           <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
           Download for Windows
         </a>
@@ -193,14 +209,9 @@ p { margin: 0 auto 16px; max-width: 65ch; }
   </section>
 </main>
 
-<footer class="site-footer">
-  <div class="wrap">
-    <span>Row Hero · Version <span id="game-version">1.0.1</span> · Free</span>
-    <nav aria-label="Footer"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:lfairowl12@gmail.com">Contact</a></nav>
-  </div>
-</footer>
+<Footer version="1.0.1" />
 
-<script>
+<script is:inline>
 // Top download button: let the download start, then bring the install steps and Windows warning into view.
 var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 document.getElementById("dl-top").addEventListener("click", function () {
@@ -274,11 +285,9 @@ video.addEventListener("play", syncToggle); video.addEventListener("pause", sync
 })();
 
 // Show the live game version from the same manifest the launcher reads (falls back to the version in the HTML).
-fetch("https://raw.githubusercontent.com/lfairclo/theo-game-launcher/main/manifest.json", { cache: "no-store" })
+fetch("https://raw.githubusercontent.com/RowHeroGame/RowHero/main/manifest.json", { cache: "no-store" })
   .then(function (r) { return r.ok ? r.json() : null; })
   .then(function (m) { if (m && m.game && m.game.version) document.getElementById("game-version").textContent = m.game.version; })
   .catch(function () {});
 </script>
-
-</body>
-</html>
+</Base>

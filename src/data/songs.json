@@ -1,0 +1,182 @@
+[
+  {
+    "id": "chamber-of-reflection",
+    "title": "Chamber of Reflection",
+    "artist": "Mac DeMarco",
+    "regatta": "head-of-the-charles",
+    "round": 1,
+    "difficulty": "Easy",
+    "notes": 272,
+    "length": 232
+  },
+  {
+    "id": "a-horse-with-no-name",
+    "title": "A Horse With No Name",
+    "artist": "America",
+    "regatta": "head-of-the-charles",
+    "round": 3,
+    "difficulty": "Easy",
+    "notes": 781,
+    "length": 254
+  },
+  {
+    "id": "down-under",
+    "title": "Down Under",
+    "artist": "Men at Work",
+    "regatta": "head-of-the-charles",
+    "round": 5,
+    "difficulty": "Medium",
+    "notes": 593,
+    "length": 232
+  },
+  {
+    "id": "feel-good-inc",
+    "title": "Feel Good Inc.",
+    "artist": "Gorillaz",
+    "regatta": "head-of-the-charles",
+    "round": 6,
+    "difficulty": "Medium",
+    "notes": 456,
+    "length": 223
+  },
+  {
+    "id": "could-you-be-loved",
+    "title": "Could You Be Loved",
+    "artist": "Bob Marley & The Wailers",
+    "regatta": "head-of-the-river",
+    "round": 1,
+    "difficulty": "Medium",
+    "notes": 680,
+    "length": 222
+  },
+  {
+    "id": "brazil",
+    "title": "Brazil",
+    "artist": "Declan McKenna",
+    "regatta": "head-of-the-river",
+    "round": 2,
+    "difficulty": "Medium",
+    "notes": 625,
+    "length": 259
+  },
+  {
+    "id": "gold",
+    "title": "Gold",
+    "artist": "Spandau Ballet",
+    "regatta": "head-of-the-river",
+    "round": 4,
+    "difficulty": "Medium",
+    "notes": 682,
+    "length": 288
+  },
+  {
+    "id": "californication",
+    "title": "Californication",
+    "artist": "Red Hot Chili Peppers",
+    "regatta": "head-of-the-river",
+    "round": 6,
+    "difficulty": "Hard",
+    "notes": 1400,
+    "length": 324
+  },
+  {
+    "id": "longview",
+    "title": "Longview",
+    "artist": "Green Day",
+    "regatta": "nat-schools",
+    "round": 1,
+    "difficulty": "Medium",
+    "notes": 312,
+    "length": 240
+  },
+  {
+    "id": "highwayman",
+    "title": "Highwayman",
+    "artist": "The Highwaymen",
+    "regatta": "nat-schools",
+    "round": 3,
+    "difficulty": "Hard",
+    "notes": 412,
+    "length": 183
+  },
+  {
+    "id": "tangerine",
+    "title": "Tangerine",
+    "artist": "Led Zeppelin",
+    "regatta": "nat-schools",
+    "round": 4,
+    "difficulty": "Hard",
+    "notes": 519,
+    "length": 195
+  },
+  {
+    "id": "little-black-submarines",
+    "title": "Little Black Submarines",
+    "artist": "The Black Keys",
+    "regatta": "nat-schools",
+    "round": 6,
+    "difficulty": "Expert",
+    "notes": 839,
+    "length": 257
+  },
+  {
+    "id": "fortunate-son",
+    "title": "Fortunate Son",
+    "artist": "Creedence Clearwater Revival",
+    "regatta": "henley",
+    "round": 1,
+    "difficulty": "Expert",
+    "notes": 267,
+    "length": 140
+  },
+  {
+    "id": "lady-hear-me-tonight",
+    "title": "Lady (Hear Me Tonight)",
+    "artist": "Modjo",
+    "regatta": "henley",
+    "round": 3,
+    "difficulty": "Expert",
+    "notes": 716,
+    "length": 307
+  },
+  {
+    "id": "move-on-up",
+    "title": "Move on Up (Single Edit)",
+    "artist": "Curtis Mayfield",
+    "regatta": "henley",
+    "round": 4,
+    "difficulty": "Expert",
+    "notes": 516,
+    "length": 168
+  },
+  {
+    "id": "seventeen-going-under",
+    "title": "Seventeen Going Under",
+    "artist": "Sam Fender",
+    "regatta": "henley",
+    "round": 5,
+    "difficulty": "Expert",
+    "notes": 843,
+    "length": 237
+  },
+  {
+    "id": "the-chain",
+    "title": "The Chain",
+    "artist": "Fleetwood Mac",
+    "regatta": "henley",
+    "round": 6,
+    "difficulty": "Expert",
+    "notes": 462,
+    "length": 272
+  },
+  {
+    "id": "la-bamba",
+    "title": "La Bamba",
+    "artist": "Los Lobos",
+    "regatta": null,
+    "round": null,
+    "difficulty": "Hard",
+    "notes": 443,
+    "length": 139
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "characters": {
+    "w": 27,
+    "h": 33,
+    "d": "M8 0h6v1h-6zM7 1h13v1h-13zM7 2h14v1h-14zM6 3h16v1h-16zM6 4h16v1h-16zM5 5h18v1h-18zM5 6h18v1h-18zM5 7h18v1h-18zM5 8h18v1h-18zM5 9h18v1h-18zM5 10h18v1h-18zM5 11h18v1h-18zM5 12h18v1h-18zM5 13h18v1h-18zM5 14h18v1h-18zM5 15h18v1h-18zM5 16h18v1h-18zM5 17h18v1h-18zM5 18h18v1h-18zM5 19h18v1h-18zM6 20h16v1h-16zM7 21h14v1h-14zM7 22h14v1h-14zM8 23h12v1h-12zM4 24h19v1h-19zM4 25h19v1h-19zM3 26h21v1h-21zM3 27h21v1h-21zM2 28h23v1h-23zM2 29h23v1h-23zM1 30h25v1h-25zM1 31h25v1h-25zM0 32h27v1h-27z"
+  },
+  "events": {
+    "w": 13,
+    "h": 14,
+    "d": "M2 0h9v1h-9zM0 1h13v1h-13zM0 2h1v1h-1zM2 2h9v1h-9zM12 2h1v1h-1zM0 3h1v1h-1zM2 3h9v1h-9zM12 3h1v1h-1zM0 4h13v1h-13zM3 5h7v1h-7zM4 6h5v1h-5zM5 7h3v1h-3zM5 8h3v1h-3zM4 9h5v1h-5zM3 10h7v1h-7zM1 11h11v1h-11zM1 12h11v1h-11zM1 13h11v1h-11z"
+  },
+  "achievements": {
+    "w": 16,
+    "h": 16,
+    "d": "M7 0h2v1h-2zM7 1h3v1h-3zM6 2h4v1h-4zM6 3h5v1h-5zM0 4h16v1h-16zM0 5h16v1h-16zM1 6h14v1h-14zM2 7h12v1h-12zM3 8h10v1h-10zM3 9h10v1h-10zM2 10h12v1h-12zM2 11h12v1h-12zM1 12h6v1h-6zM9 12h6v1h-6zM1 13h4v1h-4zM11 13h4v1h-4zM0 14h4v1h-4zM12 14h4v1h-4zM0 15h3v1h-3zM13 15h3v1h-3z"
+  },
+  "songs": {
+    "w": 15,
+    "h": 13,
+    "d": "M4 0h11v1h-11zM4 1h11v1h-11zM4 2h2v1h-2zM13 2h2v1h-2zM4 3h2v1h-2zM13 3h2v1h-2zM4 4h2v1h-2zM13 4h2v1h-2zM4 5h2v1h-2zM13 5h2v1h-2zM4 6h2v1h-2zM13 6h2v1h-2zM4 7h2v1h-2zM13 7h2v1h-2zM4 8h2v1h-2zM13 8h2v1h-2zM1 9h5v1h-5zM10 9h5v1h-5zM0 10h6v1h-6zM9 10h6v1h-6zM0 11h6v1h-6zM9 11h6v1h-6zM1 12h4v1h-4zM10 12h4v1h-4z"
+  }
+}

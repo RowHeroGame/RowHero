@@ -1,0 +1,30 @@
+---
+// One row: details on the left, links on the right.
+import { url, CONTACT } from "../lib/site";
+
+interface Props {
+  /** Game version to show (the home page then swaps in the live one from the launcher manifest). */
+  version?: string;
+}
+const { version } = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    {
+      version ? (
+        <span>
+          Row Hero · Version <span id="game-version">{version}</span> · Free
+        </span>
+      ) : (
+        <span>Row Hero · Free for Windows</span>
+      )
+    }
+    <nav aria-label="Footer">
+      <a href={url("wiki/")}>Wiki</a>
+      <a href={url("privacy.html")}>Privacy</a>
+      <a href={url("terms.html")}>Terms</a>
+      <a href={CONTACT}>Contact</a>
+    </nav>
+  </div>
+</footer>
