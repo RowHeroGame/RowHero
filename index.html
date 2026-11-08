@@ -3,182 +3,282 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="icon" href="logo.png">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="canonical" href="https://lfairclo.github.io/theo-game-launcher/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Row Hero">
+<meta property="og:title" content="Row Hero: free rowing rhythm game for Windows">
+<meta property="og:description" content="Play in time with the music to haul your crew to victory.">
+<meta property="og:url" content="https://lfairclo.github.io/theo-game-launcher/">
+<meta property="og:image" content="https://lfairclo.github.io/theo-game-launcher/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Row Hero logo over two crews racing at Henley">
+<meta name="twitter:card" content="summary_large_image">
 <title>Row Hero</title>
+<meta name="description" content="Row Hero: a free rowing rhythm game for Windows. Play in time with the music to haul your crew to victory.">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Archivo:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Redaction+10:wght@400;700&family=Redaction+35:wght@700&display=swap">
+<link rel="stylesheet" href="site.css">
 <style>
-/* Layout: pixel boathouse hero over the river, then a single column that reads like a race programme */
-:root {
-  --sky: #5d9ee0;
-  --river: #1f3f63;
-  --river-deep: #142a44;
-  --foam: #eef4fb;
-  --mist: #a9c1dc;
-  --oar: #f2c230;        /* single accent: blade yellow */
-  --oar-ink: #1a1405;
-  --line: rgba(238,244,251,.14);
-  --pixel: "Silkscreen", "Courier New", monospace;
-  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  color-scheme: dark;
-}
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--river-deep); color: var(--foam); font-family: var(--body); font-size: 17px; line-height: 1.6; }
-a { color: inherit; }
-.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+/* Order follows a visitor's questions: what is it → what can I do → where do I race → how do I get it */
 
-/* Hero */
-.hero { position: relative; background: var(--sky) url("background.png") center bottom / cover no-repeat; image-rendering: pixelated; border-bottom: 6px solid var(--river); }
-.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,42,68,0) 45%, rgba(20,42,68,.55) 100%); pointer-events: none; }
-.hero .wrap { position: relative; z-index: 1; padding-block: clamp(28px, 6vw, 64px) clamp(32px, 6vw, 56px); display: grid; justify-items: center; text-align: center; gap: 22px; }
-.logo { width: min(560px, 88%); height: auto; image-rendering: pixelated; filter: drop-shadow(0 6px 0 rgba(20,42,68,.35)); animation: bob 3.2s ease-in-out infinite; }
+/* 1 Hero: the boathouse fills the window, the logo floats in the sky */
+.hero { position: relative; height: clamp(560px, 100vh, 940px); height: clamp(560px, 100svh, 940px); overflow: hidden; background: var(--sky) url("background.png") center bottom / cover no-repeat; image-rendering: pixelated; border-bottom: 6px solid var(--river); }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(20,42,68,0) 45%, rgba(20,42,68,.55) 100%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 2; display: grid; justify-items: center; gap: 24px; text-align: center; padding-top: clamp(32px, 9vh, 96px); }
+.logo { width: min(560px, 88%); height: auto; image-rendering: pixelated; animation: bob 3.2s ease-in-out infinite; }
 @keyframes bob { 0%,100% { transform: translateY(0) rotate(-.6deg); } 50% { transform: translateY(-6px) rotate(.6deg); } }
-.tagline { margin: 0; font-family: var(--pixel); font-size: clamp(15px, 2.4vw, 20px); letter-spacing: .04em; background: var(--river-deep); color: var(--foam); padding: 8px 14px; box-shadow: 4px 4px 0 var(--oar); text-wrap: balance; }
+.title { margin: 0; width: 100%; display: flex; justify-content: center; line-height: 0; }
+.tagline { margin: 0; font-family: var(--pixel); font-size: clamp(15px, 2.4vw, 20px); letter-spacing: .04em; background: var(--river-deep); color: var(--foam); padding: 8px 16px; box-shadow: 4px 4px 0 var(--oar); text-wrap: balance; }
+.platform-note { display: grid; justify-items: center; margin: 0; max-width: 36ch; padding: 8px 16px; background: var(--river-deep); color: var(--foam); font-size: 16px; line-height: 1.5; text-wrap: balance; }
+.platform-note[hidden] { display: none; }
+.send-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0; font: inherit; font-weight: 700; color: var(--oar); background: none; border: 0; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.send-link:focus-visible { outline: 3px solid var(--foam); outline-offset: 2px; }
 
-.dl { display: grid; justify-items: center; gap: 10px; }
-.btn { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-family: var(--pixel); font-weight: 700; font-size: clamp(17px, 2.6vw, 22px); color: var(--oar-ink); background: var(--oar); padding: 16px 26px; border: 3px solid var(--oar-ink); box-shadow: 6px 6px 0 var(--oar-ink); transition: transform .08s, box-shadow .08s; }
-.btn:hover { transform: translate(-2px,-2px); box-shadow: 8px 8px 0 var(--oar-ink); }
-.btn:active { transform: translate(4px,4px); box-shadow: 2px 2px 0 var(--oar-ink); }
-.btn:focus-visible { outline: 3px solid var(--foam); outline-offset: 4px; }
-.btn svg { width: 22px; height: 22px; flex: none; }
-.meta { font-size: 14px; color: var(--foam); background: rgba(20,42,68,.78); padding: 4px 10px; }
-.meta code { font-family: var(--pixel); font-size: 13px; }
-
-/* Sections */
-section { padding-block: 56px; border-bottom: 1px solid var(--line); }
+/* Sections: one centred column, each opening with its heading */
+section { padding-block: 56px; border-bottom: 1px solid var(--line); text-align: center; }
 section:last-of-type { border-bottom: 0; }
-.eyebrow { font-family: var(--pixel); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--oar); margin: 0 0 10px; }
-h2 { font-family: var(--body); font-weight: 800; font-size: clamp(26px, 4vw, 36px); line-height: 1.15; margin: 0 0 16px; text-wrap: balance; }
-p { margin: 0 0 14px; max-width: 65ch; }
-.lead { font-size: 19px; color: var(--foam); }
-.muted { color: var(--mist); }
+h2 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 40px); line-height: 1.15; margin: 0 auto 16px; text-wrap: balance; }
+h2 .line { display: inline-block; }  /* break between sentences before breaking inside one */
+h3 { font-family: var(--pixel); font-size: 17px; font-weight: 700; letter-spacing: .02em; line-height: 1.25; margin: 0 0 8px; }
+p { margin: 0 auto 16px; max-width: 65ch; }
 
-/* Features */
-.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 28px 36px; margin-top: 28px; }
-.feature { min-width: 0; padding-top: 14px; border-top: 3px solid var(--river); }
-.feature h3 { font-family: var(--pixel); font-size: 17px; font-weight: 700; margin: 0 0 6px; letter-spacing: .02em; }
-.feature p { font-size: 15.5px; color: var(--mist); margin: 0; }
+/* 2 Gameplay: drop gameplay.mp4 next to this file and it plays; until then the Henley scene shows,
+   with both crews rowing as you scroll (the still image underneath is the no-JavaScript fallback) */
+.clip { position: relative; aspect-ratio: 16 / 9; margin-top: 32px; background: var(--river) url("img/henley-scene.png") center / cover no-repeat; image-rendering: pixelated; border: 3px solid var(--river); overflow: hidden; }
+.clip canvas, .clip video { position: absolute; inset: 0; width: 100%; height: 100%; }
+.clip canvas { image-rendering: pixelated; }
+.clip video { display: none; object-fit: cover; }
+.clip.has-video video { display: block; }
+.clip.has-video canvas { display: none; }
+.clip-toggle { display: none; position: absolute; right: 12px; bottom: 12px; min-width: 44px; min-height: 44px; padding: 0 16px; font-family: var(--pixel); font-size: 14px; color: var(--foam); background: var(--river-deep); border: 2px solid var(--foam); cursor: pointer; }
+.clip-toggle:focus-visible { outline: 3px solid var(--oar); outline-offset: 2px; }
+.clip.has-video .clip-toggle { display: inline-flex; align-items: center; }
 
-/* Season: the real order the career is raced in */
-.season { margin-top: 26px; overflow-x: auto; }
-.season table { width: 100%; min-width: 520px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-.season th, .season td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); }
-.season th { font-family: var(--pixel); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--mist); font-weight: 400; }
-.season td:first-child { font-family: var(--pixel); color: var(--oar); width: 3.5em; }
-.season td.venue { font-weight: 700; }
-.chip { display: inline-block; font-family: var(--pixel); font-size: 12px; padding: 2px 8px; border: 1px solid currentColor; }
-.chip.head { color: var(--mist); }
-.chip.side { color: var(--oar); }
+/* 3 Features: one line each across the full width, wrapping only when the screen is narrow */
+.features { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 12px; text-wrap: pretty; }
+.features b { color: var(--oar); }
 
-/* Install steps */
-.steps { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 18px; counter-reset: s; }
-.steps li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+/* 4 The season: one row, read left to right like a course */
+.season { list-style: none; padding: 0; margin: 32px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 16px; counter-reset: v; text-align: left; }
+.season li { counter-increment: v; min-width: 0; }
+.season .mark { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.season .mark::before { content: counter(v, decimal-leading-zero); flex: none; display: grid; place-items: center; width: 40px; height: 40px; font-family: var(--pixel); font-weight: 700; background: var(--river); color: var(--oar); }
+.season li:not(:last-child) .mark::after { content: ""; flex: 1; height: 3px; margin-right: -16px; background: repeating-linear-gradient(90deg, var(--river) 0 8px, transparent 8px 14px); }
+.season li:last-child .mark::before { background: var(--oar); color: var(--oar-ink); }
+.season .final { font-family: var(--pixel); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--oar); }
+.season img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; }
+.season strong { display: block; margin-top: 8px; font-size: 18px; line-height: 1.25; }
+.season span.fmt { font-family: var(--pixel); font-size: 12px; color: var(--mist); }
+@media (max-width: 767.98px) {
+  .season { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .season li:nth-child(2) .mark::after { display: none; }
+}
+
+/* 5 Download: the button up front, then install steps beside the requirements */
+.cta { display: grid; justify-items: center; gap: 16px; margin-top: 24px; }
+.cta-meta { margin: 0; font-size: 16px; color: var(--mist); }
+.cta .platform-note { padding: 0; background: none; }
+.get { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 32px 48px; margin-top: 48px; align-items: start; text-align: left; }
+.install { padding-top: 24px; }
+.install h3 { margin-bottom: 16px; }
+.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: center; font-weight: 700; }
 .steps li::before { content: counter(s); font-family: var(--pixel); font-weight: 700; font-size: 18px; width: 44px; height: 44px; display: grid; place-items: center; background: var(--river); color: var(--oar); }
-.steps li div { min-width: 0; }
-.steps strong { display: block; }
-.steps span { color: var(--mist); font-size: 15.5px; }
-.note { margin-top: 26px; padding: 14px 16px; background: var(--river); font-size: 15px; color: var(--mist); max-width: 70ch; }
+.note { margin: 24px 0 0; padding: 16px; background: var(--river); font-size: 16px; color: var(--mist); }
 .note b { color: var(--foam); }
-
-.cta-bottom { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; margin-top: 28px; }
-.textlink { font-family: var(--pixel); font-size: 14px; color: var(--mist); text-underline-offset: 4px; }
-.textlink:hover { color: var(--foam); }
-
-footer { padding-block: 28px 40px; font-size: 14px; color: var(--mist); }
-
-@media (prefers-reduced-motion: reduce) { .logo { animation: none; } .btn { transition: none; } }
+.reqs { padding: 24px 24px 8px; background: var(--river); }
+.reqs h3 { margin-bottom: 8px; }
+.reqs dl { margin: 0; }
+.reqs dl div { display: grid; grid-template-columns: 96px 1fr; gap: 12px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--line); }
+.reqs dt { font-family: var(--pixel); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--mist); }
+.reqs dd { margin: 0; min-width: 0; }
+.reqs dd small { display: block; color: var(--mist); font-size: 16px; }
 </style>
 </head>
 <body>
 
-
-<header class="hero">
-  <div class="wrap">
-    <img class="logo" src="logo.png" alt="Row Hero" width="1296" height="828">
-    <p class="tagline">Row to the beat. Beat the crew next to you.</p>
-    <div class="dl">
-      <a class="btn" href="https://github.com/lfairclo/theo-game-launcher/releases/download/installer/RowHeroInstaller.exe" rel="noopener">
-        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
-        Download for Windows
-      </a>
-      <span class="meta"><code>RowHeroInstaller.exe</code> · Windows 10 / 11 · free</span>
-    </div>
+<header class="hero" id="top">
+  <div class="hero-inner wrap">
+    <h1 class="title"><img class="logo" src="logo.png" alt="Row Hero" width="1296" height="828"></h1>
+    <p class="tagline">Row to the beat.</p>
+    <a class="btn" id="dl-top" href="https://github.com/lfairclo/theo-game-launcher/releases/download/installer/RowHeroInstaller.exe" rel="noopener">
+      <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
+      Download for Windows
+    </a>
+    <p class="platform-note" hidden aria-live="polite">Row Hero runs on Windows PCs. <button type="button" class="send-link">Send yourself the link</button></p>
   </div>
 </header>
 
 <main>
   <section>
     <div class="wrap">
-      <p class="eyebrow">What it is</p>
-      <h2>A rhythm game where every note is a stroke</h2>
-      <p class="lead">Row Hero is Guitar Hero on the water. Notes stream down towards your boat, and every one you hit in time pulls your crew through the water. Hit a streak and the boat flies. Miss and the crew beside you starts to move away.</p>
-      <p class="muted">It was made for an older brother who rows and won at Henley Royal Regatta, so the races, venues and crews come from real rowing.</p>
+      <h2><span class="line">Play in time with the music.</span> <span class="line">Haul your crew to victory.</span></h2>
+      <p>Row Hero is a free rowing rhythm game for Windows.</p>
 
-      <div class="features">
-        <div class="feature">
-          <h3>Career mode</h3>
-          <p>Race a full season, venue by venue. Each regatta is a run of races with a boss race at the end.</p>
-        </div>
-        <div class="feature">
-          <h3>Pick your crew</h3>
-          <p>Between races, spend your winnings in the shop on new rowers. Each one brings a perk that changes how your boat races.</p>
-        </div>
-        <div class="feature">
-          <h3>Free play</h3>
-          <p>Replay any song you've unlocked, at any venue, with the crew you've built. Add your own songs too.</p>
-        </div>
-        <div class="feature">
-          <h3>Leaderboards &amp; achievements</h3>
-          <p>Post your best scores online, chase achievements, and look out for the secret bosses.</p>
-        </div>
+      <!-- Gameplay: save the clip as gameplay.mp4 next to index.html and it plays here (muted, looping).
+           Until then the Henley scene shows, with both crews rowing as you scroll. -->
+      <div class="clip" id="clip">
+        <canvas id="scene" width="384" height="216" role="img" aria-label="Two crews racing past the grandstand at Henley"></canvas>
+        <video id="gameplay" autoplay muted loop playsinline preload="metadata" aria-label="Row Hero gameplay">
+          <source src="gameplay.mp4" type="video/mp4">
+        </video>
+        <button class="clip-toggle" id="clip-toggle" type="button">Pause</button>
       </div>
     </div>
   </section>
 
-  <section>
+  <section id="features">
     <div class="wrap">
-      <p class="eyebrow">The season</p>
-      <h2>Four venues, raced in order</h2>
-      <p class="muted">Two head races through the winter, where you race the clock down the course, then two side-by-side regattas.</p>
-      <div class="season">
-        <table>
-          <thead><tr><th>Race</th><th>Venue</th><th>Format</th></tr></thead>
-          <tbody>
-            <tr><td>01</td><td class="venue">Head of the Charles</td><td><span class="chip head">Head race</span></td></tr>
-            <tr><td>02</td><td class="venue">Head of the River</td><td><span class="chip head">Head race</span></td></tr>
-            <tr><td>03</td><td class="venue">National Schools</td><td><span class="chip side">Side by side</span></td></tr>
-            <tr><td>04</td><td class="venue">Henley</td><td><span class="chip side">Side by side</span></td></tr>
-          </tbody>
-        </table>
-      </div>
+      <h2>Features</h2>
+      <ul class="features">
+        <li><b>Career mode:</b> Race a full season, with all four iconic venues of schoolboy rowing.</li>
+        <li><b>Free play:</b> Play any song you want at any venue, or add your own songs.</li>
+        <li><b>Leaderboards:</b> Log in with Google to post your best scores and see how you stack up.</li>
+        <li><b>Play offline:</b> No account needed. Your saves stay on your own computer.</li>
+      </ul>
     </div>
   </section>
 
-  <section>
+  <section id="season">
     <div class="wrap">
-      <p class="eyebrow">Getting started</p>
-      <h2>Install in a minute</h2>
-      <ol class="steps">
-        <li><div><strong>Download the installer</strong><span>Click the yellow button to get <code>RowHeroInstaller.exe</code> from GitHub.</span></div></li>
-        <li><div><strong>Run it</strong><span>Open the file from your Downloads folder and follow the installer.</span></div></li>
-        <li><div><strong>Launch and row</strong><span>Open Row Hero from the launcher. It checks for updates and shows what's new each time you start it, so you won't need to download the installer again.</span></div></li>
+      <h2>The season</h2>
+      <ol class="season">
+        <li><div class="mark"></div><img class="px" src="img/venue-charles.png" alt="" width="384" height="96"><strong>Head of the Charles</strong><span class="fmt">Head race</span></li>
+        <li><div class="mark"></div><img class="px" src="img/venue-river.png" alt="" width="384" height="96"><strong>Head of the River</strong><span class="fmt">Head race</span></li>
+        <li><div class="mark"></div><img class="px" src="img/venue-nat.png" alt="" width="384" height="96"><strong>National Schools</strong><span class="fmt">Side by side</span></li>
+        <li><div class="mark"><span class="final">Finale</span></div><img class="px" src="img/venue-henley.png" alt="" width="384" height="96"><strong>Henley</strong><span class="fmt">Side by side</span></li>
       </ol>
-      <p class="note"><b>Windows warning?</b> The installer isn't signed yet, so Windows SmartScreen may say it "protected your PC". Click <b>More info</b>, then <b>Run anyway</b>.</p>
-      <div class="cta-bottom">
+    </div>
+  </section>
+
+  <section id="get-started">
+    <div class="wrap">
+      <h2>Download</h2>
+      <div class="cta">
         <a class="btn" href="https://github.com/lfairclo/theo-game-launcher/releases/download/installer/RowHeroInstaller.exe" rel="noopener">
           <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
-          Download Row Hero
+          Download for Windows
         </a>
-        <a class="textlink" href="https://github.com/lfairclo/theo-game-launcher/releases/tag/installer" rel="noopener">View the release on GitHub</a>
+        <p class="cta-meta">Free, for Windows 10 and 11</p>
+        <p class="platform-note" hidden aria-live="polite">Row Hero runs on Windows PCs. <button type="button" class="send-link">Send yourself the link</button></p>
+      </div>
+
+      <div class="get">
+        <div class="install">
+          <h3>Installing</h3>
+          <ol class="steps">
+            <li>Download the installer</li>
+            <li>Run it</li>
+            <li>Launch and row</li>
+          </ol>
+          <p class="note"><b>Windows warning?</b> The installer isn't signed yet, so Windows SmartScreen may say it "protected your PC". Click <b>More info</b>, then <b>Run anyway</b>.</p>
+        </div>
+        <div class="reqs">
+          <h3>System requirements</h3>
+          <dl>
+            <div><dt>OS</dt><dd>Windows 10 or 11, 64&#8209;bit</dd></div>
+            <div><dt>Storage</dt><dd>1.2 GB<small>2.5 GB free while installing</small></dd></div>
+            <div><dt>Input</dt><dd>Keyboard</dd></div>
+            <div><dt>Internet</dt><dd>To install and update<small>Play offline any time</small></dd></div>
+            <div><dt>Account</dt><dd>Not needed<small>Google login for leaderboards only</small></dd></div>
+          </dl>
+        </div>
       </div>
     </div>
   </section>
 </main>
 
-<footer>
-  <div class="wrap">Row Hero · made with Unity · Windows only · <a class="textlink" href="privacy.html">Privacy policy</a> · <a class="textlink" href="terms.html">Terms of service</a></div>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Row Hero · Version <span id="game-version">1.0.1</span> · Free</span>
+    <nav aria-label="Footer"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:lfairowl12@gmail.com">Contact</a></nav>
+  </div>
 </footer>
+
+<script>
+// Top download button: let the download start, then bring the install steps and Windows warning into view.
+var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.getElementById("dl-top").addEventListener("click", function () {
+  setTimeout(function () {
+    document.getElementById("get-started").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  }, 150);
+});
+
+// Gameplay clip: show it once it loads; don't autoplay for people who've asked for less motion.
+var clipBox = document.getElementById("clip"), video = document.getElementById("gameplay");
+if (reduceMotion) { video.removeAttribute("autoplay"); video.pause(); }
+video.addEventListener("loadeddata", function () { clipBox.classList.add("has-video"); if (!reduceMotion) video.play().catch(function () {}); syncToggle(); });
+var toggle = document.getElementById("clip-toggle");
+function syncToggle() { toggle.textContent = video.paused ? "Play" : "Pause"; toggle.setAttribute("aria-label", (video.paused ? "Play" : "Pause") + " gameplay video"); }
+toggle.addEventListener("click", function () { if (video.paused) video.play(); else video.pause(); });
+video.addEventListener("play", syncToggle); video.addEventListener("pause", syncToggle);
+
+// Placeholder scene: the crews row with your scrolling, forwards on the way down and backwards on the way up.
+// Hull frames and heads come straight from the game (64x32 frames, 12-frame stroke, heads placed by its neck table),
+// drawn on the game's own 384x216 pixel grid so every position snaps to a whole game pixel.
+(function () {
+  var canvas = document.getElementById("scene"), ctx = canvas.getContext("2d");
+  var srcs = { bg: "img/henley-bg.png", gold: "img/crew-gold.png", rival: "img/crew-rival.png" }, img = {}, waiting = 3, queued = false;
+  Object.keys(srcs).forEach(function (k) {
+    img[k] = new Image();
+    img[k].onload = function () { if (--waiting === 0) start(); };
+    img[k].src = srcs[k];
+  });
+  function strokeFrame(px, pxPerFrame, phase) { return ((Math.floor(px / pxPerFrame) + phase) % 12 + 12) % 12; }
+  function draw() {
+    queued = false;
+    if (clipBox.classList.contains("has-video")) return;
+    var r = canvas.getBoundingClientRect(), vh = window.innerHeight;
+    if (r.bottom < 0 || r.top > vh) return;
+    // 0 as the scene comes in at the bottom of the window, 1 as it leaves at the top
+    var p = reduceMotion ? 0.5 : Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+    var y = reduceMotion ? 0 : window.scrollY;
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(img.bg, 0, 0);
+    ctx.drawImage(img.rival, 64 * strokeFrame(y, 13, 4), 0, 64, 32, Math.round(10 + p * 270), 158, 64, 32);
+    ctx.drawImage(img.gold, 64 * strokeFrame(y, 12, 0), 0, 64, 32, Math.round(-30 + p * 340), 184, 64, 32);
+  }
+  function queue() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
+  function start() {
+    draw();
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+  }
+})();
+
+// Not on Windows (phones, Macs, Chromebooks)? Say so under the download buttons, and offer to pass the link on.
+(function () {
+  var ua = navigator.userAgent, uaPlat = (navigator.userAgentData && navigator.userAgentData.platform) || "";
+  if (/Windows/i.test(uaPlat) || /^Win/i.test(navigator.platform || "") || /Windows NT/i.test(ua)) return;
+  var url = location.href.split("#")[0];
+  var canShare = !!navigator.share, canCopy = !!(navigator.clipboard && navigator.clipboard.writeText);
+  document.querySelectorAll(".platform-note").forEach(function (note) {
+    note.hidden = false;
+    var btn = note.querySelector(".send-link");
+    if (!canShare && !canCopy) { btn.remove(); return; }
+    var label = canShare ? "Send yourself the link" : "Copy the link";
+    btn.textContent = label;
+    btn.addEventListener("click", function () {
+      if (canShare) { navigator.share({ title: "Row Hero", text: "Row Hero, a free rowing rhythm game for Windows", url: url }).catch(function () {}); return; }
+      navigator.clipboard.writeText(url).then(function () {
+        btn.textContent = "Link copied";
+        setTimeout(function () { btn.textContent = label; }, 2500);
+      });
+    });
+  });
+})();
+
+// Show the live game version from the same manifest the launcher reads (falls back to the version in the HTML).
+fetch("https://raw.githubusercontent.com/lfairclo/theo-game-launcher/main/manifest.json", { cache: "no-store" })
+  .then(function (r) { return r.ok ? r.json() : null; })
+  .then(function (m) { if (m && m.game && m.game.version) document.getElementById("game-version").textContent = m.game.version; })
+  .catch(function () {});
+</script>
 
 </body>
 </html>
