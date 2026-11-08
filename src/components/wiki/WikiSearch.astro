@@ -1,0 +1,201 @@
+---
+// Wiki search: a combobox whose results panel lists matching rowers, regattas, songs, achievements
+// and sections as you type. Every result is rendered here (hidden); the script only filters and orders them.
+import Silhouette from "./Silhouette.astro";
+import { url, characterUrl, eventUrl, songUrl, achievementUrl, SIDE_LABEL, wikiData, SECTIONS } from "../../lib/site";
+
+const { characters, events, songs, achievements } = await wikiData();
+const counts = { characters: `${characters.length} rowers`, events: `${events.length} regattas`, achievements: `${achievements.length} achievements`, songs: `${songs.length} songs` };
+
+type Hit = { name: string; meta?: string; keys?: string; type: string; href: string; img?: { src: string; w: number; h: number; portrait?: boolean }; sil?: keyof typeof counts };
+const hits: Hit[] = [
+  ...SECTIONS.map((s) => ({ name: s.name, meta: counts[s.key], type: "Section", href: s.href, sil: s.key })),
+  ...characters.map((c) => ({
+    name: c.data.name,
+    meta: `${SIDE_LABEL[c.data.side]} · ${c.data.kind === "shop" ? `${c.data.cost.toLocaleString("en-GB")} points` : "Free"}`,
+    type: "Rower",
+    href: characterUrl(c.id),
+    img: { src: url(`img/wiki/${c.data.image}`), w: 32, h: 32, portrait: true },
+  })),
+  ...events.map((e) => ({
+    name: e.data.name,
+    meta: e.data.realName,
+    keys: `${e.data.realName} ${e.data.location}`,
+    type: "Regatta",
+    href: eventUrl(e.id),
+    img: { src: url(`img/wiki/${e.data.trophy}`), w: 18, h: 24 },
+  })),
+  ...songs.map((s) => ({ name: s.data.title, meta: s.data.artist, keys: s.data.artist, type: "Song", href: songUrl(s.id), sil: "songs" as const })),
+  ...achievements.map((a) => ({ name: a.data.name, type: "Achievement", href: achievementUrl(a.id), img: { src: url(`img/wiki/${a.data.icon}`), w: 32, h: 32 } })),
+];
+---
+
+<form class="wiki-search" role="search" data-wiki-search>
+  <label class="sr-only" for="wiki-q">Search the wiki</label>
+  <div class="field">
+    <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M5 1h5v1h1v1h1v1h1v5h-1v1h-1v1H10v1H5v-1H4v-1H3V9H2V4h1V3h1V2h1zm0 2v1H4v5h1v1h5V9h1V4h-1V3zm7 9h1v1h1v1h1v2h-2v-1h-1v-1h-1v-1h1z"></path></svg>
+    <input
+      id="wiki-q"
+      type="search"
+      name="q"
+      placeholder="Search the wiki"
+      role="combobox"
+      aria-expanded="false"
+      aria-controls="wiki-results"
+      aria-autocomplete="list"
+      autocomplete="off"
+      spellcheck="false"
+      enterkeyhint="go"
+    />
+    <kbd class="search-key" title="Press / to search">/</kbd>
+  </div>
+  <div class="search-panel" hidden>
+    <ul class="search-results" id="wiki-results" role="listbox" aria-label="Search results">
+      {
+        hits.map((h, i) => (
+          <li class="hit" id={`wiki-hit-${i}`} role="option" aria-selected="false" data-name={h.name} data-keys={h.keys} data-href={h.href} hidden>
+            <span class:list={["hit-thumb", { "is-section": h.type === "Section" }]}>
+              {h.img ? <img class:list={{ portrait: h.img.portrait }} src={h.img.src} alt="" width={h.img.w} height={h.img.h} loading="lazy" /> : <Silhouette name={h.sil!} />}
+            </span>
+            <span class="hit-text">
+              <span class="hit-name">{h.name}</span>
+              {h.meta && <span class="hit-meta">{h.meta}</span>}
+            </span>
+            <span class="hit-type">{h.type}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="search-empty" hidden>No pages match “<b></b>”. Try a rower, regatta, song or achievement.</p>
+  </div>
+  <p class="sr-only" role="status"></p>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-wiki-search]");
+  if (form) {
+    const input = form.querySelector("input")!;
+    const panel = form.querySelector<HTMLElement>(".search-panel")!;
+    const list = form.querySelector<HTMLElement>("[role=listbox]")!;
+    const empty = form.querySelector<HTMLElement>(".search-empty")!;
+    const status = form.querySelector<HTMLElement>("[role=status]")!;
+    const MAX = 8;
+    const norm = (s: string) => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim();
+
+    const all = [...list.querySelectorAll<HTMLElement>("[role=option]")].map((el, order) => ({
+      el,
+      order,
+      name: el.dataset.name!,
+      n: norm(el.dataset.name!),
+      keys: norm(el.dataset.keys ?? ""),
+      label: el.querySelector<HTMLElement>(".hit-name")!,
+    }));
+    type Hit = (typeof all)[number];
+    let shown: Hit[] = [];
+    let active = -1;
+
+    // Lower is better; -1 means no match.
+    const score = (h: Hit, q: string) =>
+      h.n === q ? 0 : h.n.startsWith(q) ? 1 : ` ${h.n}`.includes(` ${q}`) ? 2 : h.n.includes(q) ? 3 : h.keys.includes(q) ? 4 : -1;
+
+    // Mark the typed text inside the name, using text nodes only.
+    function label(h: Hit, raw: string) {
+      const at = raw ? h.name.toLowerCase().indexOf(raw.toLowerCase()) : -1;
+      if (at < 0) return h.label.replaceChildren(h.name);
+      const mark = document.createElement("mark");
+      mark.textContent = h.name.slice(at, at + raw.length);
+      h.label.replaceChildren(h.name.slice(0, at), mark, h.name.slice(at + raw.length));
+    }
+
+    function setActive(i: number, scroll = true) {
+      active = i;
+      shown.forEach((h, j) => h.el.setAttribute("aria-selected", String(j === i)));
+      if (i < 0) return input.removeAttribute("aria-activedescendant");
+      input.setAttribute("aria-activedescendant", shown[i].el.id);
+      if (scroll) shown[i].el.scrollIntoView({ block: "nearest" });
+    }
+
+    function close() {
+      panel.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      setActive(-1);
+    }
+
+    function update() {
+      const raw = input.value.trim();
+      const q = norm(raw);
+      shown.forEach((h) => (h.el.hidden = true));
+      if (!q) {
+        shown = [];
+        status.textContent = "";
+        return close();
+      }
+      shown = all
+        .map((h) => ({ h, s: score(h, q) }))
+        .filter((x) => x.s >= 0)
+        .sort((a, b) => a.s - b.s || a.h.order - b.h.order)
+        .slice(0, MAX)
+        .map((x) => x.h);
+      shown.forEach((h) => {
+        label(h, raw);
+        h.el.hidden = false;
+        list.append(h.el);
+      });
+      list.hidden = !shown.length;
+      empty.hidden = !!shown.length;
+      empty.querySelector("b")!.textContent = raw;
+      panel.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      setActive(shown.length ? 0 : -1);
+      status.textContent = shown.length ? `${shown.length} result${shown.length === 1 ? "" : "s"}` : "No results";
+    }
+
+    function go(h: Hit, newTab = false) {
+      const href = h.el.dataset.href!;
+      if (newTab) window.open(href, "_blank", "noopener");
+      else location.href = href;
+    }
+
+    input.addEventListener("input", update);
+    input.addEventListener("focus", () => input.value.trim() && update());
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (panel.hidden) update();
+        if (shown.length) setActive((active + (e.key === "ArrowDown" ? 1 : -1) + shown.length) % shown.length);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        if (!panel.hidden) close();
+        else input.value = "";
+      }
+    });
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (panel.hidden) update();
+      if (shown.length) go(shown[Math.max(active, 0)]);
+    });
+
+    const hitAt = (target: EventTarget | null) => shown.findIndex((h) => h.el === (target as Element)?.closest?.("[role=option]"));
+    list.addEventListener("mousedown", (e) => e.preventDefault()); // keep focus in the input
+    list.addEventListener("mousemove", (e) => {
+      const i = hitAt(e.target);
+      if (i >= 0 && i !== active) setActive(i, false);
+    });
+    list.addEventListener("click", (e) => {
+      const i = hitAt(e.target);
+      if (i >= 0) go(shown[i], e.ctrlKey || e.metaKey);
+    });
+    form.addEventListener("focusout", (e) => {
+      if (!form.contains(e.relatedTarget as Node | null)) close();
+    });
+
+    // "/" jumps to the search box from anywhere on the page.
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) return;
+      if ((e.target as Element).closest?.("input, textarea, select, [contenteditable]")) return;
+      e.preventDefault();
+      input.focus();
+      input.select();
+    });
+  }
+</script>

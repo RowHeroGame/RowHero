@@ -1,0 +1,23 @@
+---
+// Menu bar across the top of every page except the home page (which opens on the full-screen hero).
+import { url, CONTACT } from "../lib/site";
+
+interface Props {
+  current?: "wiki" | "privacy" | "terms";
+}
+const { current } = Astro.props;
+const here = (page: Props["current"]) => (current === page ? "page" : undefined);
+---
+
+<nav class="menubar" aria-label="Main">
+  <div class="wrap">
+    <ul>
+      <li><a href={url("")}>Home</a></li>
+      <li><a href={url("wiki/")} aria-current={here("wiki")}>Wiki</a></li>
+      <li class="wide"><a class="buy" href={url("#get-started")}>Download</a></li>
+      <li class="push"><a href={url("privacy.html")} aria-current={here("privacy")}>Privacy</a></li>
+      <li><a href={url("terms.html")} aria-current={here("terms")}>Terms</a></li>
+      <li class="wide"><a href={CONTACT}>Contact</a></li>
+    </ul>
+  </div>
+</nav>

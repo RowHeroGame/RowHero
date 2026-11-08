@@ -1,0 +1,53 @@
+---
+// Every wiki page: site menu bar, then the wiki's community header (banner, name, search).
+import Base from "./Base.astro";
+import Menubar from "../components/Menubar.astro";
+import Footer from "../components/Footer.astro";
+import WikiSearch from "../components/wiki/WikiSearch.astro";
+import "../styles/wiki.css";
+import { url, wikiData, SECTIONS } from "../lib/site";
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+
+const { characters, events } = await wikiData();
+const pageCount = 1 + SECTIONS.length + characters.length + events.length; // home, section lists, articles
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<Base title={title} description={description} bodyClass="wiki-page">
+  <Fragment slot="head">
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Row Hero Wiki" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(url("img/og-image.png"), Astro.site).href} />
+  </Fragment>
+
+  <Menubar current="wiki" />
+  <header class="wiki-head">
+    <div class="wiki-banner">
+      <div class="wrap wiki-bar">
+        <a class="wiki-id" href={url("wiki/")}>
+          <img src={url("logo.png")} alt="" width="1296" height="828" />
+          <span>
+            <span class="wiki-name">Row Hero Wiki</span>
+            <span class="wiki-count">{pageCount} pages</span>
+          </span>
+        </a>
+        <WikiSearch />
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap wiki-main">
+    <slot />
+  </main>
+
+  <Footer />
+</Base>

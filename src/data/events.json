@@ -1,0 +1,58 @@
+[
+  {
+    "id": "head-of-the-charles",
+    "name": "Head of the Charles",
+    "order": 1,
+    "realName": "Head of the Charles Regatta",
+    "location": "Charles River, Boston",
+    "country": "United States",
+    "month": "October",
+    "raceType": "Head race",
+    "distance": "3 miles (4.8 km)",
+    "image": "venue-charles.png",
+    "trophy": "trophy-charles.png",
+    "rounds": ["race", "shop", "race", "shop", "race", "boss"]
+  },
+  {
+    "id": "head-of-the-river",
+    "name": "Head of the River",
+    "order": 2,
+    "realName": "Schools' Head of the River Race",
+    "location": "River Thames, London (Mortlake to Putney)",
+    "country": "England",
+    "month": "March",
+    "raceType": "Head race",
+    "distance": "6.8 km",
+    "image": "venue-river.png",
+    "trophy": "trophy-river.png",
+    "rounds": ["race", "race", "shop", "race", "shop", "boss"]
+  },
+  {
+    "id": "nat-schools",
+    "name": "Nat Schools",
+    "order": 3,
+    "realName": "National Schools' Regatta",
+    "location": "Dorney Lake, near Windsor",
+    "country": "England",
+    "month": "May",
+    "raceType": "Side by side",
+    "distance": "2,000 m",
+    "image": "venue-nat.png",
+    "trophy": "trophy-nat.png",
+    "rounds": ["race", "shop", "race", "race", "shop", "boss"]
+  },
+  {
+    "id": "henley",
+    "name": "Henley",
+    "order": 4,
+    "realName": "Henley Royal Regatta",
+    "location": "Henley-on-Thames",
+    "country": "England",
+    "month": "Late June to early July",
+    "raceType": "Side by side",
+    "distance": "2,112 m (1 mile 550 yards)",
+    "image": "venue-henley.png",
+    "trophy": "trophy-henley.png",
+    "rounds": ["race", "shop", "race", "race", "race", "boss"]
+  }
+]

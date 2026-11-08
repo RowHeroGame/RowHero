@@ -1,0 +1,7 @@
+Put two images in this folder before building:
+
+  logo.png     - your game's logo, shown at the top of the launcher
+  menu_bg.png  - the main menu artwork, fills the middle of the window
+
+Any resolution works - Stretch="Uniform"/"UniformToFill" in MainWindow.xaml
+will scale them to fit. PNG with transparency works fine for the logo.

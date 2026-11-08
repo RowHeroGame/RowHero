@@ -1,0 +1,87 @@
+---
+// Songs: every song you can race, sortable by any column.
+import WikiLayout from "../../../layouts/WikiLayout.astro";
+import Difficulty from "../../../components/wiki/Difficulty.astro";
+import { url, eventUrl, duration, wikiData } from "../../../lib/site";
+
+const { events, songs } = await wikiData();
+const eventById = new Map(events.map((e) => [e.id, e]));
+const DIFFICULTY_RANK = { Easy: 1, Medium: 2, Hard: 3, Expert: 4 };
+---
+
+<WikiLayout title="Songs | Row Hero Wiki" description="Every song in Row Hero: artist, regatta, difficulty, notes and length.">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <ol><li><a href={url("wiki/")}>Wiki</a></li></ol>
+  </nav>
+  <h1 class="page-title">Songs</h1>
+  <p>Notes are counted in normal mode; Expert mode plays every note in the chart. Select a column heading to sort.</p>
+  <div class="table-scroll">
+    <table class="wikitable songs-table" data-sortable>
+      <caption class="sr-only">Songs, with the regatta each one is raced at</caption>
+      <thead>
+        <tr>
+          <th scope="col">Song</th>
+          <th scope="col">Artist</th>
+          <th scope="col" data-type="number">Regatta</th>
+          <th scope="col" data-type="number">Difficulty</th>
+          <th scope="col" class="num" data-type="number">Notes</th>
+          <th scope="col" class="num" data-type="number">Length</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          songs.map((s) => {
+            const event = s.data.regatta ? eventById.get(s.data.regatta.id) : undefined;
+            return (
+              <tr id={`song-${s.id}`}>
+                <th scope="row">{s.data.title}</th>
+                <td>{s.data.artist}</td>
+                {event ? (
+                  <td class="nowrap" data-sort={event.data.order * 10 + (s.data.round ?? 0)}>
+                    <a href={eventUrl(event.id)}>{event.data.name}</a>
+                  </td>
+                ) : (
+                  <td class="quiet nowrap" data-sort="99">Free play only</td>
+                )}
+                <td data-sort={DIFFICULTY_RANK[s.data.difficulty]}><Difficulty level={s.data.difficulty} /></td>
+                <td class="num">{s.data.notes.toLocaleString("en-GB")}</td>
+                <td class="num" data-sort={s.data.length}>{duration(s.data.length)}</td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="sub">Secret songs stay hidden until you unlock them in Career mode.</p>
+</WikiLayout>
+
+<script>
+  // Sortable tables: turn each heading into a button that sorts by that column (data-sort, else the text).
+  document.querySelectorAll<HTMLTableElement>("table[data-sortable]").forEach((table) => {
+    const body = table.tBodies[0];
+    const heads = [...table.tHead!.rows[0].cells];
+    heads.forEach((th, col) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "sort";
+      button.append(...th.childNodes);
+      th.append(button);
+      button.addEventListener("click", () => {
+        const dir = th.getAttribute("aria-sort") === "ascending" ? "descending" : "ascending";
+        heads.forEach((h) => h.removeAttribute("aria-sort"));
+        th.setAttribute("aria-sort", dir);
+        const key = (row: HTMLTableRowElement) => {
+          const cell = row.cells[col];
+          return cell.dataset.sort ?? cell.textContent!.replace(/,/g, "").trim();
+        };
+        const numeric = th.dataset.type === "number";
+        const rows = [...body.rows].sort((a, b) => {
+          const order = numeric ? Number(key(a)) - Number(key(b)) : key(a).localeCompare(key(b));
+          return dir === "ascending" ? order : -order;
+        });
+        body.append(...rows);
+      });
+    });
+  });
+</script>

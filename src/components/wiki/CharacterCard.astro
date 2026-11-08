@@ -1,0 +1,20 @@
+---
+// Gallery card: portrait, name and one line of detail; the whole card links to the character's page.
+import { url, characterUrl, SIDE_LABEL, type Character } from "../../lib/site";
+
+interface Props {
+  character: Character;
+  small?: boolean;
+}
+const { character: c, small = false } = Astro.props;
+const size = small ? 70 : 105;
+const meta = `${SIDE_LABEL[c.data.side]} · ${c.data.kind === "shop" ? c.data.cost.toLocaleString("en-GB") : "Free"}`;
+---
+
+<li>
+  <a class="card" href={characterUrl(c.id)}>
+    <img src={url(`img/wiki/${c.data.image}`)} alt="" width={size} height={size} loading="lazy" />
+    <span class="card-name">{c.data.name}</span>
+    <span class="card-meta">{meta}</span>
+  </a>
+</li>

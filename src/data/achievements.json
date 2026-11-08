@@ -1,0 +1,11 @@
+[
+  { "id": "charles-champions", "order": 1, "name": "Charles Champions", "icon": "ach-charles.png", "how": "Win the [Head of the Charles](wiki/events/head-of-the-charles/)." },
+  { "id": "head-of-the-river", "order": 2, "name": "Head of the River", "icon": "ach-river.png", "how": "Win the [Head of the River](wiki/events/head-of-the-river/)." },
+  { "id": "national-champions", "order": 3, "name": "National Champions", "icon": "ach-nat.png", "how": "Win [Nat Schools](wiki/events/nat-schools/)." },
+  { "id": "henley-winners", "order": 4, "name": "Henley Winners", "icon": "ach-henley.png", "how": "Win [Henley](wiki/events/henley/)." },
+  { "id": "self-made", "order": 5, "name": "Self Made", "icon": "ach-nobuy.png", "how": "Win a regatta without buying anyone." },
+  { "id": "the-whole-club", "order": 6, "name": "The Whole Club", "icon": "ach-crew.png", "how": "Collect every [rower](wiki/characters/): buy them and finish the regatta." },
+  { "id": "gold", "order": 7, "name": "Gold!", "icon": "ach-record.png", "how": "Beat [Gold](wiki/songs/#song-gold) in a [golden boat](wiki/characters/jacapo-trans/)." },
+  { "id": "100-percent", "order": 8, "name": "100%", "icon": "ach-star.png", "how": "Unlock every other achievement, then click its card to claim it." },
+  { "id": "get-scared", "order": 9, "name": "Get Scared", "icon": "ach-scared.png", "how": "???" }
+]

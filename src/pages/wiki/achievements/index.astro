@@ -1,0 +1,33 @@
+---
+// Achievements: each one's icon and how to get it (the secret ones stay secret).
+import WikiLayout from "../../../layouts/WikiLayout.astro";
+import { url, linkify, wikiData } from "../../../lib/site";
+
+const { achievements } = await wikiData();
+---
+
+<WikiLayout title="Achievements | Row Hero Wiki" description="Every achievement in Row Hero and how to get it.">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <ol><li><a href={url("wiki/")}>Wiki</a></li></ol>
+  </nav>
+  <h1 class="page-title">Achievements</h1>
+  <div class="table-scroll">
+    <table class="wikitable">
+      <caption class="sr-only">Achievements and how to get them</caption>
+      <thead>
+        <tr><th scope="col"><span class="sr-only">Icon</span></th><th scope="col">Achievement</th><th scope="col">How to get it</th></tr>
+      </thead>
+      <tbody>
+        {
+          achievements.map((a) => (
+            <tr id={`ach-${a.id}`}>
+              <td class="icon-cell"><img class="ach-icon" src={url(`img/wiki/${a.data.icon}`)} alt="" width="16" height="16" /></td>
+              <th scope="row">{a.data.name}</th>
+              {a.data.how === "???" ? <td><span class="unknown">???</span></td> : <td set:html={linkify(a.data.how)} />}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</WikiLayout>

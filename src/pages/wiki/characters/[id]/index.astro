@@ -1,0 +1,66 @@
+---
+// A character's article: infobox with portrait, side, effect and cost, then everyone on the same side.
+import WikiLayout from "../../../../layouts/WikiLayout.astro";
+import Infobox from "../../../../components/wiki/Infobox.astro";
+import CharacterCard from "../../../../components/wiki/CharacterCard.astro";
+import Navbox from "../../../../components/wiki/Navbox.astro";
+import CategoryBar from "../../../../components/wiki/CategoryBar.astro";
+import { url, cost, SIDE_LABEL, wikiData, type Character } from "../../../../lib/site";
+
+export async function getStaticPaths() {
+  const { characters } = await wikiData();
+  return characters.map((character) => ({ params: { id: character.id }, props: { character } }));
+}
+
+interface Props {
+  character: Character;
+}
+const { character } = Astro.props;
+const { id, data: c } = character;
+const { shopRowers, clubRowers } = await wikiData();
+
+const isShop = c.kind === "shop";
+const list = url("wiki/characters/");
+const related = [...shopRowers, ...clubRowers].filter((r) => r.data.side === c.side && r.id !== id);
+const sameSide = c.side === "both" ? "Everyone else who can row on either side." : `Everyone else who rows ${SIDE_LABEL[c.side].toLowerCase()}.`;
+const description = `${c.name}: ${c.who.toLowerCase()}, ${SIDE_LABEL[c.side].toLowerCase()}. ${c.effect ?? "No perk."}`;
+---
+
+<WikiLayout title={`${c.name} | Row Hero Wiki`} description={description}>
+  <article>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href={url("wiki/")}>Wiki</a></li>
+        <li><a href={list}>Characters</a></li>
+      </ol>
+    </nav>
+    <h1 class="page-title">{c.name}</h1>
+
+    <Infobox title={c.name}>
+      <img slot="image" class="ib-portrait" src={url(`img/wiki/${c.image}`)} alt={`${c.name}'s portrait`} width="35" height="35" />
+      <div><dt>Who</dt><dd>{c.who}</dd></div>
+      <div><dt>Side</dt><dd>{SIDE_LABEL[c.side]}</dd></div>
+      <div><dt>Effect</dt><dd>{c.effect ?? "None"}</dd></div>
+      <div><dt>Cost</dt><dd>{cost(c.cost)}</dd></div>
+    </Infobox>
+
+    {
+      isShop ? (
+        c.side === "both" ? (
+          <p class="lead"><b>{c.name}</b> is a rower you can buy in the regatta shop. Rows on either side, so fits any seat.</p>
+        ) : (
+          <p class="lead"><b>{c.name}</b> is a {c.side}-side rower you can buy in the regatta shop.</p>
+        )
+      ) : (
+        <p class="lead"><b>{c.name}</b> is a club rower. Club rowers fill any empty seat for free, row either side and have no perk.</p>
+      )
+    }
+
+    <h2 id="related">Related characters</h2>
+    <p class="sub">{sameSide}</p>
+    <ul class="gallery small">{related.map((r) => <CharacterCard character={r} small />)}</ul>
+
+    <Navbox current={id} />
+    <CategoryBar links={[{ label: "Characters", href: list }, { label: isShop ? "Shop rowers" : "Club rowers", href: list }]} />
+  </article>
+</WikiLayout>

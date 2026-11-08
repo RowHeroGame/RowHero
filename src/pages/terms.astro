@@ -1,0 +1,61 @@
+---
+import Base from "../layouts/Base.astro";
+import Menubar from "../components/Menubar.astro";
+import Footer from "../components/Footer.astro";
+import { url } from "../lib/site";
+---
+
+<Base
+  title="Row Hero Terms of Service"
+  description="Row Hero Terms of Service"
+  bodyClass="doc-page"
+  fonts="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Archivo:wght@400;500;700;800&display=swap"
+>
+<Menubar current="terms" />
+<header class="doc-head"><a href={url("")}><img class="px" src={url("logo.png")} alt="Row Hero home" width="1296" height="828"></a></header>
+<main class="wrap doc"><article>
+<h1>Terms of service</h1>
+<p class="date">Last updated 5 November 2026</p>
+
+<div class="summary">
+<p><b>Short version:</b> Row Hero is free. Play fair, keep your name and picture appropriate, only add songs you're allowed to use, and understand the game comes as it is.</p>
+</div>
+
+<h2>Agreeing to these terms</h2>
+<p>By downloading, installing or playing Row Hero ("the game"), or by logging in to its online features, you agree to these terms. If you don't agree, please don't use the game. Row Hero is made by an independent developer in the United Kingdom ("we", "us"), contactable at <a href="mailto:lfairowl12@gmail.com">lfairowl12@gmail.com</a>.</p>
+
+<h2>Using the game</h2>
+<p>We give you a free, personal, non-exclusive licence to install and play Row Hero on your own computers. You may not sell the game, or redistribute modified copies of it, without our permission.</p>
+
+<h2>Accounts and leaderboards</h2>
+<p>Online leaderboards are optional and need a Google account. When you use them:</p>
+<ul>
+<li>Choose a display name and profile picture that aren't offensive, hateful, sexual, or pretending to be someone else.</li>
+<li>Don't cheat. That includes editing save files, changing game memory or network traffic, or uploading scores you didn't earn by playing.</li>
+<li>Don't try to break, overload or get unauthorised access to the game's servers or other players' accounts.</li>
+</ul>
+<p>We can remove names, pictures, scores or accounts that break these rules, and we can reset leaderboards at any time.</p>
+
+<h2>Custom songs</h2>
+<p>The game lets you add your own songs. You are responsible for making sure you have the right to use any music or charts you add. Custom songs stay on your computer and are not shown on the leaderboards.</p>
+
+<h2>Updates and availability</h2>
+<p>The launcher downloads updates automatically. We may change, add or remove features, and we may stop running the online features at any time. The offline game will keep working with the version you have.</p>
+
+<h2>Our content</h2>
+<p>The game's code, artwork, logo and other content belong to us or to the people who made them. Music included in the game belongs to its respective owners.</p>
+
+<h2>No warranty</h2>
+<p>Row Hero is a free hobby project provided "as is", without any warranty. We do our best, but we can't promise it will be free of bugs, always available, or that your scores or saves will never be lost.</p>
+
+<h2>Limitation of liability</h2>
+<p>As far as the law allows, we are not liable for any loss or damage that comes from using or being unable to use the game. Nothing in these terms limits liability that can't be limited under UK law, such as for death or personal injury caused by negligence.</p>
+
+<h2>Privacy</h2>
+<p>How we handle your data is explained in our <a href="privacy.html">privacy policy</a>.</p>
+
+<h2>Changes and law</h2>
+<p>We may update these terms. If we do, we'll change the date at the top of this page, and continuing to use the game means you accept the new terms. These terms are governed by the laws of England and Wales.</p>
+</article></main>
+<Footer />
+</Base>

@@ -1,0 +1,36 @@
+---
+// Document shell shared by every page: icons, fonts and the global stylesheet.
+import "../styles/site.css";
+import { url } from "../lib/site";
+
+interface Props {
+  title: string;
+  description: string;
+  bodyClass?: string;
+  /** Google Fonts stylesheet; the default is the game's pixel + Redaction pairing. */
+  fonts?: string;
+}
+
+const GAME_FONTS =
+  "https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Redaction+10:wght@400;700&family=Redaction+35:wght@700&display=swap";
+const { title, description, bodyClass, fonts = GAME_FONTS } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="icon" type="image/png" sizes="32x32" href={url("img/favicon-32.png")} />
+    <link rel="icon" type="image/png" sizes="16x16" href={url("img/favicon-16.png")} />
+    <link rel="apple-touch-icon" href={url("img/apple-touch-icon.png")} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href={fonts} />
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <slot />
+  </body>
+</html>

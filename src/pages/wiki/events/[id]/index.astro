@@ -1,0 +1,81 @@
+---
+// An event's article: infobox with the real-world regatta, then the rounds you race there.
+import WikiLayout from "../../../../layouts/WikiLayout.astro";
+import Infobox from "../../../../components/wiki/Infobox.astro";
+import Navbox from "../../../../components/wiki/Navbox.astro";
+import CategoryBar from "../../../../components/wiki/CategoryBar.astro";
+import { url, songUrl, lineUp, wikiData, type Event } from "../../../../lib/site";
+
+export async function getStaticPaths() {
+  const { events } = await wikiData();
+  return events.map((event) => ({ params: { id: event.id }, props: { event } }));
+}
+
+interface Props {
+  event: Event;
+}
+const { event } = Astro.props;
+const { id, data: e } = event;
+const { events, songs } = await wikiData();
+
+const rounds = lineUp(event, songs);
+const previous = events.find((x) => x.data.order === e.order - 1);
+const the = (name: string) => (name.startsWith("Head") ? `the ${name}` : name);
+const KIND = { race: "Race", shop: "Shop", boss: "Boss" } as const;
+const description = `${e.name}: regatta ${e.order} of ${events.length} in Row Hero. Based on the ${e.realName}, ${e.location}.`;
+---
+
+<WikiLayout title={`${e.name} | Row Hero Wiki`} description={description}>
+  <article>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href={url("wiki/")}>Wiki</a></li>
+        <li><a href={url("wiki/events/")}>Events</a></li>
+      </ol>
+    </nav>
+    <h1 class="page-title">{e.name}</h1>
+
+    <Infobox title={e.name}>
+      <img slot="image" class="ib-venue" src={url(`img/${e.image}`)} alt={`${e.name} in the game`} width="384" height="96" />
+      <div><dt>Real event</dt><dd>{e.realName}</dd></div>
+      <div><dt>Location</dt><dd>{e.location}</dd></div>
+      <div><dt>Country</dt><dd>{e.country}</dd></div>
+      <div><dt>Month</dt><dd>{e.month}</dd></div>
+      <div><dt>Race</dt><dd>{e.raceType}</dd></div>
+      <div><dt>Distance</dt><dd>{e.distance}</dd></div>
+      <div><dt>Trophy</dt><dd><img class="ib-trophy" src={url(`img/wiki/${e.trophy}`)} alt={`${e.name} trophy`} width="9" height="12" /></dd></div>
+    </Infobox>
+
+    <p class="lead">
+      <b>{e.name}</b> is regatta {e.order} of {events.length} in Career mode{e.order === events.length && ", the season finale"}.{" "}
+      {previous ? `Win ${the(previous.data.name)} to unlock it.` : "It's the first one you race."}
+    </p>
+
+    <h2 id="rounds">Rounds</h2>
+    <ol class="rounds">
+      {
+        rounds.map((r) => (
+          <li class={r.kind}>
+            <span class="rd">{r.round}</span>
+            <span class="kind">{KIND[r.kind]}</span>
+            {r.song ? (
+              <span>
+                <a href={songUrl(r.song.id)}>{r.song.data.title}</a> <span class="by">{r.song.data.artist}</span>
+              </span>
+            ) : (
+              <span class="by">Spend your points on rowers</span>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+
+    <Navbox current={id} />
+    <CategoryBar
+      links={[
+        { label: "Events", href: url("wiki/events/") },
+        { label: e.raceType === "Head race" ? "Head races" : "Side-by-side races", href: url("wiki/events/") },
+      ]}
+    />
+  </article>
+</WikiLayout>
