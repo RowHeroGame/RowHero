@@ -1,14 +1,15 @@
-# Builds the Astro site and publishes it to GitHub Pages (https://rowhero.uk) on every push to master.
-# Pull requests into master get the build only, as a check.
+# Builds the Astro site and publishes it to GitHub Pages (https://rowhero.uk) on every push to main.
+# Pull requests into main get the build only, as a check.
 # One-time setup (repo admin): Settings → Pages → Build and deployment → Source: "GitHub Actions";
-# Custom domain: rowhero.uk; tick "Enforce HTTPS" once GitHub has issued the certificate.
+# Settings → Environments → github-pages → Deployment branches: main; Custom domain: rowhero.uk;
+# tick "Enforce HTTPS" once GitHub has issued the certificate.
 name: Deploy site
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 permissions:

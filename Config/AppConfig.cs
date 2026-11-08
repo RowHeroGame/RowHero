@@ -14,9 +14,10 @@ namespace GameLauncher.Config
         public static readonly string GameName = "RowHero";         // used for folder paths + window title
         public static readonly string GameExeName = "RowHero.exe";  // the exe Unity produces
 
-        // GitHub repo that hosts manifest.json + releases (zips)
-        public static readonly string GitHubOwner = "lfairclo";
-        public static readonly string GitHubRepo = "theo-game-launcher";
+        // GitHub repo that hosts manifest.json + releases (zips). Moved from lfairclo/theo-game-launcher;
+        // GitHub redirects the old address, so launchers built before the move keep working.
+        public static readonly string GitHubOwner = "RowHeroGame";
+        public static readonly string GitHubRepo = "RowHero";
         public static readonly string ManifestBranch = "main";
 
         // Bump this constant every time you ship a new build of the LAUNCHER itself.

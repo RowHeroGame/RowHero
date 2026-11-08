@@ -3,3 +3,8 @@ node_modules/
 dist/
 .astro/
 __pycache__/
+
+# Launcher (.NET) build output
+bin/
+obj/
+.vs/
