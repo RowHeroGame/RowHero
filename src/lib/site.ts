@@ -9,7 +9,7 @@ export function url(path = ""): string {
 }
 
 export const DOWNLOAD_URL = "https://github.com/RowHeroGame/RowHero/releases/download/installer/RowHeroInstaller.exe";
-export const CONTACT = "mailto:lfairowl12@gmail.com";
+export const CONTACT = "mailto:rowherogame@gmail.com";
 
 export type Character = CollectionEntry<"characters">;
 export type Event = CollectionEntry<"events">;
