@@ -3,44 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="icon" href="logo.png">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <title>Row Hero Privacy Policy</title>
 <meta name="description" content="Row Hero Privacy Policy">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Archivo:wght@400;500;700;800&display=swap">
-<style>
-:root{--bg:#142a44;--panel:#1f3f63;--fg:#eef4fb;--mist:#a9c1dc;--oar:#f2c230;--line:rgba(238,244,251,.14);color-scheme:dark}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-size:17px;line-height:1.65}
-.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-header{background:var(--panel);border-bottom:4px solid var(--oar)}
-header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
-header img{height:48px;width:auto;image-rendering:pixelated}
-header nav{display:flex;gap:16px;flex-wrap:wrap}
-a{color:var(--oar);text-underline-offset:3px}
-nav a{font-family:"Silkscreen","Courier New",monospace;font-size:13px;color:var(--mist)}
-nav a[aria-current]{color:var(--fg)}
-main{padding-block:40px 56px}
-h1{font-size:clamp(28px,5vw,38px);line-height:1.15;margin:0 0 6px;text-wrap:balance}
-.date{font-family:"Silkscreen","Courier New",monospace;font-size:13px;color:var(--mist);margin:0 0 28px}
-h2{font-size:21px;margin:36px 0 10px;padding-top:18px;border-top:1px solid var(--line)}
-p,li{max-width:68ch}
-p{margin:0 0 12px}
-ul{padding-left:22px;margin:0 0 12px}
-li{margin-bottom:6px}
-.summary{background:var(--panel);padding:16px 18px;margin-bottom:8px}
-.summary p:last-child{margin:0}
-.tbl{overflow-x:auto;margin:8px 0 14px}
-table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px}
-th,td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--line)}
-th{color:var(--mist);font-weight:500}
-footer{border-top:1px solid var(--line);padding-block:22px 36px;color:var(--mist);font-size:14px}
-</style>
+<link rel="stylesheet" href="site.css">
 </head>
-<body>
+<body class="doc-page">
 
-<header><div class="wrap"><a href="index.html"><img src="logo.png" alt="Row Hero home" width="75" height="48"></a><nav><a href="index.html">Download</a><a href="privacy.html" aria-current="page">Privacy</a><a href="terms.html">Terms</a></nav></div></header>
-<main><div class="wrap">
+<nav class="menubar" aria-label="Main"><div class="wrap"><ul><li><a href="index.html">Home</a></li><li class="wide"><a class="buy" href="index.html#get-started">Download</a></li><li class="push"><a href="privacy.html" aria-current="page">Privacy</a></li><li><a href="terms.html">Terms</a></li><li class="wide"><a href="mailto:lfairowl12@gmail.com">Contact</a></li></ul></div></nav>
+<header class="doc-head"><a href="index.html"><img class="px" src="logo.png" alt="Row Hero home" width="1296" height="828"></a></header>
+<main class="wrap doc"><article>
 <h1>Privacy policy</h1>
 <p class="date">Last updated 5 November 2026</p>
 
@@ -92,7 +68,7 @@ footer{border-top:1px solid var(--line);padding-block:22px 36px;color:var(--mist
 
 <h2>Changes</h2>
 <p>If we change this policy, we'll update the date at the top of this page. If a change affects how we use your data, we'll mention it in the launcher's changelog.</p>
-</div></main>
-<footer><div class="wrap">Row Hero · Contact: <a href="mailto:lfairowl12@gmail.com">lfairowl12@gmail.com</a></div></footer>
+</article></main>
+<footer class="site-footer"><div class="wrap"><span>Row Hero · Free for Windows</span><nav aria-label="Footer"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:lfairowl12@gmail.com">Contact</a></nav></div></footer>
 </body>
 </html>
