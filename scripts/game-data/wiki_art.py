@@ -9,8 +9,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import unity_extract  # noqa: E402
 
 # Resources/PlayerIcons/<n> is the portrait of the rower whose Rower.index is n.
-ROWERS = ["nathaniel-barnes", "theo-fairclough", "paul-turner", "theo-martin", "wilder-daffey", "edward-ludgate",
-          "guy-parson", "jacapo-trans", "jonathan-miles", "alex", "sam", "jordan", "charlie", "frankie", "robin"]
+ROWERS = ["nathaniel", "theo-f", "paul", "theo-m", "wilder", "edward",
+          "guy", "jacapo", "jonathan", "alex", "sam", "jordan", "charlie", "frankie", "robin"]
 ACHIEVEMENT_ICONS = ["charles", "river", "nat", "henley", "nobuy", "crew", "record", "star", "scared"]
 TROPHIES = ["charles", "river", "nat", "henley"]
 
