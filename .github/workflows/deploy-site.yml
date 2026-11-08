@@ -1,5 +1,6 @@
-# Builds the Astro site and publishes it to GitHub Pages (https://rowhero.uk) on every push to main.
-# Pull requests into main get the build only, as a check.
+# Builds the Astro site in site/ and publishes it to GitHub Pages (https://rowhero.uk) on every push to main
+# that touches the site. Pull requests into main that touch it get the build only, as a check.
+# manifest.json isn't a trigger: the home page fetches it in the browser, so it needs no rebuild.
 # One-time setup (repo admin): Settings → Pages → Build and deployment → Source: "GitHub Actions";
 # Settings → Environments → github-pages → Deployment branches: main; Custom domain: rowhero.uk;
 # tick "Enforce HTTPS" once GitHub has issued the certificate.
@@ -8,8 +9,10 @@ name: Deploy site
 on:
   push:
     branches: [main]
+    paths: [site/**, .github/workflows/deploy-site.yml]
   pull_request:
     branches: [main]
+    paths: [site/**, .github/workflows/deploy-site.yml]
   workflow_dispatch:
 
 permissions:
@@ -24,17 +27,21 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: site/package-lock.json
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: dist
+          path: site/dist
 
   deploy:
     if: github.event_name != 'pull_request'

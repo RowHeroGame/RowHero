@@ -3,7 +3,7 @@
 How the wiki's data and art were pulled out of an installed copy of Row Hero (game 1.0.1).
 You shouldn't need these unless the game's rowers, songs or art change.
 
-Paths below are the default install; swap in yours if it differs.
+Run them from `site/`. Paths below are the default install; swap in yours if it differs.
 
 | Script | What it does |
 | --- | --- |
