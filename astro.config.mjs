@@ -11,5 +11,5 @@ export default defineConfig({
   // spaces around inline elements that wrap onto a new line in hand-written copy.
   compressHTML: true,
   // The repo root also holds the launcher's C# project; keep the dev server out of it.
-  vite: { server: { watch: { ignored: ["**/obj/**", "**/*.zip"] } } },
+  vite: { server: { watch: { ignored: ["**/obj/**", "**/bin/**", "**/publish/**", "**/*.zip"] } } },
 });

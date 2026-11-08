@@ -8,3 +8,7 @@ __pycache__/
 bin/
 obj/
 .vs/
+publish/
+
+# Release zips are uploaded to GitHub releases, never committed (see README → Releasing)
+*.zip
