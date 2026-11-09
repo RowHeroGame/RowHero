@@ -1,0 +1,279 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- =====================================================================
+         PALETTE - the exact colours from the Row Hero website (dark mode).
+         ===================================================================== -->
+    <Color x:Key="SkyColor">#5D9EE0</Color>
+    <Color x:Key="RiverColor">#1F3F63</Color>
+    <Color x:Key="RiverDeepColor">#142A44</Color>
+    <Color x:Key="FoamColor">#EEF4FB</Color>
+    <Color x:Key="MistColor">#A9C1DC</Color>
+    <Color x:Key="OarColor">#F2C230</Color>       <!-- blade yellow, the single accent -->
+    <Color x:Key="OarInkColor">#1A1405</Color>
+    <Color x:Key="LineColor">#24EEF4FB</Color>    <!-- foam at 14% -->
+    <Color x:Key="ChipColor">#C7142A44</Color>    <!-- river-deep at 78%, like the site's .meta chip -->
+    <Color x:Key="PressedGreyColor">#8D9AAB</Color>  <!-- "Launching..." / "Running" button -->
+
+    <SolidColorBrush x:Key="SkyBrush" Color="{StaticResource SkyColor}"/>
+    <SolidColorBrush x:Key="RiverBrush" Color="{StaticResource RiverColor}"/>
+    <SolidColorBrush x:Key="RiverDeepBrush" Color="{StaticResource RiverDeepColor}"/>
+    <SolidColorBrush x:Key="FoamBrush" Color="{StaticResource FoamColor}"/>
+    <SolidColorBrush x:Key="MistBrush" Color="{StaticResource MistColor}"/>
+    <SolidColorBrush x:Key="OarBrush" Color="{StaticResource OarColor}"/>
+    <SolidColorBrush x:Key="OarInkBrush" Color="{StaticResource OarInkColor}"/>
+    <SolidColorBrush x:Key="LineBrush" Color="{StaticResource LineColor}"/>
+    <SolidColorBrush x:Key="ChipBrush" Color="{StaticResource ChipColor}"/>
+    <SolidColorBrush x:Key="PressedGreyBrush" Color="{StaticResource PressedGreyColor}"/>
+
+    <!-- =====================================================================
+         FONTS - Silkscreen (pixel, headings/buttons) and Archivo (body),
+         bundled in Assets/Fonts. Both are SIL Open Font License.
+         ===================================================================== -->
+    <FontFamily x:Key="PixelFont">pack://application:,,,/Assets/Fonts/#Silkscreen</FontFamily>
+    <FontFamily x:Key="BodyFont">pack://application:,,,/Assets/Fonts/#Archivo</FontFamily>
+
+    <!-- =====================================================================
+         Primary button: the site's yellow .btn - 3px dark border and a hard
+         offset shadow. Hover lifts it, pressing pushes it into the shadow.
+         ===================================================================== -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="{StaticResource PixelFont}"/>
+        <Setter Property="Foreground" Value="{StaticResource OarInkBrush}"/>
+        <Setter Property="Background" Value="{StaticResource OarBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource OarInkBrush}"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="16,0"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="0" ShadowDepth="6" Direction="315"
+                                              Color="#1A1405" Opacity="1"/>
+                        </Border.Effect>
+                        <Border.RenderTransform>
+                            <TranslateTransform X="0" Y="0"/>
+                        </Border.RenderTransform>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="RenderTransform">
+                                <Setter.Value><TranslateTransform X="-2" Y="-2"/></Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Bd" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="8" Direction="315"
+                                                      Color="#1A1405" Opacity="1"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="RenderTransform">
+                                <Setter.Value><TranslateTransform X="4" Y="4"/></Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Bd" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="2" Direction="315"
+                                                      Color="#1A1405" Opacity="1"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource RiverBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource LineBrush}"/>
+                            <Setter TargetName="Bd" Property="Effect" Value="{x:Null}"/>
+                            <Setter Property="Foreground" Value="{StaticResource MistBrush}"/>
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =====================================================================
+         Grey "pressed in" button shown while the game is launching / running.
+         Same shape as the yellow button but already pushed into its shadow,
+         with no hover or click behaviour.
+         ===================================================================== -->
+    <Style x:Key="PressedButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="{StaticResource PixelFont}"/>
+        <Setter Property="Foreground" Value="{StaticResource OarInkBrush}"/>
+        <Setter Property="Background" Value="{StaticResource PressedGreyBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource OarInkBrush}"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Cursor" Value="Arrow"/>
+        <Setter Property="Padding" Value="16,0"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="0" ShadowDepth="2" Direction="315"
+                                              Color="#1A1405" Opacity="1"/>
+                        </Border.Effect>
+                        <Border.RenderTransform>
+                            <TranslateTransform X="4" Y="4"/>
+                        </Border.RenderTransform>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- =====================================================================
+         Secondary button: outlined, like the site's chips / text links
+         ===================================================================== -->
+    <Style x:Key="SecondaryButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="{StaticResource PixelFont}"/>
+        <Setter Property="Foreground" Value="{StaticResource MistBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{StaticResource MistBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource RiverBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource FoamBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource FoamBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource RiverBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource OarBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource OarBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource LineBrush}"/>
+                            <Setter Property="Opacity" Value="0.45"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =====================================================================
+         Title-bar buttons (minimise / close): small square chips over the hero
+         ===================================================================== -->
+    <Style x:Key="WindowControlButton" TargetType="Button">
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="FontFamily" Value="{StaticResource PixelFont}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource FoamBrush}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{StaticResource ChipBrush}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource OarBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource OarInkBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =====================================================================
+         Square card (the site's .note panel)
+         ===================================================================== -->
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource RiverBrush}"/>
+        <Setter Property="Padding" Value="14"/>
+    </Style>
+
+    <!-- =====================================================================
+         Square yellow progress bar
+         ===================================================================== -->
+    <Style x:Key="RoundProgressBar" TargetType="ProgressBar">
+        <Setter Property="Height" Value="10"/>
+        <Setter Property="Minimum" Value="0"/>
+        <Setter Property="Maximum" Value="100"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <Grid>
+                        <Border x:Name="PART_Track" Background="{StaticResource RiverBrush}"/>
+                        <Border x:Name="PART_Indicator" HorizontalAlignment="Left"
+                                Background="{StaticResource OarBrush}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =====================================================================
+         Slim square scrollbar (default Windows one is light grey)
+         ===================================================================== -->
+    <Style x:Key="PixelScrollBar" TargetType="ScrollBar">
+        <Setter Property="Width" Value="10"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid Background="{StaticResource RiverDeepBrush}">
+                        <Track x:Name="PART_Track" IsDirectionReversed="True">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb>
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Rectangle Fill="{StaticResource OarBrush}"/>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                            </Track.IncreaseRepeatButton>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

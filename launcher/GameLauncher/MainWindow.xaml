@@ -1,0 +1,178 @@
+<Window x:Class="GameLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Game Launcher" Icon="Assets/icon.ico" Width="450" Height="720"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        FontFamily="{StaticResource BodyFont}">
+    <Grid Margin="6,6,14,14">
+
+        <!-- Hard offset shadow, like the site's buttons (no blur) -->
+        <Border Background="{StaticResource RiverDeepBrush}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="0" ShadowDepth="8" Direction="315" Color="#1A1405" Opacity="0.9"/>
+            </Border.Effect>
+        </Border>
+
+        <Border Background="{StaticResource RiverDeepBrush}"
+                BorderBrush="{StaticResource RiverBrush}" BorderThickness="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>      <!-- hero: art + logo + tagline -->
+                    <RowDefinition Height="Auto"/>   <!-- status text -->
+                    <RowDefinition Height="Auto"/>   <!-- progress bar -->
+                    <RowDefinition Height="Auto"/>   <!-- game + song data card -->
+                </Grid.RowDefinitions>
+
+                <!-- HERO (also the drag handle for the window) -->
+                <Border Grid.Row="0" x:Name="TitleBar" MinHeight="300"
+                        BorderBrush="{StaticResource RiverBrush}" BorderThickness="0,0,0,6"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                    <Border.Background>
+                        <ImageBrush ImageSource="Assets/menu_bg.png" Stretch="UniformToFill"
+                                    AlignmentX="Center" AlignmentY="Bottom"/>
+                    </Border.Background>
+
+                    <Grid>
+                        <!-- darkening toward the bottom, same gradient as the site's hero -->
+                        <Rectangle IsHitTestVisible="False">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#00142A44" Offset="0.45"/>
+                                    <GradientStop Color="#8C142A44" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                        <!-- window buttons -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                                    VerticalAlignment="Top" Margin="0,10,10,0">
+                            <Button Content="-" Style="{StaticResource WindowControlButton}"
+                                    ToolTip="Minimise" Click="Minimize_Click"/>
+                            <Button Content="X" Style="{StaticResource WindowControlButton}"
+                                    ToolTip="Close" Margin="6,0,0,0" Click="Close_Click"/>
+                        </StackPanel>
+
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,34,0,0">
+                            <!-- logo bobs gently like on the website, with the same flat drop shadow -->
+                            <Image x:Name="LogoImage" Source="Assets/logo.png" Width="290" Stretch="Uniform"
+                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                <Image.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="6" Direction="270"
+                                                      Color="#142A44" Opacity="0.35"/>
+                                </Image.Effect>
+                                <Image.RenderTransform>
+                                    <TranslateTransform x:Name="LogoShift"/>
+                                </Image.RenderTransform>
+                                <Image.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="LogoShift"
+                                                                 Storyboard.TargetProperty="Y"
+                                                                 From="0" To="-6" Duration="0:0:1.6"
+                                                                 AutoReverse="True" RepeatBehavior="Forever">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <SineEase EasingMode="EaseInOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
+
+                            <!-- tagline pill with the yellow hard shadow -->
+                            <Border Background="{StaticResource RiverDeepBrush}" Padding="12,7"
+                                    HorizontalAlignment="Center" Margin="0,18,4,4">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="4" Direction="315"
+                                                      Color="#F2C230" Opacity="1"/>
+                                </Border.Effect>
+                                <TextBlock Text="Row to the beat. Beat the crew next to you."
+                                           FontFamily="{StaticResource PixelFont}" FontSize="13"
+                                           Foreground="{StaticResource FoamBrush}"
+                                           TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300"/>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <TextBlock Grid.Row="1" x:Name="StatusText" Text="Checking for updates..."
+                           Foreground="{StaticResource MistBrush}" FontSize="13"
+                           HorizontalAlignment="Center" Margin="0,14,0,8"/>
+
+                <ProgressBar Grid.Row="2" x:Name="ProgressBarControl" Style="{StaticResource RoundProgressBar}"
+                             Margin="20,0,20,14" Visibility="Hidden"/>
+
+                <StackPanel Grid.Row="3" Margin="20,0,20,22">
+
+                    <!-- One card: game + song data versions, ONE button that installs/updates
+                         whatever needs it, and the small Reinstall option underneath -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Game" FontFamily="{StaticResource PixelFont}"
+                                           FontWeight="Bold" FontSize="16" VerticalAlignment="Center"
+                                           Foreground="{StaticResource FoamBrush}"/>
+                                <TextBlock Grid.Column="1" x:Name="VersionText" Text="v-.-.-" FontSize="12.5"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" Margin="12,0,0,0"
+                                           Foreground="{StaticResource MistBrush}"/>
+                            </Grid>
+
+                            <!-- Song data version (hidden if manifest.json has no gameData) -->
+                            <Grid x:Name="DataVersionRow" Margin="0,8,0,0" Visibility="Collapsed">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Song data" FontFamily="{StaticResource PixelFont}"
+                                           FontWeight="Bold" FontSize="13" VerticalAlignment="Center"
+                                           Foreground="{StaticResource FoamBrush}"/>
+                                <TextBlock Grid.Column="1" x:Name="DataVersionText" Text="v-.-.-" FontSize="12.5"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" Margin="12,0,0,0"
+                                           Foreground="{StaticResource MistBrush}"/>
+                            </Grid>
+
+                            <Button x:Name="ActionButton" Content="Install Game"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Height="50" FontSize="16" Margin="0,12,6,6"
+                                    Click="ActionButton_Click"/>
+
+                            <!-- Repair option, always explained so nobody uses it by accident -->
+                            <StackPanel x:Name="RepairPanel" Visibility="Collapsed">
+                                <Border Height="1" Background="{StaticResource LineBrush}" Margin="0,8,0,12"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" TextWrapping="Wrap" FontSize="12" LineHeight="17"
+                                               Foreground="{StaticResource MistBrush}" VerticalAlignment="Center"
+                                               Margin="0,0,12,0"
+                                               Text="Only use Reinstall if you get an error, or songs are missing or were deleted by mistake."/>
+
+                                    <Button Grid.Column="1" x:Name="ReinstallButton" Content="Reinstall"
+                                            Style="{StaticResource SecondaryButton}"
+                                            MinWidth="128" Height="34" FontSize="12" IsEnabled="False"
+                                            Click="ReinstallButton_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
