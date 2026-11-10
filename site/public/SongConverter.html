@@ -4,63 +4,69 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RowHero Song Batch Converter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Redaction+10:wght@400;700&family=Redaction+35:wght@700&display=swap">
 <style>
+  /* Colours and fonts from rowhero.uk (site/src/styles/site.css): river navy, foam text, blade-yellow accent,
+     Silkscreen for labels, Redaction for text. */
   :root{
-    --bg:#0A0C0F; --panel:#12151B; --panel-2:#171B22; --border:#232830;
-    --text:#E7EAEE; --text-dim:#8A93A3; --text-faint:#565E6C;
-    --teal:#4FD8C4; --amber:#F5A623; --red:#E5484D;
+    --bg:#142A44; --panel:#1F3F63; --panel-2:#142A44; --border:rgba(238,244,251,.16);
+    --text:#EEF4FB; --text-dim:#A9C1DC; --text-faint:#7F9BBB;
+    --accent:#F2C230; --accent-ink:#1A1405; --green:#8FD694; --amber:#F5A623; --red:#FF8F87;
+    --pixel:"Silkscreen","Courier New",monospace;
+    --body:"Redaction 10",Georgia,"Times New Roman",serif;
+    --display:"Redaction 35",Georgia,"Times New Roman",serif;
     --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica Neue,Arial,sans-serif;
+    color-scheme:dark;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--sans);}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--body);}
   body{padding:32px 24px 80px;}
   .wrap{max-width:1080px;margin:0 auto;}
-  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;margin-bottom:10px;}
-  h1{font-size:28px;font-weight:700;letter-spacing:-0.02em;margin:0 0 8px;}
-  h1 span{color:var(--teal);}
-  .sub{color:var(--text-dim);font-size:14px;line-height:1.6;max-width:720px;}
+  h1{font-family:var(--display);font-size:32px;font-weight:700;margin:0 0 8px;}
+  h1 span{color:var(--accent);}
+  .sub{color:var(--text-dim);font-size:16px;line-height:1.6;max-width:720px;}
   .sub b{color:var(--text);}
   .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:22px;margin:20px 0;}
-  .panel-title{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--text-faint);text-transform:uppercase;margin-bottom:16px;}
+  .panel-title{font-family:var(--pixel);font-size:12px;letter-spacing:.06em;color:var(--text-faint);text-transform:uppercase;margin-bottom:16px;}
   .drop{border:1.5px dashed var(--border);border-radius:8px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;}
-  .drop:hover,.drop.drag{border-color:var(--teal);background:#0F1A18;}
-  .drop-icon{font-family:var(--mono);font-size:22px;color:var(--teal);margin-bottom:10px;}
-  .drop-text{font-size:14px;color:var(--text-dim);line-height:1.6;}
+  .drop:hover,.drop.drag{border-color:var(--accent);background:rgba(242,194,48,.06);}
+  .drop-icon{font-family:var(--mono);font-size:22px;color:var(--accent);margin-bottom:10px;}
+  .drop-text{font-size:16px;color:var(--text-dim);line-height:1.6;}
   .drop-text b{color:var(--text);}
   input[type=file]{display:none;}
   .row-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center;}
-  button{font-family:var(--sans);font-size:13px;font-weight:600;border-radius:6px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);padding:9px 16px;cursor:pointer;}
-  button:hover{border-color:var(--teal);color:var(--teal);}
-  button.primary{background:var(--teal);color:#04201B;border-color:var(--teal);}
-  button.primary:hover{background:#67E4D2;color:#04201B;}
+  button{font-family:var(--pixel);font-size:13px;font-weight:400;border-radius:6px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);padding:9px 16px;cursor:pointer;}
+  button:hover{border-color:var(--accent);color:var(--accent);}
+  button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+  button.primary:hover{background:#F7D35C;color:var(--accent-ink);}
   button:disabled{opacity:.35;cursor:not-allowed;}
-  label.opt{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:8px;}
-  label.opt input{accent-color:var(--teal);}
-  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px;}
-  th{text-align:left;padding:8px 10px;color:var(--text-faint);font-weight:500;text-transform:uppercase;font-size:10px;letter-spacing:.08em;border-bottom:1px solid var(--border);}
-  td{padding:8px 10px;border-bottom:1px solid #1B1F26;color:var(--text-dim);vertical-align:top;}
-  td input[type=text]{width:100%;background:var(--panel-2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:12.5px;padding:5px 7px;}
-  td input[type=text]:focus{outline:none;border-color:var(--teal);}
-  .ok{color:var(--teal);} .bad{color:var(--red);} .warn{color:var(--amber);} .faint{color:var(--text-faint);}
-  .small{font-size:11px;line-height:1.5;}
+  label.opt{font-size:15px;color:var(--text-dim);display:flex;align-items:center;gap:8px;}
+  label.opt input{accent-color:var(--accent);}
+  table{width:100%;border-collapse:collapse;font-family:var(--body);font-size:14px;}
+  th{text-align:left;padding:8px 10px;color:var(--text-faint);font-family:var(--pixel);font-weight:400;text-transform:uppercase;font-size:11px;letter-spacing:.06em;border-bottom:1px solid var(--border);}
+  td{padding:8px 10px;border-bottom:1px solid rgba(238,244,251,.08);color:var(--text-dim);vertical-align:top;}
+  td input[type=text]{width:100%;background:var(--panel-2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--body);font-size:14px;padding:5px 7px;}
+  td input[type=text]:focus{outline:none;border-color:var(--accent);}
+  .ok{color:var(--green);} .bad{color:var(--red);} .warn{color:var(--amber);} .faint{color:var(--text-faint);}
+  .small{font-size:12.5px;line-height:1.5;}
   .log{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--text-dim);white-space:pre-wrap;max-height:200px;overflow:auto;}
-  .note{margin-top:14px;padding:10px 12px;border-radius:6px;font-size:12.5px;line-height:1.55;background:#0F1A18;border:1px solid #1E3A33;color:#9FE3D7;}
+  .note{margin-top:14px;padding:10px 12px;border-radius:6px;font-size:14px;line-height:1.55;background:rgba(242,194,48,.07);border:1px solid rgba(242,194,48,.3);color:#F3E2AE;}
   .note b{color:var(--text);}
-  footer{margin-top:36px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-faint);}
+  footer{margin-top:36px;text-align:center;font-family:var(--pixel);font-size:11px;color:var(--text-faint);}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow">Batch song converter</div>
-  <h1>Row<span>Hero</span> songs</h1>
-  <div class="sub">Drop in as many <b>Clone Hero song zips</b> as you like (or song folders, or loose <b>.chart / .mid</b> files). Each one is converted to the game's chart <b>.json</b> with exact timing, and its audio stems are mixed into a single <b>.wav</b>. Nothing to fill in: the track, the song's sync delay, the artist, the length and the file name are all worked out for you.</div>
+  <h1>Row<span>Hero</span> Song Batch Converter</h1>
+  <div class="sub">Turns <b>Clone Hero songs</b> into a chart <b>.json</b> and a <b>.wav</b> for the game. Everything is filled in for you.</div>
 
   <div class="panel">
     <div class="panel-title">01 · Add songs</div>
     <div class="drop" id="drop">
       <div class="drop-icon">♫</div>
-      <div class="drop-text"><b>Click to choose files</b> or drag them here.<br>Song <b>.zip</b>s are best: they have the audio and the song.ini. A loose <b>.chart</b> or <b>.mid</b> works too (drop its song.ini alongside it to get the delay and artist), but then there is no audio to make the .wav from.</div>
+      <div class="drop-text"><b>Click to choose files</b> or drag them here.<br>Song <b>.zip</b>s work best. A loose <b>.chart</b> or <b>.mid</b> works too, but has no audio for the .wav.</div>
       <input type="file" id="fileInput" multiple accept=".zip,.chart,.mid,.midi,.ini,.opus,.ogg,.mp3,.wav,.flac,.m4a">
       <input type="file" id="folderInput" webkitdirectory multiple>
     </div>
@@ -71,7 +77,7 @@
   </div>
 
   <div class="panel" id="listPanel" style="display:none;">
-    <div class="panel-title">02 · Songs <span class="faint">(the file name is editable -- it has to match the song's name in the game)</span></div>
+    <div class="panel-title">02 · Songs <span class="faint">(file names must match the game's)</span></div>
     <table>
       <thead><tr><th style="width:26%;">Game file name</th><th>From</th><th>Chart</th><th>Audio</th><th>Status</th></tr></thead>
       <tbody id="songBody"></tbody>
@@ -81,14 +87,14 @@
     </div>
     <div class="row-actions">
       <label class="opt">Shortest gap between two notes in the same lane
-        <input type="number" id="gapInput" value="0" step="0.05" min="0" style="width:80px;background:var(--panel-2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--mono);padding:5px 7px;"> seconds</label>
+        <input type="number" id="gapInput" value="0" step="0.05" min="0" style="width:80px;background:var(--panel-2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--body);font-size:14px;padding:5px 7px;"> seconds</label>
     </div>
-    <div class="note" style="margin-top:8px;">Guitar charts often run fast streams on one fret, and folding orange onto R makes more of them. <b>Leave this at 0 for the game.</b> The game now applies this limit itself as each song loads, with its own value per regatta and boss song (NoteGap.cs), and Expert mode in Options turns it off to play every note. A chart converted with a gap here has those notes gone for good, so Expert mode cannot bring them back. Set it above 0 only if you want a chart thinned before it ever reaches the game: any note that comes sooner than this after the previous note <b>in the same lane</b> is then left out of the file. Notes in other lanes and chords are not affected.</div>
+    <div class="note" style="margin-top:8px;"><b>Leave this at 0.</b> The game thins out fast notes itself, and Expert mode turns that off. Notes removed here are gone for good.</div>
     <div class="row-actions">
       <button class="primary" id="saveFolderBtn" disabled>Save straight into my Songs folder…</button>
       <button id="zipBtn" disabled>Download everything as one .zip</button>
     </div>
-    <div class="note">The game's Songs folder is <b>%USERPROFILE%\AppData\LocalLow\lfairclo\RowHero\Songs</b>. "Save straight into" works in Chrome and Edge; pick that folder and the files are written into it, replacing any of the same name. The game uses a song's .wav before its .mp3, so old .mp3s can stay.</div>
+    <div class="note">Songs folder: <b>%USERPROFILE%\AppData\LocalLow\lfairclo\RowHero\Songs</b>. "Save straight into" works in Chrome and Edge and replaces files with the same name.</div>
     <div class="log" id="log"></div>
   </div>
 
