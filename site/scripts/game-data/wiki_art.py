@@ -8,10 +8,13 @@ import os, shutil, sys, tempfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import unity_extract  # noqa: E402
 
-# Resources/PlayerIcons/<n> is the portrait of the rower whose Rower.index is n.
-ROWERS = ["nathaniel", "theo-f", "paul", "theo-m", "wilder", "edward",
-          "guy", "jacapo", "jonathan", "alex", "sam", "jordan", "charlie", "frankie", "robin"]
-ACHIEVEMENT_ICONS = ["charles", "river", "nat", "henley", "nobuy", "crew", "record", "star", "scared"]
+# Resources/PlayerIcons/<n> is the portrait of the rower or coach whose Rower.index is n.
+ROWERS = {0: "nathaniel", 1: "theo-f", 2: "paul", 3: "theo-m", 4: "wilder", 5: "edward",
+          6: "guy", 7: "jacapo", 8: "jonathan", 9: "alex", 10: "jamie", 11: "jordan",
+          12: "casey", 13: "frankie", 14: "robin"}
+COACHES = {20: "bobby", 21: "german", 22: "sam", 23: "dickie", 24: "donald", 25: "matt", 26: "charlie"}
+ACHIEVEMENT_ICONS = ["charles", "river", "nat", "henley", "nobuy", "crew", "record", "note", "star",
+                     "scared", "lightning", "gold", "infinite"]
 TROPHIES = ["charles", "river", "nat", "henley"]
 
 
@@ -21,7 +24,8 @@ def main():
     os.makedirs(out, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         saved = unity_extract.extract(data_dir, tmp, ["playericons/", "achievements/", "trophies/"])
-        wanted = {f"playericons/{i}": f"rower-{slug}.png" for i, slug in enumerate(ROWERS)}
+        wanted = {f"playericons/{i}": f"rower-{slug}.png" for i, slug in ROWERS.items()}
+        wanted |= {f"playericons/{i}": f"coach-{slug}.png" for i, slug in COACHES.items()}
         wanted |= {f"achievements/{a}": f"ach-{a}.png" for a in ACHIEVEMENT_ICONS}
         wanted |= {f"trophies/{t}": f"trophy-{t}.png" for t in TROPHIES}
         for path, name in wanted.items():

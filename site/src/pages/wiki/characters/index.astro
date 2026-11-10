@@ -1,19 +1,25 @@
 ---
-// Characters: every rower in one gallery, shop rowers first, then the club.
+// Characters: everyone in one gallery (shop rowers, then the club, then the coaches), coloured by kind with a key underneath.
 import WikiLayout from "../../../layouts/WikiLayout.astro";
 import CharacterCard from "../../../components/wiki/CharacterCard.astro";
 import { url, wikiData } from "../../../lib/site";
 
-const { shopRowers, clubRowers } = await wikiData();
+const { shopRowers, clubRowers, coaches } = await wikiData();
 ---
 
-<WikiLayout title="Characters | Row Hero Wiki" description="Every rower in Row Hero: the side they row, what they do and what they cost.">
+<WikiLayout title="Characters | Row Hero Wiki" description="Every rower and coach in Row Hero: the side they row, what they do and what they cost.">
   <nav class="crumbs" aria-label="Breadcrumb">
     <ol><li><a href={url("wiki/")}>Wiki</a></li></ol>
   </nav>
   <h1 class="page-title">Characters</h1>
   <p>Buy rowers in the regatta shop with your points, then finish the regatta to collect them. You have to buy them again to row in the next one.</p>
   <p>Club rowers fill any empty seat for free, row either side and have no perk.</p>
+  <p>Achievements unlock coaches. They only row in Free Play, where you pick your crew from the club rowers and your coaches. Coach effects aren't in the game yet (1.3.0).</p>
   <p>Your boat has four seats. Bow and 3 seat are bow side; 2 seat and stroke are stroke side.</p>
-  <ul class="gallery">{[...shopRowers, ...clubRowers].map((c) => <CharacterCard character={c} />)}</ul>
+  <ul class="gallery">{[...shopRowers, ...clubRowers, ...coaches].map((c) => <CharacterCard character={c} />)}</ul>
+  <ul class="key" aria-label="Key">
+    <li class="shop">Shop rowers</li>
+    <li class="club">Club rowers</li>
+    <li class="coach">Coaches</li>
+  </ul>
 </WikiLayout>

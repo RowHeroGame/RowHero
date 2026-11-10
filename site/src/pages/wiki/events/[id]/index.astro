@@ -4,7 +4,7 @@ import WikiLayout from "../../../../layouts/WikiLayout.astro";
 import Infobox from "../../../../components/wiki/Infobox.astro";
 import Navbox from "../../../../components/wiki/Navbox.astro";
 import CategoryBar from "../../../../components/wiki/CategoryBar.astro";
-import { url, songUrl, lineUp, wikiData, type Event } from "../../../../lib/site";
+import { url, songUrl, lineUp, imageSize, wikiData, type Event } from "../../../../lib/site";
 
 export async function getStaticPaths() {
   const { events } = await wikiData();
@@ -19,6 +19,7 @@ const { id, data: e } = event;
 const { events, songs } = await wikiData();
 
 const rounds = lineUp(event, songs);
+const trophy = imageSize(e.trophy);
 const previous = events.find((x) => x.data.order === e.order - 1);
 const the = (name: string) => (name.startsWith("Head") ? `the ${name}` : name);
 const KIND = { race: "Race", shop: "Shop", boss: "Boss" } as const;
@@ -43,7 +44,7 @@ const description = `${e.name}: regatta ${e.order} of ${events.length} in Row He
       <div><dt>Month</dt><dd>{e.month}</dd></div>
       <div><dt>Race</dt><dd>{e.raceType}</dd></div>
       <div><dt>Distance</dt><dd>{e.distance}</dd></div>
-      <div><dt>Trophy</dt><dd><img class="ib-trophy" src={url(`img/wiki/${e.trophy}`)} alt={`${e.name} trophy`} width="9" height="12" /></dd></div>
+      <div><dt>Trophy</dt><dd><img class="ib-trophy" src={url(`img/wiki/${e.trophy}`)} alt={`${e.name} trophy`} width={trophy.w * 3} height={trophy.h * 3} /></dd></div>
     </Infobox>
 
     <p class="lead">

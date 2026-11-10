@@ -85,7 +85,7 @@
 .ib-data dt { font-family: var(--pixel); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--mist); }
 .ib-data dd { margin: 0; min-width: 0; font-size: 16px; line-height: 1.45; }
 .ib-data > div:has(.ib-trophy) { align-items: center; }
-.ib-trophy { display: block; width: 27px; height: 36px; image-rendering: pixelated; }
+.ib-trophy { display: block; image-rendering: pixelated; }
 @media (max-width: 719.98px) { .infobox { float: none; width: auto; margin: 0 0 24px; } }
 
 /* Wiki home: the four sections as a 2x2 grid of tiles, each with a single-colour silhouette */
@@ -107,13 +107,21 @@
 }
 @media (prefers-reduced-motion: reduce) { .hub-tile, .card, .venue { transition: none; } }
 
-/* Galleries of characters (portrait cards) */
+/* Galleries of characters (portrait cards), coloured by kind like a periodic table */
+:root { --shop: #5c4718; --club: var(--river); --coach: #4b2d5e; }
 .gallery { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 16px; }
 .gallery.small { grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); }
 .card, .venue { display: block; height: 100%; color: var(--foam); text-decoration: none; background: var(--river); transition: transform 100ms ease-out, box-shadow 100ms ease-out; }
 .card { display: grid; justify-items: center; align-content: start; gap: 4px; padding: 16px 12px; text-align: center; }
-.card img { width: 105px; height: 105px; margin-bottom: 8px; background: var(--sky); image-rendering: pixelated; }
+.card img { width: 105px; height: 105px; margin-bottom: 8px; image-rendering: pixelated; }
 .gallery.small .card img { width: 70px; height: 70px; }
+.card.shop { background: var(--shop); }
+.card.coach { background: var(--coach); }
+.key { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 16px 0 0; padding: 0; font-family: var(--pixel); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--mist); }
+.key li { display: flex; align-items: center; gap: 8px; }
+.key li::before { content: ""; width: 12px; height: 12px; background: var(--club); box-shadow: inset 0 0 0 1px var(--line); }
+.key .shop::before { background: var(--shop); }
+.key .coach::before { background: var(--coach); }
 .card-name, .venue-name { font-weight: 700; line-height: 1.25; text-underline-offset: 4px; }
 .card-meta, .venue-meta { font-family: var(--pixel); font-size: 12px; color: var(--mist); }
 @media (hover: hover) {

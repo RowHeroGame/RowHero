@@ -9,9 +9,16 @@
   { "id": "jacapo", "name": "Jacapo", "kind": "shop", "who": "Shop rower", "side": "bow", "cost": 600, "effect": "Makes your boat golden for the rest of the regatta. Takes no seat; cosmetic only.", "image": "rower-jacapo.png" },
   { "id": "jonathan", "name": "Jonathan", "kind": "shop", "who": "Shop rower", "side": "stroke", "cost": 1000, "effect": "Raises the opponent's miss rate from 1 in 4 to roughly 1 in 3.", "image": "rower-jonathan.png" },
   { "id": "alex", "name": "Alex", "kind": "club", "who": "Club rower", "side": "both", "cost": 0, "effect": null, "image": "rower-alex.png" },
-  { "id": "sam", "name": "Sam", "kind": "club", "who": "Club rower", "side": "both", "cost": 0, "effect": null, "image": "rower-sam.png" },
+  { "id": "jamie", "name": "Jamie", "kind": "club", "who": "Club rower", "side": "both", "cost": 0, "effect": null, "image": "rower-jamie.png" },
   { "id": "jordan", "name": "Jordan", "kind": "club", "who": "Club rower", "side": "both", "cost": 0, "effect": null, "image": "rower-jordan.png" },
-  { "id": "charlie", "name": "Charlie", "kind": "club", "who": "Club rower", "side": "both", "cost": 0, "effect": null, "image": "rower-charlie.png" },
+  { "id": "casey", "name": "Casey", "kind": "club", "who": "Club rower", "side": "both", "cost": 0, "effect": null, "image": "rower-casey.png" },
   { "id": "frankie", "name": "Frankie", "kind": "club", "who": "Club rower", "side": "both", "cost": 0, "effect": null, "image": "rower-frankie.png" },
-  { "id": "robin", "name": "Robin", "kind": "club", "who": "Club rower", "side": "both", "cost": 0, "effect": null, "image": "rower-robin.png" }
+  { "id": "robin", "name": "Robin", "kind": "club", "who": "Club rower", "side": "both", "cost": 0, "effect": null, "image": "rower-robin.png" },
+  { "id": "bobby", "name": "Bobby", "kind": "coach", "who": "Coach", "side": "both", "cost": 0, "effect": "Everyone else's perks are stronger.", "unlock": "Beat the first [bonus song](wiki/achievements/#ach-bonus-song-1).", "image": "coach-bobby.png" },
+  { "id": "german", "name": "German", "kind": "coach", "who": "Coach", "side": "both", "cost": 0, "effect": "+30% score when playing [Move on Up](wiki/songs/#song-move-on-up).", "unlock": "Beat the third [bonus song](wiki/achievements/#ach-bonus-song-3).", "image": "coach-german.png" },
+  { "id": "sam", "name": "Sam", "kind": "coach", "who": "Coach", "side": "both", "cost": 0, "effect": "You never lose for slowing down too much.", "unlock": "Beat the second [bonus song](wiki/achievements/#ach-bonus-song-2).", "image": "coach-sam.png" },
+  { "id": "dickie", "name": "Dickie", "kind": "coach", "who": "Coach", "side": "both", "cost": 0, "effect": "Lightning doesn't sink your boat.", "unlock": "Get [That's a Big Repair](wiki/achievements/#ach-thats-a-big-repair).", "image": "coach-dickie.png" },
+  { "id": "donald", "name": "Donald", "kind": "coach", "who": "Coach", "side": "both", "cost": 0, "effect": "Your boat is always 5% faster.", "unlock": "Turn on Expert mode ([Big Leagues](wiki/achievements/#ach-big-leagues)).", "image": "coach-donald.png" },
+  { "id": "matt", "name": "Matt", "kind": "coach", "who": "Coach", "side": "both", "cost": 0, "effect": "Double score while you're on a streak of 25 or more.", "unlock": "Win all four [regattas](wiki/events/).", "image": "coach-matt.png" },
+  { "id": "charlie", "name": "Charlie", "kind": "coach", "who": "Coach", "side": "bow", "cost": 0, "effect": "+30% power for the first 2 minutes. Only rows in the bow seat.", "unlock": "Beat any custom song ([Infinite Possibilities](wiki/achievements/#ach-infinite-possibilities)).", "image": "coach-charlie.png" }
 ]

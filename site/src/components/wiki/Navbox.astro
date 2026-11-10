@@ -7,11 +7,12 @@ interface Props {
   current: string;
 }
 const { current } = Astro.props;
-const { shopRowers, clubRowers, events } = await wikiData();
+const { shopRowers, clubRowers, coaches, events } = await wikiData();
 
 const groups = [
   { label: "Shop rowers", links: shopRowers.map((c) => ({ id: c.id, name: c.data.name, href: characterUrl(c.id) })) },
   { label: "Club rowers", links: clubRowers.map((c) => ({ id: c.id, name: c.data.name, href: characterUrl(c.id) })) },
+  { label: "Coaches", links: coaches.map((c) => ({ id: c.id, name: c.data.name, href: characterUrl(c.id) })) },
   { label: "Events", links: events.map((e) => ({ id: e.id, name: e.data.name, href: eventUrl(e.id) })) },
   { label: "Sections", links: SECTIONS.map((s) => ({ id: s.key, name: s.name, href: s.href })) },
 ];

@@ -1,11 +1,11 @@
 ---
-// A character's article: infobox with portrait, side, effect and cost, then everyone on the same side.
+// A character's article: infobox with portrait, side, effect and cost (or unlock), then everyone on the same side.
 import WikiLayout from "../../../../layouts/WikiLayout.astro";
 import Infobox from "../../../../components/wiki/Infobox.astro";
 import CharacterCard from "../../../../components/wiki/CharacterCard.astro";
 import Navbox from "../../../../components/wiki/Navbox.astro";
 import CategoryBar from "../../../../components/wiki/CategoryBar.astro";
-import { url, cost, SIDE_LABEL, wikiData, type Character } from "../../../../lib/site";
+import { url, cost, linkify, plain, SIDE_LABEL, wikiData, type Character } from "../../../../lib/site";
 
 export async function getStaticPaths() {
   const { characters } = await wikiData();
@@ -17,13 +17,15 @@ interface Props {
 }
 const { character } = Astro.props;
 const { id, data: c } = character;
-const { shopRowers, clubRowers } = await wikiData();
+const { shopRowers, clubRowers, coaches } = await wikiData();
 
 const isShop = c.kind === "shop";
+const isCoach = c.kind === "coach";
 const list = url("wiki/characters/");
-const related = [...shopRowers, ...clubRowers].filter((r) => r.data.side === c.side && r.id !== id);
+const related = [...shopRowers, ...clubRowers, ...coaches].filter((r) => r.data.side === c.side && r.id !== id);
 const sameSide = c.side === "both" ? "Everyone else who can row on either side." : `Everyone else who rows ${SIDE_LABEL[c.side].toLowerCase()}.`;
-const description = `${c.name}: ${c.who.toLowerCase()}, ${SIDE_LABEL[c.side].toLowerCase()}. ${c.effect ?? "No perk."}`;
+const description = `${c.name}: ${c.who.toLowerCase()}, ${SIDE_LABEL[c.side].toLowerCase()}. ${c.effect ? plain(c.effect) : "No perk."}`;
+const category = { shop: "Shop rowers", club: "Club rowers", coach: "Coaches" }[c.kind];
 ---
 
 <WikiLayout title={`${c.name} | Row Hero Wiki`} description={description}>
@@ -40,8 +42,8 @@ const description = `${c.name}: ${c.who.toLowerCase()}, ${SIDE_LABEL[c.side].toL
       <img slot="image" class="ib-portrait" src={url(`img/wiki/${c.image}`)} alt={`${c.name}'s portrait`} width="35" height="35" />
       <div><dt>Who</dt><dd>{c.who}</dd></div>
       <div><dt>Side</dt><dd>{SIDE_LABEL[c.side]}</dd></div>
-      <div><dt>Effect</dt><dd>{c.effect ?? "None"}</dd></div>
-      <div><dt>Cost</dt><dd>{cost(c.cost)}</dd></div>
+      {c.effect ? <div><dt>Effect</dt><dd set:html={linkify(c.effect)} /></div> : <div><dt>Effect</dt><dd>None</dd></div>}
+      {isCoach ? <div><dt>Unlock</dt><dd set:html={linkify(c.unlock ?? "")} /></div> : <div><dt>Cost</dt><dd>{cost(c.cost)}</dd></div>}
     </Infobox>
 
     {
@@ -51,6 +53,8 @@ const description = `${c.name}: ${c.who.toLowerCase()}, ${SIDE_LABEL[c.side].toL
         ) : (
           <p class="lead"><b>{c.name}</b> is a {c.side}-side rower you can buy in the regatta shop.</p>
         )
+      ) : isCoach ? (
+        <p class="lead"><b>{c.name}</b> is {c.side === "both" ? "a coach" : `a ${c.side}-side coach`}. Coaches are unlocked by achievements and only row in Free Play. Coach effects aren't in the game yet (1.3.0).</p>
       ) : (
         <p class="lead"><b>{c.name}</b> is a club rower. Club rowers fill any empty seat for free, row either side and have no perk.</p>
       )
@@ -61,6 +65,6 @@ const description = `${c.name}: ${c.who.toLowerCase()}, ${SIDE_LABEL[c.side].toL
     <ul class="gallery small">{related.map((r) => <CharacterCard character={r} small />)}</ul>
 
     <Navbox current={id} />
-    <CategoryBar links={[{ label: "Characters", href: list }, { label: isShop ? "Shop rowers" : "Club rowers", href: list }]} />
+    <CategoryBar links={[{ label: "Characters", href: list }, { label: category, href: list }]} />
   </article>
 </WikiLayout>

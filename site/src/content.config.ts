@@ -8,11 +8,12 @@ const characters = defineCollection({
   loader: file("src/data/characters.json"),
   schema: z.object({
     name: z.string(),
-    kind: z.enum(["shop", "club"]), // club rowers are the free, no-perk NPCs every career starts with
+    kind: z.enum(["shop", "club", "coach"]), // club: the free, no-perk NPCs every career starts with; coach: unlocked by achievements, free play only
     who: z.string(),
     side: z.enum(["stroke", "bow", "both"]),
     cost: z.number().int().nonnegative(),
-    effect: z.string().nullable(),
+    effect: z.string().nullable(), // [text](path) links as in achievements
+    unlock: z.string().optional(), // coaches: what unlocks them; [text](path) links as in achievements
     image: z.string(), // file in public/img/wiki
   }),
 });

@@ -1,4 +1,5 @@
 // Shared helpers: base-aware URLs and the small formatting rules the wiki repeats.
+import { readFileSync } from "node:fs";
 import { getCollection, type CollectionEntry } from "astro:content";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -35,11 +36,32 @@ export function cost(points: number): string {
   return points === 0 ? "Free" : `${points.toLocaleString("en-GB")} points`;
 }
 
+/** One line under a character's name: their side, then what they cost. `long` spells it out for search results. */
+export function characterMeta(c: Character, long = false): string {
+  const price = {
+    shop: long ? cost(c.data.cost) : c.data.cost.toLocaleString("en-GB"),
+    club: "Free",
+    coach: long ? "Free play only" : "Coach",
+  }[c.data.kind];
+  return `${SIDE_LABEL[c.data.side]} · ${price}`;
+}
+
+/** Width and height of a PNG in public/img/wiki, read from its header (the game's trophies aren't all one size). */
+export function imageSize(file: string): { w: number; h: number } {
+  const png = readFileSync(`public/img/wiki/${file}`);
+  return { w: png.readUInt32BE(16), h: png.readUInt32BE(20) };
+}
+
 export function duration(seconds: number): string {
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
 const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/** Drop the [label](path) link syntax, keeping the label, for plain-text places like meta descriptions. */
+export function plain(text: string): string {
+  return text.replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1");
+}
 
 /** Escape text, then turn [label](path) into links to site pages. */
 export function linkify(text: string): string {
@@ -60,7 +82,8 @@ export async function wikiData() {
   const achievements = (await getCollection("achievements")).sort((a, b) => a.data.order - b.data.order);
   return {
     shopRowers: characters.filter((c) => c.data.kind === "shop").sort(byName),
-    clubRowers: characters.filter((c) => c.data.kind === "club"), // game order
+    clubRowers: characters.filter((c) => c.data.kind === "club").sort(byName),
+    coaches: characters.filter((c) => c.data.kind === "coach").sort(byName),
     characters,
     events,
     songs,

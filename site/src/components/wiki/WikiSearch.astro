@@ -2,7 +2,7 @@
 // Wiki search: a combobox whose results panel lists matching rowers, regattas, songs, achievements
 // and sections as you type. Every result is rendered here (hidden); the script only filters and orders them.
 import Silhouette from "./Silhouette.astro";
-import { url, characterUrl, eventUrl, songUrl, achievementUrl, SIDE_LABEL, wikiData, SECTIONS } from "../../lib/site";
+import { url, characterUrl, characterMeta, eventUrl, songUrl, achievementUrl, imageSize, wikiData, SECTIONS } from "../../lib/site";
 
 const { characters, events, songs, achievements } = await wikiData();
 const counts = { characters: `${characters.length} rowers`, events: `${events.length} regattas`, achievements: `${achievements.length} achievements`, songs: `${songs.length} songs` };
@@ -12,21 +12,24 @@ const hits: Hit[] = [
   ...SECTIONS.map((s) => ({ name: s.name, meta: counts[s.key], type: "Section", href: s.href, sil: s.key })),
   ...characters.map((c) => ({
     name: c.data.name,
-    meta: `${SIDE_LABEL[c.data.side]} · ${c.data.kind === "shop" ? `${c.data.cost.toLocaleString("en-GB")} points` : "Free"}`,
-    type: "Rower",
+    meta: characterMeta(c, true),
+    type: c.data.kind === "coach" ? "Coach" : "Rower",
     href: characterUrl(c.id),
     img: { src: url(`img/wiki/${c.data.image}`), w: 32, h: 32, portrait: true },
   })),
-  ...events.map((e) => ({
-    name: e.data.name,
-    meta: e.data.realName,
-    keys: `${e.data.realName} ${e.data.location}`,
-    type: "Regatta",
-    href: eventUrl(e.id),
-    img: { src: url(`img/wiki/${e.data.trophy}`), w: 18, h: 24 },
-  })),
+  ...events.map((e) => {
+    const t = imageSize(e.data.trophy);
+    return {
+      name: e.data.name,
+      meta: e.data.realName,
+      keys: `${e.data.realName} ${e.data.location}`,
+      type: "Regatta",
+      href: eventUrl(e.id),
+      img: { src: url(`img/wiki/${e.data.trophy}`), w: t.w * 2, h: t.h * 2 },
+    };
+  }),
   ...songs.map((s) => ({ name: s.data.title, meta: s.data.artist, keys: s.data.artist, type: "Song", href: songUrl(s.id), sil: "songs" as const })),
-  ...achievements.map((a) => ({ name: a.data.name, type: "Achievement", href: achievementUrl(a.id), img: { src: url(`img/wiki/${a.data.icon}`), w: 32, h: 32 } })),
+  ...achievements.filter((a) => a.data.name !== "???").map((a) => ({ name: a.data.name, type: "Achievement", href: achievementUrl(a.id), img: { src: url(`img/wiki/${a.data.icon}`), w: 32, h: 32 } })),
 ];
 ---
 

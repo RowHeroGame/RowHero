@@ -22,7 +22,7 @@ const { achievements } = await wikiData();
           achievements.map((a) => (
             <tr id={`ach-${a.id}`}>
               <td class="icon-cell"><img class="ach-icon" src={url(`img/wiki/${a.data.icon}`)} alt="" width="16" height="16" /></td>
-              <th scope="row">{a.data.name}</th>
+              {a.data.name === "???" ? <th scope="row"><span class="unknown">???</span></th> : <th scope="row">{a.data.name}</th>}
               {a.data.how === "???" ? <td><span class="unknown">???</span></td> : <td set:html={linkify(a.data.how)} />}
             </tr>
           ))
