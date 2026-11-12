@@ -4,9 +4,9 @@
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/launcher/GameLauncher.zip"
   },
   "game": {
-    "version": "1.3.0",
+    "version": "1.4.1",
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/game/RowHero.zip",
-    "changelog": "- Add Coaches",
+    "changelog": "New Loading screens. Custom Keybinds added. Old Reggatta Selector back. General bug fixes",
     "sizeMB": 1400
   },
   "gameData": {
