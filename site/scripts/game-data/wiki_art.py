@@ -14,7 +14,7 @@ ROWERS = {0: "nathaniel", 1: "theo-f", 2: "paul", 3: "theo-m", 4: "wilder", 5: "
           12: "casey", 13: "frankie", 14: "robin"}
 COACHES = {20: "bobby", 21: "german", 22: "sam", 23: "dickie", 24: "donald", 25: "matt", 26: "charlie"}
 ACHIEVEMENT_ICONS = ["charles", "river", "nat", "henley", "nobuy", "crew", "record", "note", "star",
-                     "scared", "lightning", "gold", "infinite"]
+                     "scared", "lightning", "gold", "infinite", "coaches"]
 TROPHIES = ["charles", "river", "nat", "henley"]
 
 

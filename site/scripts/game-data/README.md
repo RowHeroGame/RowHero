@@ -1,6 +1,6 @@
 # Game data scripts
 
-How the wiki's data and art were pulled out of an installed copy of Row Hero (game 1.3.0; songs from game data 1.0.1).
+How the wiki's data and art were pulled out of an installed copy of Row Hero (game 1.4.1; songs from game data 1.0.1).
 You shouldn't need these unless the game's rowers, songs or art change.
 
 Run them from `site/`. Paths below are the default install; swap in yours if it differs.

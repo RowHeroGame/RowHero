@@ -9,9 +9,10 @@
   { "id": "bonus-song-1", "order": 8, "name": "???", "icon": "ach-note.png", "how": "Beat the first bonus song. It appears on the regatta screen once you've won all four [regattas](wiki/events/)." },
   { "id": "bonus-song-2", "order": 9, "name": "???", "icon": "ach-note.png", "how": "Beat the second bonus song. Beating the first one unlocks it." },
   { "id": "bonus-song-3", "order": 10, "name": "???", "icon": "ach-note.png", "how": "Beat the third bonus song. Beating the second one unlocks it." },
-  { "id": "100-percent", "order": 11, "name": "100%", "icon": "ach-star.png", "how": "Unlock every other achievement, then click its card to claim it." },
+  { "id": "100-percent", "order": 11, "name": "100%", "icon": "ach-star.png", "how": "Unlock every other achievement, then click its card to claim it. Claiming it plays a one-off cutscene and puts the Olympus Trophy in the trophy cabinet on the home screen." },
   { "id": "get-scared", "order": 12, "name": "Get Scared", "icon": "ach-scared.png", "how": "???" },
   { "id": "thats-a-big-repair", "order": 13, "name": "That's a Big Repair", "icon": "ach-lightning.png", "how": "Get caught in the lightning storm. Storms only hit rainy races at the [Head of the Charles](wiki/events/head-of-the-charles/)." },
   { "id": "big-leagues", "order": 14, "name": "Big Leagues", "icon": "ach-gold.png", "how": "Turn on Expert mode in Options." },
-  { "id": "infinite-possibilities", "order": 15, "name": "Infinite Possibilities", "icon": "ach-infinite.png", "how": "Beat any custom song in Free Play. Make one with the [Song Converter](SongConverter.html)." }
+  { "id": "infinite-possibilities", "order": 15, "name": "Infinite Possibilities", "icon": "ach-infinite.png", "how": "Beat any custom song in Free Play. Make one with the [Song Converter](SongConverter.html)." },
+  { "id": "coaching-staff", "order": 16, "name": "Coaching Staff", "icon": "ach-coaches.png", "how": "Unlock all seven [coaches](wiki/characters/)." }
 ]
