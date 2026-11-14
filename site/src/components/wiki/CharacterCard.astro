@@ -6,15 +6,17 @@ import { url, characterUrl, characterMeta, type Character } from "../../lib/site
 interface Props {
   character: Character;
   small?: boolean;
+  /** Load the portrait straight away (for the cards on screen when the page opens). */
+  eager?: boolean;
 }
-const { character: c, small = false } = Astro.props;
+const { character: c, small = false, eager = false } = Astro.props;
 const size = small ? 70 : 105;
 const meta = characterMeta(c);
 ---
 
 <li>
   <a class={`card ${c.data.kind}`} href={characterUrl(c.id)}>
-    <img src={url(`img/wiki/${c.data.image}`)} alt="" width={size} height={size} loading="lazy" />
+    <img src={url(`img/wiki/${c.data.image}`)} alt="" width={size} height={size} loading={eager ? undefined : "lazy"} />
     <span class="card-name">{c.data.name}</span>
     <span class="card-meta">{meta}</span>
   </a>

@@ -16,7 +16,7 @@ const { shopRowers, clubRowers, coaches } = await wikiData();
   <p>Club rowers fill any empty seat for free, row either side and have no perk.</p>
   <p>Achievements unlock coaches. They only row in Free Play, where you pick your crew from the club rowers and your coaches.</p>
   <p>Your boat has four seats. Bow and 3 seat are bow side; 2 seat and stroke are stroke side.</p>
-  <ul class="gallery">{[...shopRowers, ...clubRowers, ...coaches].map((c) => <CharacterCard character={c} />)}</ul>
+  <ul class="gallery">{[...shopRowers, ...clubRowers, ...coaches].map((c, i) => <CharacterCard character={c} eager={i < 6} />)}</ul>
   <ul class="key" aria-label="Key">
     <li class="shop">Shop rowers</li>
     <li class="club">Club rowers</li>

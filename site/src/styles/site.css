@@ -1,5 +1,22 @@
 /* Row Hero site: shared pieces for every page (menu bar, download button, footer, privacy/terms text).
    River palette: deep navy, foam text, one blade-yellow accent. */
+
+/* Fallback faces sized to the web fonts' metrics, so text doesn't jump when Google Fonts swaps them in.
+   Measured from the fonts' own files (average advance of running text, hhea ascent/descent):
+   Redaction 10 vs Georgia, Redaction 35 Bold vs Georgia Bold, Silkscreen vs Courier New. */
+@font-face { font-family: "Redaction 10 fallback"; src: local("Georgia"); font-weight: 400; size-adjust: 99.7%; ascent-override: 90.3%; descent-override: 30.1%; line-gap-override: 0%; }
+@font-face { font-family: "Redaction 10 fallback"; src: local("Georgia Bold"), local("Georgia-Bold"); font-weight: 700; size-adjust: 99.7%; ascent-override: 90.3%; descent-override: 30.1%; line-gap-override: 0%; }
+@font-face { font-family: "Redaction 35 fallback"; src: local("Georgia Bold"), local("Georgia-Bold"); font-weight: 700; size-adjust: 93.8%; ascent-override: 96%; descent-override: 32%; line-gap-override: 0%; }
+@font-face { font-family: "Silkscreen fallback"; src: local("Courier New"), local("CourierNewPSMT"); font-weight: 400; size-adjust: 110.6%; ascent-override: 93.1%; descent-override: 22.6%; line-gap-override: 0%; }
+@font-face { font-family: "Silkscreen fallback"; src: local("Courier New Bold"), local("CourierNewPS-BoldMT"); font-weight: 700; size-adjust: 110.6%; ascent-override: 93.1%; descent-override: 22.6%; line-gap-override: 0%; }
+
+/* Same-origin page changes cross-fade where supported; the menu bar and wiki header hold still. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+.menubar { view-transition-name: menubar; }
+.wiki-head { view-transition-name: wiki-head; }
+
 :root {
   --sky: #5d9ee0;
   --river: #1f3f63;
@@ -9,14 +26,21 @@
   --oar: #f2c230;        /* single accent: blade yellow */
   --oar-ink: #1a1405;
   --line: rgba(238,244,251,.14);
-  --pixel: "Silkscreen", "Courier New", monospace;
-  --body: "Redaction 10", Georgia, "Times New Roman", serif;     /* lightly pixelated serif: readable at body size */
-  --display: "Redaction 35", Georgia, "Times New Roman", serif;  /* crunchier cut of the same family for headings */
+  --pixel: "Silkscreen", "Silkscreen fallback", "Courier New", monospace;
+  --body: "Redaction 10", "Redaction 10 fallback", Georgia, "Times New Roman", serif;     /* lightly pixelated serif: readable at body size */
+  --display: "Redaction 35", "Redaction 35 fallback", Georgia, "Times New Roman", serif;  /* crunchier cut of the same family for headings */
   color-scheme: dark;
+  accent-color: var(--oar);
+  scrollbar-color: var(--mist) var(--river-deep);
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--river-deep); color: var(--foam); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+body { margin: 0; background: var(--river-deep); color: var(--foam); font-family: var(--body); font-size: 1.125rem; line-height: 1.6; }
 a { color: inherit; }
+
+/* Skip link: first thing a keyboard user reaches; slides into view when focused */
+.skip-link { position: absolute; top: 8px; left: max(16px, env(safe-area-inset-left, 0px)); z-index: 100; padding: 8px 16px; font-family: var(--pixel); font-size: 0.875rem; color: var(--oar-ink); background: var(--oar); text-decoration: none; translate: 0 calc(-100% - 16px); }
+.skip-link:focus { translate: 0; outline: 3px solid var(--foam); outline-offset: 2px; }
+main:focus { outline: none; } /* focused only by the skip link (tabindex="-1"), never by tabbing */
 img, video { max-width: 100%; }
 .px { image-rendering: pixelated; }
 .wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
@@ -25,45 +49,45 @@ img, video { max-width: 100%; }
 .menubar { position: relative; z-index: 20; background: var(--river); border-bottom: 4px solid var(--oar); }
 .menubar ul { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 4px 32px; min-height: 56px; }
 .menubar li.push { margin-left: auto; }
-.menubar a { display: inline-flex; align-items: center; min-height: 48px; font-family: var(--pixel); font-size: 15px; color: var(--mist); text-decoration: none; }
+.menubar a { display: inline-flex; align-items: center; min-height: 48px; font-family: var(--pixel); font-size: 0.9375rem; color: var(--mist); text-decoration: none; }
 .menubar a[aria-current="page"] { color: var(--foam); }
 .menubar a.buy { color: var(--oar); }
 @media (hover: hover) { .menubar a:hover { color: var(--foam); text-decoration: underline; text-underline-offset: 4px; } }
 .menubar a:focus-visible { outline: 3px solid var(--oar); outline-offset: 2px; }
-@media (max-width: 719.98px) {
+@media (max-width: 44.99em) {
   .menubar ul { gap: 4px 20px; justify-content: center; }
   .menubar li.wide { display: none; }
   .menubar li.push { margin-left: 0; }
-  .menubar a { font-size: 14px; }
+  .menubar a { font-size: 0.875rem; }
 }
 
 /* Download button */
-.btn { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; white-space: nowrap; font-family: var(--pixel); font-weight: 700; font-size: clamp(17px, 2.6vw, 22px); color: var(--oar-ink); background: var(--oar); padding: 16px 24px; border: 3px solid var(--oar-ink); box-shadow: 6px 6px 0 var(--oar-ink); transition: transform 100ms ease-out; }
+.btn { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; white-space: nowrap; font-family: var(--pixel); font-weight: 700; font-size: clamp(1.0625rem, 0.5rem + 1.53vw, 1.375rem); color: var(--oar-ink); background: var(--oar); padding: 16px 24px; border: 3px solid var(--oar-ink); box-shadow: 6px 6px 0 var(--oar-ink); transition: transform 100ms ease-out; }
 @media (hover: hover) { .btn:hover { transform: translate(-2px,-2px); box-shadow: 8px 8px 0 var(--oar-ink); } }
 .btn:active { transform: translate(4px,4px); box-shadow: 2px 2px 0 var(--oar-ink); }
 .btn:focus-visible { outline: 3px solid var(--foam); outline-offset: 4px; }
 .btn svg { width: 22px; height: 22px; flex: none; }
-@media (max-width: 767.98px) { .btn { font-size: 15px; padding: 16px 20px; gap: 8px; } }
+@media (max-width: 47.99em) { .btn { font-size: 0.9375rem; padding: 16px 20px; gap: 8px; } }
 
 /* Footer: one row, details on the left, links on the right */
-.site-footer { padding-block: 32px 40px; font-size: 15px; color: var(--mist); border-top: 1px solid var(--line); }
+.site-footer { padding-block: 32px 40px; font-size: 0.9375rem; color: var(--mist); border-top: 1px solid var(--line); }
 .site-footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; }
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 0 24px; }
-.site-footer a { display: inline-flex; align-items: center; min-height: 44px; font-family: var(--pixel); font-size: 14px; color: var(--mist); text-underline-offset: 4px; }
+.site-footer a { display: inline-flex; align-items: center; min-height: 44px; font-family: var(--pixel); font-size: 0.875rem; color: var(--mist); text-underline-offset: 4px; }
 @media (hover: hover) { .site-footer a:hover { color: var(--foam); } }
 .site-footer a:focus-visible { outline: 3px solid var(--oar); outline-offset: 2px; }
-@media (max-width: 719.98px) { .site-footer .wrap, .site-footer nav { justify-content: center; text-align: center; } }
+@media (max-width: 44.99em) { .site-footer .wrap, .site-footer nav { justify-content: center; text-align: center; } }
 
 /* Privacy & terms */
-.doc-page { font-family: "Archivo", "Helvetica Neue", Arial, sans-serif; font-size: 17px; line-height: 1.65; }
+.doc-page { font-family: "Archivo", "Helvetica Neue", Arial, sans-serif; font-size: 1.0625rem; line-height: 1.65; }
 .doc-head { display: flex; justify-content: center; padding: 32px 16px 8px; }
 .doc-head a { line-height: 0; }
 .doc-head img { width: min(200px, 50vw); height: auto; filter: drop-shadow(0 4px 0 rgba(0,0,0,.35)); }
 .doc { max-width: 760px; padding-block: 24px 56px; }
 .doc a { color: var(--oar); text-underline-offset: 3px; }
-.doc h1 { font-size: clamp(28px, 5vw, 38px); line-height: 1.15; margin: 0 0 6px; text-wrap: balance; }
-.doc .date { font-family: var(--pixel); font-size: 13px; color: var(--mist); margin: 0 0 28px; }
-.doc h2 { font-size: 21px; margin: 36px 0 10px; padding-top: 18px; border-top: 1px solid var(--line); }
+.doc h1 { font-size: clamp(1.75rem, 1rem + 2.5vw, 2.375rem); line-height: 1.15; margin: 0 0 6px; text-wrap: balance; }
+.doc .date { font-family: var(--pixel); font-size: 0.8125rem; color: var(--mist); margin: 0 0 28px; }
+.doc h2 { font-size: 1.3125rem; margin: 36px 0 10px; padding-top: 18px; border-top: 1px solid var(--line); }
 .doc p, .doc li { max-width: 68ch; }
 .doc p { margin: 0 0 12px; }
 .doc ul { padding-left: 22px; margin: 0 0 12px; }
@@ -71,10 +95,10 @@ img, video { max-width: 100%; }
 .summary { background: var(--river); padding: 16px 18px; margin-bottom: 8px; }
 .summary p:last-child { margin: 0; }
 .tbl { overflow-x: auto; margin: 8px 0 14px; }
-.tbl table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 15.5px; }
+.tbl table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 0.96875rem; }
 .tbl th, .tbl td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
 .tbl th { color: var(--mist); font-weight: 500; }
+.tbl:focus-visible { outline: 3px solid var(--oar); outline-offset: 2px; }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-}
+/* Reduced motion is handled next to each animation (here, wiki.css and the home page) rather than globally. */
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }

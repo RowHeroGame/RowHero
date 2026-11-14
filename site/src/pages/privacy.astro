@@ -13,7 +13,7 @@ import { url } from "../lib/site";
 >
 <Menubar current="privacy" />
 <header class="doc-head"><a href={url("")}><img class="px" src={url("logo.png")} alt="Row Hero home" width="1296" height="828"></a></header>
-<main class="wrap doc"><article>
+<main class="wrap doc" id="content" tabindex="-1"><article>
 <h1>Privacy policy</h1>
 <p class="date">Last updated 8 November 2026</p>
 
@@ -30,7 +30,8 @@ import { url } from "../lib/site";
 
 <h2>Logging in with Google</h2>
 <p>Logging in is optional and is only used for the leaderboards. When you press "Log in with Google", Google asks you to share basic profile information with Row Hero. We only ask for the standard <code>openid</code>, <code>email</code> and <code>profile</code> permissions.</p>
-<div class="tbl"><table>
+<div class="tbl" tabindex="0" role="region" aria-label="Data we collect when you log in">
+<table>
 <thead><tr><th>Data</th><th>Where it comes from</th><th>Why we use it</th></tr></thead>
 <tbody>
 <tr><td>Your Google account ID and email address</td><td>Google sign-in</td><td>To create your Row Hero account and recognise you when you log in. Your email address is held by our sign-in provider (Firebase Authentication) and is never shown to other players.</td></tr>

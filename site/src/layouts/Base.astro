@@ -14,6 +14,17 @@ interface Props {
 const GAME_FONTS =
   "https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Redaction+10:wght@400;700&family=Redaction+35:wght@700&display=swap";
 const { title, description, bodyClass, fonts = GAME_FONTS } = Astro.props;
+
+// Prefetch same-origin pages when a visitor hovers or starts to tap a link (Chromium only; others ignore it).
+// The Song Converter is left out: it's a big standalone tool page few visitors open.
+const speculationRules = {
+  prefetch: [
+    {
+      where: { and: [{ href_matches: url("*") }, { not: { href_matches: url("SongConverter.html") } }] },
+      eagerness: "moderate",
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -21,16 +32,22 @@ const { title, description, bodyClass, fonts = GAME_FONTS } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="text-scale" content="scale" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#142a44" />
     <link rel="icon" type="image/png" sizes="32x32" href={url("img/favicon-32.png")} />
     <link rel="icon" type="image/png" sizes="16x16" href={url("img/favicon-16.png")} />
     <link rel="apple-touch-icon" href={url("img/apple-touch-icon.png")} />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href={fonts} />
+    <script is:inline type="speculationrules" set:html={JSON.stringify(speculationRules)} />
     <slot name="head" />
   </head>
   <body class={bodyClass}>
+    <a class="skip-link" href="#content">Skip to content</a>
     <slot />
   </body>
 </html>
