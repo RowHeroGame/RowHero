@@ -4,9 +4,9 @@
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/launcher/GameLauncher.zip"
   },
   "game": {
-    "version": "1.4.2",
+    "version": "1.4.3",
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/game/RowHero.zip",
-    "changelog": "Tiles added to home screen for 100% achievers plus various PB related Bugs",
+    "changelog": "Fixed freezing bug. Thanks Arya",
     "sizeMB": 1400
   },
   "gameData": {
