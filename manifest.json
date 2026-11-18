@@ -4,9 +4,9 @@
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/launcher/GameLauncher.zip"
   },
   "game": {
-    "version": "1.4.1",
+    "version": "1.4.2",
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/game/RowHero.zip",
-    "changelog": "New Loading screens. Custom Keybinds added. Old Reggatta Selector back. General bug fixes",
+    "changelog": "Tiles added to home screen for 100% achievers plus various PB related Bugs",
     "sizeMB": 1400
   },
   "gameData": {
