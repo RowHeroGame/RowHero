@@ -1,6 +1,6 @@
 {
   "launcher": {
-    "version": "1.4.0",
+    "version": "1.5",
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/launcher/GameLauncher.zip"
   },
   "game": {
@@ -13,5 +13,15 @@
     "version": "1.0.1",
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/gamedata/GameData.zip",
     "changelog": "- Initial Song Data"
+  },
+  "launcherMac": {
+    "version": "1.0",
+    "url": "https://github.com/RowHeroGame/RowHero/releases/download/launcher-mac/RowHeroLauncher-mac.zip"
+  },
+  "gameMac": {
+    "version": "1.1.0",
+    "url": "https://github.com/RowHeroGame/RowHero/releases/download/game-mac/RowHero-mac.zip",
+    "changelog": "- Row Hero on a Mac for the first time",
+    "sizeMB": 900
   }
 }
