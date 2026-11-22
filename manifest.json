@@ -4,9 +4,9 @@
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/launcher/GameLauncher.zip"
   },
   "game": {
-    "version": "1.4.3",
+    "version": "1.4.4",
     "url": "https://github.com/lfairclo/theo-game-launcher/releases/download/game/RowHero.zip",
-    "changelog": "Fixed freezing bug. Thanks Arya",
+    "changelog": "Changed song order slightly aswell as cutscene and loading times.",
     "sizeMB": 1400
   },
   "gameData": {
