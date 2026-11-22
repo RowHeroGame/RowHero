@@ -9,7 +9,9 @@ export function url(path = ""): string {
   return `${BASE}/${path.replace(/^\//, "")}`;
 }
 
+// Windows: the installer. Mac: the launcher, zipped as "RowHero Launcher.app" (Tools/package_mac.py in the launcher).
 export const DOWNLOAD_URL = "https://github.com/RowHeroGame/RowHero/releases/download/installer/RowHeroInstaller.exe";
+export const MAC_DOWNLOAD_URL = "https://github.com/RowHeroGame/RowHero/releases/download/launcher-mac/RowHeroLauncher-mac.zip";
 export const CONTACT = "mailto:rowherogame@gmail.com";
 
 export type Character = CollectionEntry<"characters">;

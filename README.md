@@ -55,6 +55,8 @@ the next time they open.
 | `game` | `RowHero.zip` | The contents of the Unity build folder, with `RowHero.exe` at the top of the zip. Unpacked into `%LocalAppData%\lfairclo\RowHero`. |
 | `gamedata` | `GameData.zip` | Unpacked into `%AppData%\lfairclo\RowHero`. |
 | `installer` | `RowHeroInstaller.exe` | The home page's download button links straight to it; not in the manifest. |
+| `launcher-mac` | `RowHeroLauncher-mac.zip` | `RowHero Launcher.app`, zipped with the launcher's `Tools/package_mac.py`. The home page's Mac button links straight to it; `launcherMac` in the manifest. |
+| `game-mac` | `RowHero-mac.zip` | `RowHero.app` from the Unity Mac build, zipped with `Tools/package_mac.py game` (never with Windows' own zip). `gameMac` in the manifest. |
 
 ```sh
 gh release upload launcher GameLauncher.zip --clobber -R RowHeroGame/RowHero

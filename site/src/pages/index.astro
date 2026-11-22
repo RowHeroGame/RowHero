@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Footer from "../components/Footer.astro";
 import { existsSync } from "node:fs";
-import { url, eventUrl, DOWNLOAD_URL } from "../lib/site";
+import { url, eventUrl, DOWNLOAD_URL, MAC_DOWNLOAD_URL } from "../lib/site";
 
 // The gameplay clip goes in only when public/gameplay.mp4 exists (adding it triggers a rebuild), so the page
 // never asks for a video that isn't there.
@@ -18,12 +18,12 @@ const season = [
 ];
 ---
 
-<Base title="Row Hero" description="Row Hero: a free rowing rhythm game for Windows. Play in time with the music to haul your crew to victory.">
+<Base title="Row Hero" description="Row Hero: a free rowing rhythm game for Windows and Mac. Play in time with the music to haul your crew to victory.">
 <Fragment slot="head">
 <link rel="canonical" href={site}>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Row Hero">
-<meta property="og:title" content="Row Hero: free rowing rhythm game for Windows">
+<meta property="og:title" content="Row Hero: free rowing rhythm game for Windows and Mac">
 <meta property="og:description" content="Play in time with the music to haul your crew to victory.">
 <meta property="og:url" content={site}>
 <meta property="og:image" content={`${site}img/og-image.png`}>
@@ -57,6 +57,24 @@ h2 { font-family: var(--display); font-weight: 700; font-size: clamp(1.75rem, 1r
 h2 .line { display: inline-block; }  /* break between sentences before breaking inside one */
 h3 { font-family: var(--pixel); font-size: 1.0625rem; font-weight: 700; letter-spacing: .02em; line-height: 1.25; margin: 0 0 8px; }
 p { margin: 0 auto 16px; max-width: 65ch; }
+
+/* Download buttons: Windows and Mac side by side. Whichever matches the visitor's computer goes first and
+   stays yellow; the other drops to the outlined style (data-os on <html>, set by the script below). */
+.dl-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 20px; }
+.dl-row .btn { min-height: 48px; }
+html[data-os="mac"] .dl-row .dl-win, html[data-os="win"] .dl-row .dl-mac { color: var(--foam); background: var(--river-deep); border-color: var(--foam); }
+html[data-os="mac"] .dl-row .dl-mac { order: -1; }
+.dl-meta { margin: 0; font-size: 1rem; color: var(--mist); }
+.hero .dl-meta { background: var(--river-deep); color: var(--foam); padding: 4px 12px; font-size: 0.9375rem; }
+
+/* Install steps: one panel per system, switched by the tabs (both show if JavaScript is off). */
+.os-tabs { display: flex; gap: 8px; margin: 0 0 16px; }
+.os-tabs button { min-height: 44px; padding: 0 16px; font-family: var(--pixel); font-size: 0.9375rem; color: var(--mist); background: none; border: 2px solid var(--line); cursor: pointer; }
+.os-tabs button[aria-selected="true"] { color: var(--oar-ink); background: var(--oar); border-color: var(--oar); }
+.os-tabs button:focus-visible { outline: 3px solid var(--foam); outline-offset: 2px; }
+.os-tabs[hidden] { display: none; }
+.os-panel + .os-panel { margin-top: 32px; }
+.os-panel[hidden] { display: none; }
 
 /* 2 Gameplay: add gameplay.mp4 to public/ and, once the site rebuilds, it plays; until then the Henley scene shows,
    with both crews rowing as you scroll (the still image underneath is the no-JavaScript fallback) */
@@ -126,11 +144,17 @@ p { margin: 0 auto 16px; max-width: 65ch; }
   <div class="hero-inner wrap">
     <h1 class="title"><img class="logo" src={url("logo.png")} alt="Row Hero" width="1296" height="828"></h1>
     <p class="tagline">Row to the beat.</p>
-    <a class="btn" id="dl-top" href={DOWNLOAD_URL} rel="noopener">
-      <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
-      Download for Windows
-    </a>
-    <p class="platform-note" hidden aria-live="polite">Row Hero runs on Windows PCs. <button type="button" class="send-link">Send yourself the link</button></p>
+    <div class="dl-row" id="dl-top">
+      <a class="btn dl-win" href={DOWNLOAD_URL} rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
+        Download for Windows
+      </a>
+      <a class="btn dl-mac" href={MAC_DOWNLOAD_URL} rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
+        Download for Mac
+      </a>
+    </div>
+    <p class="platform-note" hidden aria-live="polite">Row Hero runs on Windows PCs and Macs. <button type="button" class="send-link">Send yourself the link</button></p>
   </div>
 </header>
 
@@ -138,7 +162,7 @@ p { margin: 0 auto 16px; max-width: 65ch; }
   <section>
     <div class="wrap">
       <h2><span class="line">Play in time with the music.</span> <span class="line">Haul your crew to victory.</span></h2>
-      <p>Row Hero is a free rowing rhythm game for Windows.</p>
+      <p>Row Hero is a free rowing rhythm game for Windows and Mac.</p>
 
       <!-- Gameplay: save the clip as public/gameplay.mp4 and it plays here (muted, looping) after the next build.
            Until then the Henley scene shows, with both crews rowing as you scroll. -->
@@ -185,28 +209,48 @@ p { margin: 0 auto 16px; max-width: 65ch; }
     <div class="wrap">
       <h2>Download</h2>
       <div class="cta">
-        <a class="btn" href={DOWNLOAD_URL} rel="noopener">
-          <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
-          Download for Windows
-        </a>
-        <p class="cta-meta">Free, for Windows 10 and 11</p>
-        <p class="platform-note" hidden aria-live="polite">Row Hero runs on Windows PCs. <button type="button" class="send-link">Send yourself the link</button></p>
+        <div class="dl-row">
+          <a class="btn dl-win" href={DOWNLOAD_URL} rel="noopener">
+            <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
+            Download for Windows
+          </a>
+          <a class="btn dl-mac" href={MAC_DOWNLOAD_URL} rel="noopener">
+            <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
+            Download for Mac
+          </a>
+        </div>
+        <p class="cta-meta">Free, for Windows 10 and 11 and macOS 12 or newer</p>
+        <p class="platform-note" hidden aria-live="polite">Row Hero runs on Windows PCs and Macs. <button type="button" class="send-link">Send yourself the link</button></p>
       </div>
 
       <div class="get">
         <div class="install">
           <h3>Installing</h3>
-          <ol class="steps">
-            <li>Download the installer</li>
-            <li>Run it</li>
-            <li>Launch and row</li>
-          </ol>
-          <p class="note"><b>Windows warning?</b> The installer isn't signed yet, so Windows SmartScreen may say it "protected your PC". Click <b>More info</b>, then <b>Run anyway</b>.</p>
+          <div class="os-tabs" role="tablist" aria-label="Your computer" hidden>
+            <button type="button" role="tab" id="tab-win" aria-controls="install-win" aria-selected="true">Windows</button>
+            <button type="button" role="tab" id="tab-mac" aria-controls="install-mac" aria-selected="false" tabindex="-1">Mac</button>
+          </div>
+          <div class="os-panel" id="install-win" role="tabpanel" aria-labelledby="tab-win">
+            <ol class="steps">
+              <li>Download the installer</li>
+              <li>Run it</li>
+              <li>Launch and row</li>
+            </ol>
+            <p class="note"><b>Windows warning?</b> The installer isn't signed yet, so Windows SmartScreen may say it "protected your PC". Click <b>More info</b>, then <b>Run anyway</b>.</p>
+          </div>
+          <div class="os-panel" id="install-mac" role="tabpanel" aria-labelledby="tab-mac">
+            <ol class="steps">
+              <li>Download and open the zip</li>
+              <li>Drag RowHero Launcher into Applications</li>
+              <li>Right-click it, choose Open, and row</li>
+            </ol>
+            <p class="note"><b>Mac won't open it?</b> The launcher isn't signed by Apple yet. The first time, <b>right-click</b> it and choose <b>Open</b>, then <b>Open</b> again. If that doesn't work, go to <b>System Settings &gt; Privacy &amp; Security</b> and click <b>Open Anyway</b>. After that it opens normally, installs the game and songs, and keeps them up to date.</p>
+          </div>
         </div>
         <div class="reqs">
           <h3>System requirements</h3>
           <dl>
-            <div><dt>OS</dt><dd>Windows 10 or 11, 64&#8209;bit</dd></div>
+            <div><dt>OS</dt><dd>Windows 10 or 11, 64&#8209;bit<small>or macOS 12 or newer, Intel or Apple silicon</small></dd></div>
             <div><dt>Storage</dt><dd>1.2 GB<small>2.5 GB free while installing</small></dd></div>
             <div><dt>Input</dt><dd>Keyboard</dd></div>
             <div><dt>Internet</dt><dd>To install and update<small>Play offline any time</small></dd></div>
@@ -223,10 +267,49 @@ p { margin: 0 auto 16px; max-width: 65ch; }
 <script is:inline>
 // Top download button: let the download start, then bring the install steps and Windows warning into view.
 var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-document.getElementById("dl-top").addEventListener("click", function () {
-  setTimeout(function () {
-    document.getElementById("get-started").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-  }, 150);
+document.querySelectorAll("#dl-top a").forEach(function (a) {
+  a.addEventListener("click", function () {
+    if (a.classList.contains("dl-mac")) showOs("mac"); else showOs("win");
+    setTimeout(function () {
+      document.getElementById("get-started").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    }, 150);
+  });
+});
+
+// Which computer is this? Windows and Mac get their own button first and their own install steps;
+// anything else (phones, tablets, Chromebooks, Linux) gets both buttons and the "send yourself the link" note.
+var visitorOs = (function () {
+  var ua = navigator.userAgent, plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+  if (/Windows/i.test(plat) || /^Win/i.test(plat) || /Windows NT/i.test(ua)) return "win";
+  // iPads report themselves as Macs; a Mac has no touch screen.
+  if ((/Mac/i.test(plat) || /Macintosh/i.test(ua)) && !(navigator.maxTouchPoints > 1)) return "mac";
+  return "other";
+})();
+if (visitorOs !== "other") document.documentElement.dataset.os = visitorOs;
+
+// The install steps' tabs: one panel at a time once JavaScript is running.
+var tabs = document.querySelector(".os-tabs");
+function showOs(os) {
+  ["win", "mac"].forEach(function (k) {
+    var tab = document.getElementById("tab-" + k), panel = document.getElementById("install-" + k);
+    var on = k === os;
+    tab.setAttribute("aria-selected", on ? "true" : "false");
+    tab.tabIndex = on ? 0 : -1;
+    panel.hidden = !on;
+  });
+}
+tabs.hidden = false;
+showOs(visitorOs === "mac" ? "mac" : "win");
+tabs.addEventListener("click", function (e) {
+  var b = e.target.closest("[role=tab]");
+  if (b) showOs(b.id === "tab-mac" ? "mac" : "win");
+});
+tabs.addEventListener("keydown", function (e) {
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+  var next = document.getElementById("tab-mac").getAttribute("aria-selected") === "true" ? "win" : "mac";
+  showOs(next);
+  document.getElementById("tab-" + next).focus();
+  e.preventDefault();
 });
 
 // Gameplay clip: show it once it loads; don't autoplay for people who've asked for less motion.
@@ -273,10 +356,9 @@ if (video) {
   }
 })();
 
-// Not on Windows (phones, Macs, Chromebooks)? Say so under the download buttons, and offer to pass the link on.
+// Not on a Windows PC or a Mac (phones, tablets, Chromebooks)? Say so under the download buttons, and offer to pass the link on.
 (function () {
-  var ua = navigator.userAgent, uaPlat = (navigator.userAgentData && navigator.userAgentData.platform) || "";
-  if (/Windows/i.test(uaPlat) || /^Win/i.test(navigator.platform || "") || /Windows NT/i.test(ua)) return;
+  if (visitorOs !== "other") return;
   var url = location.href.split("#")[0];
   var canShare = !!navigator.share, canCopy = !!(navigator.clipboard && navigator.clipboard.writeText);
   document.querySelectorAll(".platform-note").forEach(function (note) {
@@ -286,7 +368,7 @@ if (video) {
     var label = canShare ? "Send yourself the link" : "Copy the link";
     btn.textContent = label;
     btn.addEventListener("click", function () {
-      if (canShare) { navigator.share({ title: "Row Hero", text: "Row Hero, a free rowing rhythm game for Windows", url: url }).catch(function () {}); return; }
+      if (canShare) { navigator.share({ title: "Row Hero", text: "Row Hero, a free rowing rhythm game for Windows and Mac", url: url }).catch(function () {}); return; }
       navigator.clipboard.writeText(url).then(function () {
         btn.textContent = "Link copied";
         setTimeout(function () { btn.textContent = label; }, 2500);
