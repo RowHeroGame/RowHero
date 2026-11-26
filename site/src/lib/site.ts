@@ -13,6 +13,8 @@ export function url(path = ""): string {
 export const DOWNLOAD_URL = "https://github.com/RowHeroGame/RowHero/releases/download/installer/RowHeroInstaller.exe";
 export const MAC_DOWNLOAD_URL = "https://github.com/RowHeroGame/RowHero/releases/download/launcher-mac/RowHeroLauncher-mac.zip";
 export const CONTACT = "mailto:rowherogame@gmail.com";
+// The "Now playing" bar above the footer.
+export const PLAYLIST = { name: "Now That's What I Call Guitar Hero", href: "https://open.spotify.com/playlist/4ZBF36Tr1oHp4Xh3AyZj2Z" };
 
 export type Character = CollectionEntry<"characters">;
 export type Event = CollectionEntry<"events">;

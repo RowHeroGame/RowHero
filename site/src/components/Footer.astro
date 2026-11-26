@@ -1,13 +1,41 @@
 ---
-// One row: details on the left, links on the right.
-import { url, CONTACT } from "../lib/site";
+// The "Now playing" strip, then the footer proper: one row, details on the left, links on the right.
+import { url, CONTACT, PLAYLIST } from "../lib/site";
 
 interface Props {
   /** Game version to show (the home page then swaps in the live one from the launcher manifest). */
   version?: string;
 }
 const { version } = Astro.props;
+
+const PLAY = "M3 1h2v1h1v1h1v1h1v1h1v2H8v1H7v1H6v1H5v1H3z";
 ---
+
+<!-- Now playing: a music-player strip linking to the Spotify playlist. The controls and progress are decoration;
+     the whole strip is one link, so it reads as "Now playing <name>, Listen on Spotify".
+     Wide screens get a desktop player (track, controls, extras); phones get an app's mini-player. -->
+<a class="np" href={PLAYLIST.href} rel="noopener">
+  <span class="np-now">
+    <img class="np-art" src={url("img/playlist-cover.png")} alt="" width="64" height="64" loading="lazy" decoding="async" />
+    <span class="np-text">
+      <span class="np-label">Now playing</span>
+      <span class="np-title"><span>{PLAYLIST.name}</span></span>
+    </span>
+  </span>
+  <span class="np-player" aria-hidden="true">
+    <span class="np-controls">
+      <svg viewBox="0 0 12 12" shape-rendering="crispEdges"><path d="M2 2h2v8H2zM10 2v8H9V9H8V8H7V7H6V5h1V4h1V3h1V2z" fill="currentColor"/></svg>
+      <span class="np-play"><svg viewBox="0 0 12 12" shape-rendering="crispEdges"><path d={PLAY} fill="currentColor"/></svg></span>
+      <svg viewBox="0 0 12 12" shape-rendering="crispEdges"><path d="M8 2h2v8H8zM2 2v8h1V9h1V8h1V7h1V5H5V4H4V3H3V2z" fill="currentColor"/></svg>
+    </span>
+    <span class="np-progress"><span>1:12</span><span class="np-track"><span></span></span><span>3:45</span></span>
+  </span>
+  <span class="np-cta">
+    <span class="np-eq" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+    Listen on Spotify
+  </span>
+  <span class="np-mini" aria-hidden="true"><svg viewBox="0 0 12 12" shape-rendering="crispEdges"><path d={PLAY} fill="currentColor"/></svg></span>
+</a>
 
 <footer class="site-footer">
   <div class="wrap">
