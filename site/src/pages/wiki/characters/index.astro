@@ -18,8 +18,8 @@ const { shopRowers, clubRowers, coaches } = await wikiData();
   <p>Your boat has four seats. Bow and 3 seat are bow side; 2 seat and stroke are stroke side.</p>
   <ul class="gallery">{[...shopRowers, ...clubRowers, ...coaches].map((c, i) => <CharacterCard character={c} eager={i < 6} />)}</ul>
   <ul class="key" aria-label="Key">
-    <li class="shop">Shop rowers</li>
-    <li class="club">Club rowers</li>
-    <li class="coach">Coaches</li>
+    <li class="shop">Crew</li>
+    <li class="club">Default</li>
+    <li class="coach">Coach</li>
   </ul>
 </WikiLayout>

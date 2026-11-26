@@ -22,10 +22,10 @@ const { shopRowers, clubRowers, coaches } = await wikiData();
 const isShop = c.kind === "shop";
 const isCoach = c.kind === "coach";
 const list = url("wiki/characters/");
-const related = [...shopRowers, ...clubRowers, ...coaches].filter((r) => r.data.side === c.side && r.id !== id);
-const sameSide = c.side === "both" ? "Everyone else who can row on either side." : `Everyone else who rows ${SIDE_LABEL[c.side].toLowerCase()}.`;
+const category = { shop: "Crew", club: "Default", coach: "Coach" }[c.kind];
+const related = [...shopRowers, ...clubRowers, ...coaches].filter((r) => (r.data.side === c.side || r.data.kind === c.kind) && r.id !== id);
+const sameSide = `Everyone else in the ${category} category, or who ${c.side === "both" ? "can row on either side" : `rows ${SIDE_LABEL[c.side].toLowerCase()}`}.`;
 const description = `${c.name}: ${c.who.toLowerCase()}, ${SIDE_LABEL[c.side].toLowerCase()}. ${c.effect ? plain(c.effect) : "No perk."}`;
-const category = { shop: "Shop rowers", club: "Club rowers", coach: "Coaches" }[c.kind];
 ---
 
 <WikiLayout title={`${c.name} | Row Hero Wiki`} description={description}>

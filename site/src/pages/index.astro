@@ -1,6 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import Footer from "../components/Footer.astro";
+import OsIcon from "../components/OsIcon.astro";
+import Away from "../components/Away.astro";
 import { existsSync } from "node:fs";
 import { url, eventUrl, DOWNLOAD_URL, MAC_DOWNLOAD_URL } from "../lib/site";
 
@@ -32,6 +34,18 @@ const season = [
 <meta property="og:image:alt" content="The Row Hero logo over two crews racing at Henley">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" as="image" href={url("background.png")} fetchpriority="high">
+<script is:inline>
+// Which device is this? Runs before the page paints so the right download shows from the first frame.
+// Phones and tablets first: Android says "Linux", and iPads say "Mac" but have a touch screen (Macs don't).
+(function () {
+  var n = navigator, ua = n.userAgent, uad = n.userAgentData, plat = (uad && uad.platform) || n.platform || "";
+  var os = (uad && uad.mobile) || /Android|iPhone|iPad|iPod/i.test(ua + " " + plat) || (/Mac/i.test(plat) && n.maxTouchPoints > 1) ? "mobile"
+    : /Win/i.test(plat) || /Windows NT/i.test(ua) ? "win"
+    : /Mac/i.test(plat) || /Macintosh/i.test(ua) ? "mac"
+    : "other";
+  document.documentElement.dataset.os = os;
+})();
+</script>
 </Fragment>
 <style is:global>
 /* Order follows a visitor's questions: what is it → what can I do → where do I race → how do I get it */
@@ -45,8 +59,6 @@ const season = [
 @keyframes bob { 0%,100% { transform: translateY(0) rotate(-.6deg); } 50% { transform: translateY(-6px) rotate(.6deg); } }
 .title { margin: 0; width: 100%; display: flex; justify-content: center; line-height: 0; }
 .tagline { margin: 0; font-family: var(--pixel); font-size: clamp(0.9375rem, 0.5rem + 1.3vw, 1.25rem); letter-spacing: .04em; background: var(--river-deep); color: var(--foam); padding: 8px 16px; box-shadow: 4px 4px 0 var(--oar); text-wrap: balance; }
-.platform-note { display: grid; justify-items: center; margin: 0; max-width: 36ch; padding: 8px 16px; background: var(--river-deep); color: var(--foam); font-size: 1rem; line-height: 1.5; text-wrap: balance; }
-.platform-note[hidden] { display: none; }
 .send-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0; font: inherit; font-weight: 700; color: var(--oar); background: none; border: 0; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .send-link:focus-visible { outline: 3px solid var(--foam); outline-offset: 2px; }
 
@@ -58,23 +70,32 @@ h2 .line { display: inline-block; }  /* break between sentences before breaking 
 h3 { font-family: var(--pixel); font-size: 1.0625rem; font-weight: 700; letter-spacing: .02em; line-height: 1.25; margin: 0 0 8px; }
 p { margin: 0 auto 16px; max-width: 65ch; }
 
-/* Download buttons: Windows and Mac side by side. Whichever matches the visitor's computer goes first and
-   stays yellow; the other drops to the outlined style (data-os on <html>, set by the script below). */
-.dl-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 20px; }
-.dl-row .btn { min-height: 48px; }
-html[data-os="mac"] .dl-row .dl-win, html[data-os="win"] .dl-row .dl-mac { color: var(--foam); background: var(--river-deep); border-color: var(--foam); }
-html[data-os="mac"] .dl-row .dl-mac { order: -1; }
-.dl-meta { margin: 0; font-size: 1rem; color: var(--mist); }
-.hero .dl-meta { background: var(--river-deep); color: var(--foam); padding: 4px 12px; font-size: 0.9375rem; }
+/* Which download shows: the script in <head> sets data-os on <html> to win, mac, mobile (phones and tablets)
+   or other (Linux, Chromebooks) before the page paints. Windows and Macs see just their own download, with
+   the other one a small link; everyone else is told the game needs a computer, and sees both downloads.
+   With JavaScript off there's no data-os, so both downloads show. */
+html:not([data-os="win"]) .for-win, html:not([data-os="mac"]) .for-mac,
+html:not([data-os="mobile"]):not([data-os="other"]) .for-away,
+html:not([data-os="mobile"]) .for-mobile, html:not([data-os="other"]) .for-other,
+html[data-os] .for-any,
+html[data-os="win"] .plat-mac, html[data-os="mac"] .plat-win { display: none; }
 
-/* Install steps: one panel per system, switched by the tabs (both show if JavaScript is off). */
-.os-tabs { display: flex; gap: 8px; margin: 0 0 16px; }
-.os-tabs button { min-height: 44px; padding: 0 16px; font-family: var(--pixel); font-size: 0.9375rem; color: var(--mist); background: none; border: 2px solid var(--line); cursor: pointer; }
-.os-tabs button[aria-selected="true"] { color: var(--oar-ink); background: var(--oar); border-color: var(--oar); }
-.os-tabs button:focus-visible { outline: 3px solid var(--foam); outline-offset: 2px; }
-.os-tabs[hidden] { display: none; }
-.os-panel + .os-panel { margin-top: 32px; }
-.os-panel[hidden] { display: none; }
+/* Hero: one big button for this computer */
+.pick { display: grid; justify-items: center; gap: 16px; }
+.pick-both { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 20px; }
+.alt-link svg { width: 14px; height: 14px; flex: none; }
+.alt-link:focus-visible { outline: 3px solid var(--foam); outline-offset: 2px; }
+.btn svg.os { width: 24px; height: 24px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* Not a computer the game runs on: an icon, why, and a way to pass the link on */
+.away { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4px 16px; max-width: 34rem; margin: 0 auto; padding: 16px 20px; background: var(--river-deep); color: var(--foam); font-size: 1rem; line-height: 1.5; text-align: left; border-left: 4px solid var(--oar); }
+.away > svg { grid-row: span 2; width: 40px; height: 40px; color: var(--mist); }
+.away p { margin: 0; text-wrap: pretty; }
+.away .send-link { justify-self: start; }
+
+/* On a phone or other device neither download is for this device, so both buttons drop to an outline */
+html[data-os="mobile"] .plat .btn, html[data-os="other"] .plat .btn { color: var(--foam); background: var(--river-deep); border-color: var(--foam); box-shadow: 6px 6px 0 var(--oar-ink); }
 
 /* 2 Gameplay: add gameplay.mp4 to public/ and, once the site rebuilds, it plays; until then the Henley scene shows,
    with both crews rowing as you scroll (the still image underneath is the no-JavaScript fallback) */
@@ -119,42 +140,50 @@ html[data-os="mac"] .dl-row .dl-mac { order: -1; }
   .season li:nth-child(2) .mark::after { display: none; }
 }
 
-/* 5 Download: the button up front, then install steps beside the requirements */
-.cta { display: grid; justify-items: center; gap: 16px; margin-top: 24px; }
-.cta-meta { margin: 0; font-size: 1rem; color: var(--mist); }
-.cta .platform-note { padding: 0; background: none; }
-.get { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 32px 48px; margin-top: 48px; align-items: start; text-align: left; }
-.install { padding-top: 24px; }
-.install h3 { margin-bottom: 16px; }
-.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; counter-reset: s; }
-.steps li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: center; font-weight: 700; }
-.steps li::before { content: counter(s); font-family: var(--pixel); font-weight: 700; font-size: 1.125rem; width: 44px; height: 44px; display: grid; place-items: center; background: var(--river); color: var(--oar); }
-.note { margin: 24px 0 0; padding: 16px; background: var(--river); font-size: 1rem; color: var(--mist); }
+/* 5 Download: a card per system (just this computer's, when we know it), then what every system needs */
+.away-wrap { margin: 24px 0 0; }
+.platforms { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 24px; margin-top: 32px; text-align: left; }
+.plat { container-type: inline-size; padding: 24px; background: var(--river); border-top: 4px solid var(--oar); }
+.plat-body { display: grid; gap: 24px; }
+@container (min-width: 640px) { .plat-body { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 32px 48px; align-items: start; } }
+.plat-get { display: grid; gap: 20px; justify-items: start; }
+.plat-head { display: flex; align-items: center; gap: 16px; }
+.plat-head svg { width: 48px; height: 48px; flex: none; color: var(--oar); }
+.plat h3 { margin: 0; font-size: 1.375rem; }
+.plat-req { margin: 0; font-size: 1rem; color: var(--mist); }
+.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: center; font-weight: 700; line-height: 1.35; }
+.steps li::before { content: counter(s); font-family: var(--pixel); font-weight: 700; font-size: 1.0625rem; width: 40px; height: 40px; display: grid; place-items: center; background: var(--river-deep); color: var(--oar); }
+.note { margin: 20px 0 0; padding: 16px; background: var(--river-deep); font-size: 1rem; color: var(--mist); }
 .note b { color: var(--foam); }
-.reqs { padding: 24px 24px 8px; background: var(--river); }
-.reqs h3 { margin-bottom: 8px; }
-.reqs dl { margin: 0; }
-.reqs dl div { display: grid; grid-template-columns: 96px 1fr; gap: 12px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--line); }
-.reqs dt { font-family: var(--pixel); font-size: 0.75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--mist); }
-.reqs dd { margin: 0; min-width: 0; }
-.reqs dd small { display: block; color: var(--mist); font-size: 1rem; }
+.also { margin: 24px 0 0; font-size: 1rem; color: var(--mist); }
+.alt-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-family: var(--pixel); font-size: 0.9375rem; color: var(--oar); text-underline-offset: 4px; }
+
+.reqs { margin-top: 48px; text-align: left; }
+.reqs h3 { margin-bottom: 16px; text-align: center; }
+.reqs dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin: 0; background: var(--line); border: 1px solid var(--line); }
+.reqs dl div { padding: 16px; background: var(--river-deep); }
+.reqs dt { margin-bottom: 4px; font-family: var(--pixel); font-size: 0.75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--mist); }
+.reqs dd { margin: 0; min-width: 0; font-weight: 700; }
+.reqs dd small { display: block; color: var(--mist); font-size: 0.9375rem; font-weight: 400; }
+@media (max-width: 47.99em) { .reqs dl { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>
 
 <header class="hero" id="top">
   <div class="hero-inner wrap">
     <h1 class="title"><img class="logo" src={url("logo.png")} alt="Row Hero" width="1296" height="828"></h1>
     <p class="tagline">Row to the beat.</p>
-    <div class="dl-row" id="dl-top">
-      <a class="btn dl-win" href={DOWNLOAD_URL} rel="noopener">
-        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
-        Download for Windows
-      </a>
-      <a class="btn dl-mac" href={MAC_DOWNLOAD_URL} rel="noopener">
-        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
-        Download for Mac
-      </a>
+    <div class="pick for-win">
+      <a class="btn dl-top" href={DOWNLOAD_URL} rel="noopener"><OsIcon os="win" class="os" />Download for Windows</a>
     </div>
-    <p class="platform-note" hidden aria-live="polite">Row Hero runs on Windows PCs and Macs. <button type="button" class="send-link">Send yourself the link</button></p>
+    <div class="pick for-mac">
+      <a class="btn dl-top" href={MAC_DOWNLOAD_URL} rel="noopener"><OsIcon os="mac" class="os" />Download for Mac</a>
+    </div>
+    <div class="pick-both for-any">
+      <a class="btn" href={DOWNLOAD_URL} rel="noopener"><OsIcon os="win" class="os" />Download for Windows</a>
+      <a class="btn" href={MAC_DOWNLOAD_URL} rel="noopener"><OsIcon os="mac" class="os" />Download for Mac</a>
+    </div>
+    <Away />
   </div>
 </header>
 
@@ -208,55 +237,59 @@ html[data-os="mac"] .dl-row .dl-mac { order: -1; }
   <section id="get-started">
     <div class="wrap">
       <h2>Download</h2>
-      <div class="cta">
-        <div class="dl-row">
-          <a class="btn dl-win" href={DOWNLOAD_URL} rel="noopener">
-            <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
-            Download for Windows
-          </a>
-          <a class="btn dl-mac" href={MAC_DOWNLOAD_URL} rel="noopener">
-            <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-1h1v-1h1v2h-1v1h-1v1h-1v1H8v-1H7v-1H6v-1H5V9H3V7h1v1h1v1h2zM2 13h12v2H2z"/></svg>
-            Download for Mac
-          </a>
-        </div>
-        <p class="cta-meta">Free, for Windows 10 and 11 and macOS 12 or newer</p>
-        <p class="platform-note" hidden aria-live="polite">Row Hero runs on Windows PCs and Macs. <button type="button" class="send-link">Send yourself the link</button></p>
-      </div>
+      <div class="away-wrap for-away"><Away /></div>
 
-      <div class="get">
-        <div class="install">
-          <h3>Installing</h3>
-          <div class="os-tabs" role="tablist" aria-label="Your computer" hidden>
-            <button type="button" role="tab" id="tab-win" aria-controls="install-win" aria-selected="true">Windows</button>
-            <button type="button" role="tab" id="tab-mac" aria-controls="install-mac" aria-selected="false" tabindex="-1">Mac</button>
+      <div class="platforms">
+        <article class="plat plat-win" aria-labelledby="plat-win">
+          <div class="plat-body">
+            <div class="plat-get">
+              <div class="plat-head">
+                <OsIcon os="win" />
+                <div><h3 id="plat-win">Windows</h3><p class="plat-req">Windows 10 or 11, 64&#8209;bit</p></div>
+              </div>
+              <a class="btn" href={DOWNLOAD_URL} rel="noopener"><OsIcon os="win" class="os" />Download<span class="sr-only"> for Windows</span></a>
+            </div>
+            <div>
+              <ol class="steps">
+                <li>Download the installer</li>
+                <li>Run it</li>
+                <li>Launch and row</li>
+              </ol>
+              <p class="note"><b>Windows warning?</b> The installer isn't signed yet, so Windows SmartScreen may say it "protected your PC". Click <b>More info</b>, then <b>Run anyway</b>.</p>
+            </div>
           </div>
-          <div class="os-panel" id="install-win" role="tabpanel" aria-labelledby="tab-win">
-            <ol class="steps">
-              <li>Download the installer</li>
-              <li>Run it</li>
-              <li>Launch and row</li>
-            </ol>
-            <p class="note"><b>Windows warning?</b> The installer isn't signed yet, so Windows SmartScreen may say it "protected your PC". Click <b>More info</b>, then <b>Run anyway</b>.</p>
+        </article>
+        <article class="plat plat-mac" aria-labelledby="plat-mac">
+          <div class="plat-body">
+            <div class="plat-get">
+              <div class="plat-head">
+                <OsIcon os="mac" />
+                <div><h3 id="plat-mac">Mac</h3><p class="plat-req">macOS 12 or newer, Intel or Apple silicon</p></div>
+              </div>
+              <a class="btn" href={MAC_DOWNLOAD_URL} rel="noopener"><OsIcon os="mac" class="os" />Download<span class="sr-only"> for Mac</span></a>
+            </div>
+            <div>
+              <ol class="steps">
+                <li>Download and open the zip</li>
+                <li>Drag RowHero Launcher into Applications</li>
+                <li>Right-click it, choose Open, and row</li>
+              </ol>
+              <p class="note"><b>Mac won't open it?</b> The launcher isn't signed by Apple yet. The first time, <b>right-click</b> it and choose <b>Open</b>, then <b>Open</b> again. If that doesn't work, go to <b>System Settings &gt; Privacy &amp; Security</b> and click <b>Open Anyway</b>. After that it opens normally, installs the game and songs, and keeps them up to date.</p>
+            </div>
           </div>
-          <div class="os-panel" id="install-mac" role="tabpanel" aria-labelledby="tab-mac">
-            <ol class="steps">
-              <li>Download and open the zip</li>
-              <li>Drag RowHero Launcher into Applications</li>
-              <li>Right-click it, choose Open, and row</li>
-            </ol>
-            <p class="note"><b>Mac won't open it?</b> The launcher isn't signed by Apple yet. The first time, <b>right-click</b> it and choose <b>Open</b>, then <b>Open</b> again. If that doesn't work, go to <b>System Settings &gt; Privacy &amp; Security</b> and click <b>Open Anyway</b>. After that it opens normally, installs the game and songs, and keeps them up to date.</p>
-          </div>
-        </div>
-        <div class="reqs">
-          <h3>System requirements</h3>
-          <dl>
-            <div><dt>OS</dt><dd>Windows 10 or 11, 64&#8209;bit<small>or macOS 12 or newer, Intel or Apple silicon</small></dd></div>
-            <div><dt>Storage</dt><dd>1.2 GB<small>2.5 GB free while installing</small></dd></div>
-            <div><dt>Input</dt><dd>Keyboard</dd></div>
-            <div><dt>Internet</dt><dd>To install and update<small>Play offline any time</small></dd></div>
-            <div><dt>Account</dt><dd>Not needed<small>Google login for leaderboards only</small></dd></div>
-          </dl>
-        </div>
+        </article>
+      </div>
+      <p class="also for-win">Setting up a Mac? <a class="alt-link" href={MAC_DOWNLOAD_URL} rel="noopener"><OsIcon os="mac" />Download for Mac</a></p>
+      <p class="also for-mac">Setting up a Windows PC? <a class="alt-link" href={DOWNLOAD_URL} rel="noopener"><OsIcon os="win" />Download for Windows</a></p>
+
+      <div class="reqs">
+        <h3>System requirements</h3>
+        <dl>
+          <div><dt>Storage</dt><dd>1.2 GB<small>2.5 GB free while installing</small></dd></div>
+          <div><dt>Input</dt><dd>Keyboard</dd></div>
+          <div><dt>Internet</dt><dd>To install and update<small>Play offline any time</small></dd></div>
+          <div><dt>Account</dt><dd>Not needed<small>Google login for leaderboards only</small></dd></div>
+        </dl>
       </div>
     </div>
   </section>
@@ -265,51 +298,14 @@ html[data-os="mac"] .dl-row .dl-mac { order: -1; }
 <Footer version="1.0.1" />
 
 <script is:inline>
-// Top download button: let the download start, then bring the install steps and Windows warning into view.
+// Top download button: let the download start, then bring the install steps and the unsigned-app warning into view.
 var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-document.querySelectorAll("#dl-top a").forEach(function (a) {
+document.querySelectorAll(".dl-top").forEach(function (a) {
   a.addEventListener("click", function () {
-    if (a.classList.contains("dl-mac")) showOs("mac"); else showOs("win");
     setTimeout(function () {
       document.getElementById("get-started").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
     }, 150);
   });
-});
-
-// Which computer is this? Windows and Mac get their own button first and their own install steps;
-// anything else (phones, tablets, Chromebooks, Linux) gets both buttons and the "send yourself the link" note.
-var visitorOs = (function () {
-  var ua = navigator.userAgent, plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
-  if (/Windows/i.test(plat) || /^Win/i.test(plat) || /Windows NT/i.test(ua)) return "win";
-  // iPads report themselves as Macs; a Mac has no touch screen.
-  if ((/Mac/i.test(plat) || /Macintosh/i.test(ua)) && !(navigator.maxTouchPoints > 1)) return "mac";
-  return "other";
-})();
-if (visitorOs !== "other") document.documentElement.dataset.os = visitorOs;
-
-// The install steps' tabs: one panel at a time once JavaScript is running.
-var tabs = document.querySelector(".os-tabs");
-function showOs(os) {
-  ["win", "mac"].forEach(function (k) {
-    var tab = document.getElementById("tab-" + k), panel = document.getElementById("install-" + k);
-    var on = k === os;
-    tab.setAttribute("aria-selected", on ? "true" : "false");
-    tab.tabIndex = on ? 0 : -1;
-    panel.hidden = !on;
-  });
-}
-tabs.hidden = false;
-showOs(visitorOs === "mac" ? "mac" : "win");
-tabs.addEventListener("click", function (e) {
-  var b = e.target.closest("[role=tab]");
-  if (b) showOs(b.id === "tab-mac" ? "mac" : "win");
-});
-tabs.addEventListener("keydown", function (e) {
-  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-  var next = document.getElementById("tab-mac").getAttribute("aria-selected") === "true" ? "win" : "mac";
-  showOs(next);
-  document.getElementById("tab-" + next).focus();
-  e.preventDefault();
 });
 
 // Gameplay clip: show it once it loads; don't autoplay for people who've asked for less motion.
@@ -356,13 +352,13 @@ if (video) {
   }
 })();
 
-// Not on a Windows PC or a Mac (phones, tablets, Chromebooks)? Say so under the download buttons, and offer to pass the link on.
+// Not on a Windows PC or a Mac (phones, tablets, Chromebooks)? The note saying so offers to pass the link on.
 (function () {
-  if (visitorOs !== "other") return;
+  var os = document.documentElement.dataset.os;
+  if (os !== "mobile" && os !== "other") return;
   var url = location.href.split("#")[0];
   var canShare = !!navigator.share, canCopy = !!(navigator.clipboard && navigator.clipboard.writeText);
-  document.querySelectorAll(".platform-note").forEach(function (note) {
-    note.hidden = false;
+  document.querySelectorAll(".away").forEach(function (note) {
     var btn = note.querySelector(".send-link");
     if (!canShare && !canCopy) { btn.remove(); return; }
     var label = canShare ? "Send yourself the link" : "Copy the link";
