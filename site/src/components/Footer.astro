@@ -1,6 +1,6 @@
 ---
 // The "Now playing" strip, then the footer proper: one row, details on the left, links on the right.
-import { url, CONTACT, PLAYLIST } from "../lib/site";
+import { url, CONTACT, PLAYLIST, GA_ID } from "../lib/site";
 
 interface Props {
   /** Game version to show (the home page then swaps in the live one from the launcher manifest). */
@@ -52,6 +52,7 @@ const PLAY = "M3 1h2v1h1v1h1v1h1v1h1v2H8v1H7v1H6v1H5v1H3z";
       <a href={url("wiki/")}>Wiki</a>
       <a href={url("privacy.html")}>Privacy</a>
       <a href={url("terms.html")}>Terms</a>
+      {GA_ID && <button type="button" class="consent-open">Cookies</button>}
       <a href={CONTACT}>Contact</a>
     </nav>
   </div>

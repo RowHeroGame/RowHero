@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Menubar from "../components/Menubar.astro";
 import Footer from "../components/Footer.astro";
-import { url } from "../lib/site";
+import { url, GA_ID } from "../lib/site";
 ---
 
 <Base
@@ -15,10 +15,10 @@ import { url } from "../lib/site";
 <header class="doc-head"><a href={url("")}><img class="px" src={url("logo.png")} alt="Row Hero home" width="1296" height="828"></a></header>
 <main class="wrap doc" id="content" tabindex="-1"><article>
 <h1>Privacy policy</h1>
-<p class="date">Last updated 8 November 2026</p>
+<p class="date">Last updated 26 November 2026</p>
 
 <div class="summary">
-<p><b>Short version:</b> You can play Row Hero offline without giving us any personal data. If you choose to log in with Google for the leaderboards, we keep your display name, picture and best scores so other players can see them, and your email address so we know which account is yours. We don't sell your data, show ads or track you, and you can have it all deleted whenever you like.</p>
+<p><b>Short version:</b> You can play Row Hero offline without giving us any personal data. If you choose to log in with Google for the leaderboards, we keep your display name, picture and best scores so other players can see them, and your email address so we know which account is yours. This website uses analytics cookies only with your consent. We don't sell your data or show ads, and you can have it all deleted whenever you like.</p>
 </div>
 
 <h2>Who we are</h2>
@@ -59,8 +59,24 @@ import { url } from "../lib/site";
 <li>rowhero.uk is hosted by GitHub Pages. GitHub records visitors' IP addresses to keep its service secure. We don't have access to them.</li>
 <li>Our pages load their fonts from Google Fonts, so your browser sends your IP address to Google when you visit. Google says it doesn't use Google Fonts requests to build profiles or target ads.</li>
 <li>The home page asks GitHub for the latest version number, so GitHub also receives your IP address then.</li>
-<li>The site doesn't use cookies, analytics or ads. The Song Converter runs entirely in your browser, and nothing you put into it is uploaded.</li>
+<li>The site doesn't show ads. The Song Converter runs entirely in your browser, and nothing you put into it is uploaded.</li>
 </ul>
+
+<h3 id="analytics">Analytics cookies</h3>
+<p>This website uses Google Analytics, a web analytics service provided by Google, to collect statistical information about how the website is used. We use analytics cookies only with your prior consent. No analytics cookies are set, and no data is sent to Google Analytics, unless you select <b>Accept</b> in the cookie banner. If you select <b>Reject</b>, or your browser sends a Global Privacy Control signal, Google Analytics is not loaded.</p>
+<p>If you consent, the following cookies are set on your device:</p>
+<div class="tbl" tabindex="0" role="region" aria-label="Analytics cookies">
+<table>
+<thead><tr><th>Cookie</th><th>Purpose</th><th>Duration</th></tr></thead>
+<tbody>
+<tr><td><code>_ga</code></td><td>Distinguishes one visitor from another</td><td>2 years</td></tr>
+<tr><td><code>_ga_{GA_ID.replace(/^G-/, "")}</code></td><td>Keeps track of the current visit</td><td>2 years</td></tr>
+</tbody></table></div>
+<p><b>Data collected:</b> the pages you visit, the website that referred you, your browser and device type, and your approximate location (city or country), which is derived from your IP address. Google Analytics does not store IP addresses.</p>
+<p><b>Purpose and lawful basis:</b> we use this data only to measure and improve the website. Our lawful basis is your consent. We have disabled Google's advertising features, and the data is not used for advertising or to build advertising profiles.</p>
+<p><b>Retention:</b> Google Analytics retains event-level and user-level data for 2 months, after which only aggregated reports remain.</p>
+<p><b>Processor and international transfers:</b> Google processes this data on our behalf as a data processor. Google may transfer it outside the UK. Where it does, the transfer is protected by safeguards recognised under UK law, such as the UK–US data bridge or the UK International Data Transfer Addendum.</p>
+<p><b>Your choice:</b> your choice is stored in your browser's local storage, which is strictly necessary to record it. You may withdraw or change your consent at any time{GA_ID ? <> by selecting <button type="button" class="consent-open">Change cookie settings</button> or</> : " via"} the "Cookies" link at the foot of every page. When you withdraw consent, the analytics cookies are deleted from your browser. Withdrawing consent does not affect the lawfulness of any processing carried out before you withdrew it.</p>
 
 <h2>Emailing us</h2>
 <p>If you email us, we'll see your email address and whatever you write. We only use it to reply to you, and we don't keep it for longer than we need to.</p>
@@ -69,7 +85,7 @@ import { url } from "../lib/site";
 <p>Some of the rowers in Row Hero are named after real rowers from the club the game is based on, and have pixel-art pictures. They also appear in the wiki on this website. If you're one of them, or their parent or guardian, and you'd like your name or picture changed or removed, email us. We'll take it off the website straight away and out of the game in the next update.</p>
 
 <h2>Our legal basis</h2>
-<p>UK data protection law says we need a legal reason, called a "lawful basis", to use personal data. Ours is <b>legitimate interests</b>: running the leaderboards you've chosen to join and keeping them fair and secure, replying to your emails, and including members of the club in a game made for the club. We keep what we collect to a minimum, and you can object or ask us to delete your data at any time.</p>
+<p>UK data protection law says we need a legal reason, called a "lawful basis", to use personal data. Ours is <b>legitimate interests</b>: running the leaderboards you've chosen to join and keeping them fair and secure, replying to your emails, and including members of the club in a game made for the club. For Google Analytics on this website, it's your <b>consent</b>, which you can withdraw at any time. We keep what we collect to a minimum, and you can object or ask us to delete your data at any time.</p>
 
 <h2>How long we keep it</h2>
 <p>We keep your account and scores until you ask us to delete them. If we shut down the online features, we'll delete the leaderboard data. We may delete accounts or scores sooner, for example test scores, accounts that haven't been used for a long time, or anything that breaks the <a href={url("terms.html")}>terms of service</a>.</p>
