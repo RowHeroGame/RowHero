@@ -15,7 +15,7 @@ const meta = characterMeta(c);
 ---
 
 <li>
-  <a class={`card ${c.data.kind}`} href={characterUrl(c.id)}>
+  <a class={`card ${c.data.kind} side-${c.data.side}`} href={characterUrl(c.id)}>
     <img src={url(`img/wiki/${c.data.image}`)} alt="" width={size} height={size} loading={eager ? undefined : "lazy"} />
     <span class="card-name">{c.data.name}</span>
     <span class="card-meta">{meta}</span>

@@ -1,0 +1,13 @@
+---
+// Shown instead of a download on devices the game doesn't run on (styled on the home page; the script there
+// wires up the button). Which line shows comes from data-os on <html>: "mobile" or "other".
+import OsIcon from "./OsIcon.astro";
+---
+
+<div class="away for-away" aria-live="polite">
+  <OsIcon os="phone" class="for-mobile" />
+  <OsIcon os="screen" class="for-other" />
+  <p class="for-mobile">Row Hero is a computer game. Download it on a Windows PC or a Mac.</p>
+  <p class="for-other">Row Hero isn't available for this computer yet. It runs on Windows PCs and Macs.</p>
+  <button type="button" class="send-link">Send yourself the link</button>
+</div>

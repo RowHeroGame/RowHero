@@ -126,6 +126,9 @@
 .card-meta, .venue-meta { font-family: var(--pixel); font-size: 0.75rem; color: var(--mist); }
 @media (hover: hover) {
   .card:hover, .venue:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--oar); }
+  /* Stroke side is port (red), bow side is starboard (green); both-siders keep the oar colour */
+  .card.side-stroke:hover { box-shadow: 6px 6px 0 #c8382e; }
+  .card.side-bow:hover { box-shadow: 6px 6px 0 #3e9b4f; }
   .card:hover :is(.card-name), .venue:hover .venue-name { text-decoration: underline; }
 }
 .card:focus-visible, .venue:focus-visible { outline: 3px solid var(--oar); outline-offset: 3px; }
