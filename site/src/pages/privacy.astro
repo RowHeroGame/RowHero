@@ -62,21 +62,27 @@ import { url, GA_ID } from "../lib/site";
 <li>The site doesn't show ads. The Song Converter runs entirely in your browser, and nothing you put into it is uploaded.</li>
 </ul>
 
-<h3 id="analytics">Analytics cookies</h3>
-<p>This website uses Google Analytics, a web analytics service provided by Google, to collect statistical information about how the website is used. We use analytics cookies only with your prior consent. No analytics cookies are set, and no data is sent to Google Analytics, unless you select <b>Accept</b> in the cookie banner. If you select <b>Reject</b>, or your browser sends a Global Privacy Control signal, Google Analytics is not loaded.</p>
-<p>If you consent, the following cookies are set on your device:</p>
+<h3 id="analytics">Cookies and analytics</h3>
+<p>This website doesn't set any cookies unless you agree to them. The first time you visit, a bar at the bottom of the page asks whether you'll allow analytics cookies. Until you press <b>Accept</b>, Google Analytics isn't loaded, no cookies are set and nothing is sent to Google Analytics. If you press <b>Reject</b>, or your browser sends a Global Privacy Control signal, it stays that way.</p>
+<p>If you accept, we use Google Analytics to see how the website is used so we can improve it, and it sets these cookies:</p>
 <div class="tbl" tabindex="0" role="region" aria-label="Analytics cookies">
 <table>
-<thead><tr><th>Cookie</th><th>Purpose</th><th>Duration</th></tr></thead>
+<thead><tr><th>Cookie</th><th>What it's for</th><th>How long it lasts</th></tr></thead>
 <tbody>
-<tr><td><code>_ga</code></td><td>Distinguishes one visitor from another</td><td>2 years</td></tr>
+<tr><td><code>_ga</code></td><td>Tells one visitor apart from another</td><td>2 years</td></tr>
 <tr><td><code>_ga_{GA_ID.replace(/^G-/, "")}</code></td><td>Keeps track of the current visit</td><td>2 years</td></tr>
 </tbody></table></div>
-<p><b>Data collected:</b> the pages you visit, the website that referred you, your browser and device type, and your approximate location (city or country), which is derived from your IP address. Google Analytics does not store IP addresses.</p>
-<p><b>Purpose and lawful basis:</b> we use this data only to measure and improve the website. Our lawful basis is your consent. We have disabled Google's advertising features, and the data is not used for advertising or to build advertising profiles.</p>
-<p><b>Retention:</b> Google Analytics retains event-level and user-level data for 2 months, after which only aggregated reports remain.</p>
-<p><b>Processor and international transfers:</b> Google processes this data on our behalf as a data processor. Google may transfer it outside the UK. Where it does, the transfer is protected by safeguards recognised under UK law, such as the UK–US data bridge or the UK International Data Transfer Addendum.</p>
-<p><b>Your choice:</b> your choice is stored in your browser's local storage, which is strictly necessary to record it. You may withdraw or change your consent at any time{GA_ID ? <> by selecting <button type="button" class="consent-open">Change cookie settings</button> or</> : " via"} the "Cookies" link at the foot of every page. When you withdraw consent, the analytics cookies are deleted from your browser. Withdrawing consent does not affect the lawfulness of any processing carried out before you withdrew it.</p>
+<p>Google Analytics records the pages you visit, the website that sent you here, your browser and device type, and your approximate location (city or country, worked out from your IP address). When you download the game, it also records whether you chose Windows or Mac, which download button you pressed, and how long into your visit you pressed it. Google Analytics doesn't store your IP address.</p>
+<p>Google handles this data for us as our processor. We've turned off Google's advertising features, so it isn't used for ads or to build advertising profiles. Detailed data is deleted after 2 months, leaving only overall totals. Google may transfer the data outside the UK. When it does, the transfer is protected by safeguards recognised under UK law, such as the UK–US data bridge or the UK International Data Transfer Addendum.</p>
+<p>Your browser also keeps two small notes for this website. They aren't cookies, and they're never sent to us or anyone else:</p>
+<div class="tbl" tabindex="0" role="region" aria-label="Other data stored in your browser">
+<table>
+<thead><tr><th>Name</th><th>What it's for</th><th>How long it lasts</th></tr></thead>
+<tbody>
+<tr><td><code>rowhero-analytics</code></td><td>Remembers whether you accepted or rejected, so we don't ask again</td><td>Until you clear this site's data in your browser</td></tr>
+<tr><td><code>rowhero-visit-start</code></td><td>Only if you accept: when your visit began, for timing downloads</td><td>Until you close the tab</td></tr>
+</tbody></table></div>
+<p>You can change your mind at any time{GA_ID ? <> with this <button type="button" class="consent-open">Cookie settings</button> button or</> : " with"} the <b>Cookies</b> button at the foot of every page. If you switch from Accept to Reject, we stop sending data straight away and delete the Google Analytics cookies from your browser. That doesn't affect anything collected while you'd agreed. Our lawful basis for analytics is your consent.</p>
 
 <h2>Emailing us</h2>
 <p>If you email us, we'll see your email address and whatever you write. We only use it to reply to you, and we don't keep it for longer than we need to.</p>
