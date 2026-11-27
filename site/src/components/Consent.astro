@@ -9,8 +9,8 @@ import { GA_ID, url } from "../lib/site";
   GA_ID && (
     <aside class="consent" aria-label="Cookies" data-ga-id={GA_ID} hidden>
       <p>
-        With your consent, we use Google Analytics cookies to collect statistical information about how this website
-        is used. They are not used for advertising. See our <a href={url("privacy.html#analytics")}>Privacy Policy</a>.
+        With your consent, we use analytics cookies to measure how this website is used. They are not used for
+        advertising. <a href={url("privacy.html#analytics")}>Privacy Policy</a>
       </p>
       <div class="consent-actions">
         <button type="button" data-consent="granted">Accept</button>
@@ -42,10 +42,29 @@ import { GA_ID, url } from "../lib/site";
     } catch {}
   }
 
+  // When this visit began, for "how long before they downloaded". Kept in sessionStorage (cleared when the tab
+  // closes) and only written once the visitor has accepted, so a reject leaves nothing behind. Started at the
+  // current page's load, so a visitor who accepts on their first page is timed from when they arrived.
+  const START_KEY = "rowhero-visit-start";
+  function visitStart(): number {
+    try {
+      const v = Number(sessionStorage.getItem(START_KEY));
+      if (v > 0) return v;
+      const now = Math.round(performance.timeOrigin);
+      sessionStorage.setItem(START_KEY, String(now));
+      return now;
+    } catch {
+      return Math.round(performance.timeOrigin);
+    }
+  }
+
   let loaded = false;
+  let granted = false;
   function startAnalytics(id: string) {
+    granted = true;
     if (loaded) return;
     loaded = true;
+    visitStart();
     (window as any)[`ga-disable-${id}`] = false;
     const w = window as any;
     w.dataLayer = w.dataLayer || [];
@@ -71,6 +90,10 @@ import { GA_ID, url } from "../lib/site";
 
   // Changing an earlier "Accept" to "Reject": stop sending, then delete the _ga cookies GA set.
   function stopAnalytics(id: string) {
+    granted = false;
+    try {
+      sessionStorage.removeItem(START_KEY);
+    } catch {}
     (window as any)[`ga-disable-${id}`] = true;
     (window as any).gtag?.("consent", "update", { analytics_storage: "denied" });
     const parts = location.hostname.split(".");
@@ -95,6 +118,18 @@ import { GA_ID, url } from "../lib/site";
       bar.hidden = true;
       if (next === "granted") startAnalytics(id);
       else stopAnalytics(id);
+    });
+
+    // Download buttons (data-download="windows" | "mac", data-placement says which button on the page). In GA this
+    // is the "download" key event; platform, placement and seconds_on_site are its custom definitions.
+    document.addEventListener("click", (e) => {
+      const link = (e.target as Element).closest<HTMLElement>("[data-download]");
+      if (!link || !granted) return;
+      (window as any).gtag?.("event", "download", {
+        platform: link.dataset.download,
+        placement: link.dataset.placement,
+        seconds_on_site: Math.max(0, Math.round((Date.now() - visitStart()) / 1000)),
+      });
     });
 
     // The footer's "Cookies" button and the privacy page's button bring the bar back.

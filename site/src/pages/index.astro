@@ -174,14 +174,14 @@ html[data-os="mobile"] .plat .btn, html[data-os="other"] .plat .btn { color: var
     <h1 class="title"><img class="logo" src={url("logo.png")} alt="Row Hero" width="1296" height="828"></h1>
     <p class="tagline">Row to the beat.</p>
     <div class="pick for-win">
-      <a class="btn dl-top" href={DOWNLOAD_URL} rel="noopener"><OsIcon os="win" class="os" />Download for Windows</a>
+      <a class="btn dl-top" href={DOWNLOAD_URL} data-download="windows" data-placement="hero" rel="noopener"><OsIcon os="win" class="os" />Download for Windows</a>
     </div>
     <div class="pick for-mac">
-      <a class="btn dl-top" href={MAC_DOWNLOAD_URL} rel="noopener"><OsIcon os="mac" class="os" />Download for Mac</a>
+      <a class="btn dl-top" href={MAC_DOWNLOAD_URL} data-download="mac" data-placement="hero" rel="noopener"><OsIcon os="mac" class="os" />Download for Mac</a>
     </div>
     <div class="pick-both for-any">
-      <a class="btn" href={DOWNLOAD_URL} rel="noopener"><OsIcon os="win" class="os" />Download for Windows</a>
-      <a class="btn" href={MAC_DOWNLOAD_URL} rel="noopener"><OsIcon os="mac" class="os" />Download for Mac</a>
+      <a class="btn" href={DOWNLOAD_URL} data-download="windows" data-placement="hero" rel="noopener"><OsIcon os="win" class="os" />Download for Windows</a>
+      <a class="btn" href={MAC_DOWNLOAD_URL} data-download="mac" data-placement="hero" rel="noopener"><OsIcon os="mac" class="os" />Download for Mac</a>
     </div>
     <Away />
   </div>
@@ -247,7 +247,7 @@ html[data-os="mobile"] .plat .btn, html[data-os="other"] .plat .btn { color: var
                 <OsIcon os="win" />
                 <div><h3 id="plat-win">Windows</h3><p class="plat-req">Windows 10 or 11, 64&#8209;bit</p></div>
               </div>
-              <a class="btn" href={DOWNLOAD_URL} rel="noopener"><OsIcon os="win" class="os" />Download<span class="sr-only"> for Windows</span></a>
+              <a class="btn" href={DOWNLOAD_URL} data-download="windows" data-placement="download-section" rel="noopener"><OsIcon os="win" class="os" />Download<span class="sr-only"> for Windows</span></a>
             </div>
             <div>
               <ol class="steps">
@@ -266,7 +266,7 @@ html[data-os="mobile"] .plat .btn, html[data-os="other"] .plat .btn { color: var
                 <OsIcon os="mac" />
                 <div><h3 id="plat-mac">Mac</h3><p class="plat-req">macOS 12 or newer, Intel or Apple silicon</p></div>
               </div>
-              <a class="btn" href={MAC_DOWNLOAD_URL} rel="noopener"><OsIcon os="mac" class="os" />Download<span class="sr-only"> for Mac</span></a>
+              <a class="btn" href={MAC_DOWNLOAD_URL} data-download="mac" data-placement="download-section" rel="noopener"><OsIcon os="mac" class="os" />Download<span class="sr-only"> for Mac</span></a>
             </div>
             <div>
               <ol class="steps">
@@ -279,8 +279,8 @@ html[data-os="mobile"] .plat .btn, html[data-os="other"] .plat .btn { color: var
           </div>
         </article>
       </div>
-      <p class="also for-win">Setting up a Mac? <a class="alt-link" href={MAC_DOWNLOAD_URL} rel="noopener"><OsIcon os="mac" />Download for Mac</a></p>
-      <p class="also for-mac">Setting up a Windows PC? <a class="alt-link" href={DOWNLOAD_URL} rel="noopener"><OsIcon os="win" />Download for Windows</a></p>
+      <p class="also for-win">Setting up a Mac? <a class="alt-link" href={MAC_DOWNLOAD_URL} data-download="mac" data-placement="other-os-link" rel="noopener"><OsIcon os="mac" />Download for Mac</a></p>
+      <p class="also for-mac">Setting up a Windows PC? <a class="alt-link" href={DOWNLOAD_URL} data-download="windows" data-placement="other-os-link" rel="noopener"><OsIcon os="win" />Download for Windows</a></p>
 
       <div class="reqs">
         <h3>System requirements</h3>
