@@ -1,7 +1,8 @@
 ---
 // Document shell shared by every page: icons, fonts and the global stylesheet.
 import "../styles/site.css";
-import { url } from "../lib/site";
+import { url, GA_ID } from "../lib/site";
+import Consent from "../components/Consent.astro";
 
 interface Props {
   title: string;
@@ -49,5 +50,6 @@ const speculationRules = {
   <body class={bodyClass}>
     <a class="skip-link" href="#content">Skip to content</a>
     <slot />
+    {GA_ID && <Consent />}
   </body>
 </html>

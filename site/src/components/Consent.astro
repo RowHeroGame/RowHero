@@ -1,0 +1,142 @@
+---
+// Google Analytics, opt-in only. Nothing from Google loads until a visitor presses "Accept" on this bar; the choice
+// is remembered in localStorage and can be changed from the footer's "Cookies" button or the privacy page.
+// Renders nothing while GA_ID (src/lib/site.ts) is empty.
+import { GA_ID, url } from "../lib/site";
+---
+
+{
+  GA_ID && (
+    <aside class="consent" aria-label="Cookies" data-ga-id={GA_ID} hidden>
+      <p>
+        With your consent, we use analytics cookies to measure how this website is used. They are not used for
+        advertising. <a href={url("privacy.html#analytics")}>Privacy Policy</a>
+      </p>
+      <div class="consent-actions">
+        <button type="button" data-consent="granted">Accept</button>
+        <button type="button" data-consent="denied">Reject</button>
+      </div>
+    </aside>
+  )
+}
+
+<script>
+  const KEY = "rowhero-analytics"; // "granted" | "denied"; unset means the visitor hasn't chosen yet
+  type Choice = "granted" | "denied";
+
+  const bar = document.querySelector<HTMLElement>(".consent");
+  const id = bar?.dataset.gaId;
+
+  function stored(): Choice | null {
+    try {
+      const v = localStorage.getItem(KEY);
+      return v === "granted" || v === "denied" ? v : null;
+    } catch {
+      return null; // storage blocked: ask every time, never assume yes
+    }
+  }
+
+  function remember(choice: Choice) {
+    try {
+      localStorage.setItem(KEY, choice);
+    } catch {}
+  }
+
+  // When this visit began, for "how long before they downloaded". Kept in sessionStorage (cleared when the tab
+  // closes) and only written once the visitor has accepted, so a reject leaves nothing behind. Started at the
+  // current page's load, so a visitor who accepts on their first page is timed from when they arrived.
+  const START_KEY = "rowhero-visit-start";
+  function visitStart(): number {
+    try {
+      const v = Number(sessionStorage.getItem(START_KEY));
+      if (v > 0) return v;
+      const now = Math.round(performance.timeOrigin);
+      sessionStorage.setItem(START_KEY, String(now));
+      return now;
+    } catch {
+      return Math.round(performance.timeOrigin);
+    }
+  }
+
+  let loaded = false;
+  let granted = false;
+  function startAnalytics(id: string) {
+    granted = true;
+    if (loaded) return;
+    loaded = true;
+    visitStart();
+    (window as any)[`ga-disable-${id}`] = false;
+    const w = window as any;
+    w.dataLayer = w.dataLayer || [];
+    // gtag.js only reads real `arguments` objects from the queue, hence the function rather than an arrow.
+    w.gtag = function () {
+      w.dataLayer.push(arguments);
+    };
+    // Analytics cookies only: advertising stays off for everyone.
+    w.gtag("consent", "default", {
+      analytics_storage: "granted",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+    });
+    w.gtag("js", new Date());
+    w.gtag("config", id, { allow_google_signals: false, allow_ad_personalization_signals: false });
+    const s = document.createElement("script");
+    s.async = true;
+    s.fetchPriority = "low";
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
+    document.head.append(s);
+  }
+
+  // Changing an earlier "Accept" to "Reject": stop sending, then delete the _ga cookies GA set.
+  function stopAnalytics(id: string) {
+    granted = false;
+    try {
+      sessionStorage.removeItem(START_KEY);
+    } catch {}
+    (window as any)[`ga-disable-${id}`] = true;
+    (window as any).gtag?.("consent", "update", { analytics_storage: "denied" });
+    const parts = location.hostname.split(".");
+    const domains = ["", ...parts.map((_, i) => "." + parts.slice(i).join("."))];
+    for (const name of document.cookie.split(/;\s*/).map((c) => c.split("=")[0])) {
+      if (!name.startsWith("_ga")) continue;
+      for (const d of domains) document.cookie = `${name}=; Max-Age=0; path=/${d && `; domain=${d}`}`;
+    }
+  }
+
+  if (bar && id) {
+    const choice = stored();
+    if (choice === "granted") startAnalytics(id);
+    // Global Privacy Control (a browser-wide "don't track me") counts as "Reject" without asking.
+    else if (!choice && !(navigator as any).globalPrivacyControl) bar.hidden = false;
+
+    bar.addEventListener("click", (e) => {
+      const button = (e.target as Element).closest<HTMLButtonElement>("[data-consent]");
+      if (!button) return;
+      const next = button.dataset.consent as Choice;
+      remember(next);
+      bar.hidden = true;
+      if (next === "granted") startAnalytics(id);
+      else stopAnalytics(id);
+    });
+
+    // Download buttons (data-download="windows" | "mac", data-placement says which button on the page). In GA this
+    // is the "download" key event; platform, placement and seconds_on_site are its custom definitions.
+    document.addEventListener("click", (e) => {
+      const link = (e.target as Element).closest<HTMLElement>("[data-download]");
+      if (!link || !granted) return;
+      (window as any).gtag?.("event", "download", {
+        platform: link.dataset.download,
+        placement: link.dataset.placement,
+        seconds_on_site: Math.max(0, Math.round((Date.now() - visitStart()) / 1000)),
+      });
+    });
+
+    // The footer's "Cookies" button and the privacy page's button bring the bar back.
+    document.addEventListener("click", (e) => {
+      if (!(e.target as Element).closest(".consent-open")) return;
+      bar.hidden = false;
+      bar.querySelector<HTMLButtonElement>(`[data-consent="${stored() ?? "granted"}"]`)?.focus();
+    });
+  }
+</script>

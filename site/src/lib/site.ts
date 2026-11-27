@@ -13,8 +13,11 @@ export function url(path = ""): string {
 export const DOWNLOAD_URL = "https://github.com/RowHeroGame/RowHero/releases/download/installer/RowHeroInstaller.exe";
 export const MAC_DOWNLOAD_URL = "https://github.com/RowHeroGame/RowHero/releases/download/launcher-mac/RowHeroLauncher-mac.zip";
 export const CONTACT = "mailto:rowherogame@gmail.com";
+// Google Analytics 4 Measurement ID (Admin → Data streams → rowhero.uk). Empty turns analytics off: no consent bar,
+// no "Cookies" button, nothing loaded from Google. See components/Consent.astro.
+export const GA_ID = "G-458XMP495C";
 // The "Now playing" bar above the footer.
-export const PLAYLIST = { name: "Now That's What I Call Guitar Hero", href: "https://open.spotify.com/playlist/4ZBF36Tr1oHp4Xh3AyZj2Z" };
+export const PLAYLIST = { name: "Now That's What I Call Row Hero", href: "https://open.spotify.com/playlist/4ZBF36Tr1oHp4Xh3AyZj2Z" };
 
 export type Character = CollectionEntry<"characters">;
 export type Event = CollectionEntry<"events">;
