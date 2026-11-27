@@ -12,3 +12,4 @@ publish/
 
 # Release zips are uploaded to GitHub releases, never committed (see README → Releasing)
 *.zip
+.claude/
